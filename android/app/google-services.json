@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "168883929200",
+    "firebase_url": "https://breakout-bricks-challenge-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "breakout-bricks-challenge",
+    "storage_bucket": "breakout-bricks-challenge.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:168883929200:android:e593ed2ca67e09371f34b5",
+        "android_client_info": {
+          "package_name": "sk.saluspub.breakoutbrickschallenge"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "168883929200-d1h2cs3l49bsamneojaai7sc75dii9bl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDu0N2T4yb1DOkn4Lr7SRxzDcsnaLTKDK8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "168883929200-d1h2cs3l49bsamneojaai7sc75dii9bl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

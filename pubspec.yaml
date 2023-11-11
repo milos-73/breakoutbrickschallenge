@@ -1,0 +1,241 @@
+name: initial_project
+description: Flame starting project.
+
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+# The following defines the version and build number for your application.
+# A version number is three numbers separated by dots, like 1.2.43
+# followed by an optional build number separated by a +.
+# Both the version and the builder number may be overridden in flutter
+# build by specifying --build-name and --build-number, respectively.
+# In Android, build-name is used as versionName while build-number used as versionCode.
+# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
+# In iOS, build-name is used as CFBundleShortVersionString while build-number is used as CFBundleVersion.
+# Read more about iOS versioning at
+# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+# In Windows, build-name is used as the major, minor, and patch parts
+# of the product and file versions while build-number is used as the build suffix.
+version: 0.0.0+1
+
+environment:
+  sdk: '>=2.17.0<4.0.0'
+
+# Dependencies specify other packages that your package needs in order to work.
+# To automatically upgrade your package dependencies to the latest versions
+# consider running `flutter pub upgrade --major-versions`. Alternatively,
+# dependencies can be manually updated by changing the version numbers below to
+# the latest version available on pub.dev. To see which dependencies have newer
+# versions available, run `flutter pub outdated`.
+dependencies:
+  flutter:
+    sdk: flutter
+  flame: 1.8.2
+  flame_forge2d: ^0.14.1+1
+  intl: ^0.18.1
+  flame_tiled: ^1.10.2
+  shared_preferences: ^2.0.20
+  google_fonts: ^4.0.4
+  font_awesome_flutter: ^10.4.0
+  firebase_auth: ^4.13.0
+  firebase_core: ^2.22.0
+  firebase_database: ^10.3.4
+  google_sign_in: ^6.1.6
+  username_gen: ^1.0.4
+  flame_audio: ^2.0.3
+  firebase_storage: ^11.2.3
+  cloud_firestore: ^4.13.0
+  firebase_dynamic_links: ^5.4.4
+  google_mobile_ads: ^3.1.0
+#  flame_splash_screen: ^0.1.0
+
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^1.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.3.1
+
+flutter_native_splash:
+  color: "#000000"
+  image: assets/splashScreen_icon_older.png
+  branding: assets/logo_brand_older.png
+  android_12:
+      image: assets/splashScreen_icon_12plus.png
+      branding: assets/logo_brand.png
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/play_store_512.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  adaptive_icon_background: "assets/launch_icon_background.png"
+  adaptive_icon_foreground: "assets/launch_icon_foreground.png"
+
+
+  # The "flutter_lints" package below contains a set of recommended lints to
+  # encourage good coding practices. The lint set provided by the package is
+  # activated in the `analysis_options.yaml` file located at the root of your
+  # package. See that file for information about deactivating specific lint
+  # rules and activating additional ones.
+  flutter_lints: ^2.0.0
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter packages.
+flutter:
+
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/tiles/screen1.tmx
+    - assets/tiles/test.tmx
+    - assets/jsonwalls/wall3.json
+    - assets/images/background_tile1.png
+    - assets/images/google.png
+    - assets/images/apple.png
+    - assets/images/
+    - assets/images/bricks4/
+    - assets/images/bricks2/
+    - assets/images/bricks3/
+    - assets/images/paddles/
+    - assets/images/levels/
+    - assets/images/bg/
+    - assets/images/bonus/bonus3.png
+    - assets/images/bonus/bonus5.png
+    - assets/images/bg/test25.png
+    - assets/images/bg/bg1.jpg
+    - assets/images/bg/bg2.jpg
+    - assets/images/bg/bg3.jpg
+    - assets/images/bg/bg4.jpg
+    - assets/images/bg/bg5.jpg
+    - assets/images/bg/bg6.jpg
+    - assets/images/bg/bg7.jpg
+    - assets/images/bg/bg8.jpg
+    - assets/images/bg/bg9.jpg
+    - assets/images/bg/bg10.jpg
+    - assets/images/bg/bg11.jpg
+    - assets/images/bg/bg12.jpg
+    - assets/images/bg/bg13.jpg
+    - assets/images/bg/bg14.jpg
+    - assets/images/bg/bg15.jpg
+    - assets/images/bg/bg16.jpg
+    - assets/images/bg/bg17.jpg
+    - assets/images/bg/bg18.jpg
+    - assets/images/bg/trava1.png
+    - assets/images/bg/trava2.png
+    - assets/images/bg/beginningNote.png
+    - assets/images/bg/stoneBar.jpg
+    - assets/images/bg/brickBar.png
+    - assets/images/bg/brickBar2.png
+    - assets/images/bg/bottomBar.png
+    - assets/images/bg/bottomBar2.png
+    - assets/images/bg/oldBrickWall2.png
+    - assets/images/bg/oldBrickWall_green.png
+    - assets/images/bg/topBar.png
+    - assets/images/bg/topBar2.png
+    - assets/images/bg/beginNote.png
+    - assets/images/bg/beginningNote2.png
+    - assets/images/bg/beginNote2.png
+    - assets/images/bg/beginNote3.png
+    - assets/images/bg/gameOverMenu.png
+    - assets/images/bg/lostBall.png
+    - assets/images/bg/lostBall2.png
+    - assets/images/bg/winHeading.png
+    - assets/images/bg/lostHeading.png
+    - assets/images/bg/mainSCreen.jpg
+    - assets/images/bg/levels.jpg
+    - assets/images/bg/levels2.jpg
+    - assets/images/bg/gamePaused.png
+    - assets/images/bg/logInInfo.png
+    - assets/images/buttons/gear.png
+    - assets/images/buttons/myAccountButton.png
+    - assets/images/buttons/myAccountButton_hover.png
+    - assets/images/buttons/resumeButton_hover.png
+    - assets/images/buttons/resumeButton.png
+    - assets/images/buttons/home_button.png
+    - assets/images/buttons/home_button2.png
+    - assets/images/buttons/pause_button.png
+    - assets/images/buttons/pause_button2.png
+    - assets/images/buttons/levels_button.png
+    - assets/images/buttons/restartButton.png
+    - assets/images/buttons/restartButton_hover.png
+    - assets/images/buttons/levelsButton.png
+    - assets/images/buttons/boardButton.png
+    - assets/images/buttons/challengeButton.png
+    - assets/images/buttons/levelsButton_hover.png
+    - assets/images/buttons/boardButton_hover.png
+    - assets/images/buttons/challengeButton_hover.png
+    - assets/images/buttons/settingsButton.png
+    - assets/images/buttons/settingsButton_hover.png
+    - assets/images/bonus/bonus1.png
+    - assets/images/bonus/bonus2.png
+    - assets/images/bonus/bonus4.png
+    - assets/images/bonus/bonus6.png
+    - assets/images/bonus/fullStar.png
+    - assets/images/bonus/emptyStar.png
+    - assets/images/bullets/bulletL1.png
+    - assets/images/bullets/bullet2.png
+    - assets/images/menuscreen.jpg
+    - assets/images/objects/object1.png
+    - assets/images/objects/object2.png
+    - assets/images/explosion/
+    - assets/images/stars/
+    - assets/images/buttons/mainMenuButton.png
+    - assets/images/buttons/nextLevelButton.png
+    - assets/images/buttons/nextLevelButton_hover.png
+    - assets/images/buttons/mainMenuButton_hover.png
+    - assets/images/buttons/replyButton.png
+    - assets/images/buttons/replyButton_hover.png
+    - assets/images/buttons/pickLevelButton.png
+    - assets/images/buttons/pickLevelButton_hover.png
+    - assets/images/points/50.png
+    - assets/images/points/-50.png
+    - assets/images/points/100.png
+    - assets/images/points/-100.png
+    - assets/images/points/200.png
+    - assets/images/points/-200.png
+    - assets/images/points/500.png
+    - assets/images/points/-500.png
+    - assets/audio/
+    - assets/audio/collectCoin1.mp3
+
+
+
+  #   - images/a_dot_ham.jpeg
+
+  # An image asset can refer to one or more resolution-specific "variants", see
+  # https://flutter.dev/assets-and-images/#resolution-aware
+
+  # For details regarding adding assets from package dependencies, see
+  # https://flutter.dev/assets-and-images/#from-packages
+
+  # To add custom fonts to your application, add a fonts section here,
+  # in this "flutter" section. Each entry in this list should have a
+  # "family" key with the font family name, and a "fonts" key with a
+  # list giving the asset and other descriptors for the font. For
+  # example:
+  # fonts:
+  #   - family: Schyler
+  #     fonts:
+  #       - asset: fonts/Schyler-Regular.ttf
+  #       - asset: fonts/Schyler-Italic.ttf
+  #         style: italic
+  #   - family: Trajan Pro
+  #     fonts:
+  #       - asset: fonts/TrajanPro.ttf
+  #       - asset: fonts/TrajanPro_Bold.ttf
+  #         weight: 700
+  #
+  # For details regarding fonts from package dependencies,
+  # see https://flutter.dev/custom-fonts/#from-packages

@@ -1,0 +1,160 @@
+[
+  {
+  "id": 1,
+  "level": 1,
+  "rows": 4,
+  "columns": 12,
+  "wall_size_percentage": {
+    "wall_size_x_percentage": 0.90,
+    "wall_size_y_percentage": 0.30
+  },
+  "bricks": [
+      {
+        "brick_type": "plain",
+        "brick_color": "red",
+        "brick_position_x": "(wallSize.width) / columns) + brickSize.width)",
+        "brick_position_y": "16"
+      },
+    {
+      "brick_type": "plain",
+      "brick_color": "green",
+      "brick_position_x": "Vector2(((wallSize.width) / columns) + (2 * brickSize.width), brickList[0].bricks![i]?.brickPositionY ?? 0.0)",
+      "brick_position_y": "16"
+    },
+    {
+      "brick_type": "plain",
+      "brick_color": "red",
+      "brick_position_x": "(wallSize.width) / columns) + (3 * brickSize.width)",
+      "brick_position_y": "16"
+    },
+    {
+      "brick_type": "plain",
+      "brick_color": "red",
+      "brick_position_x": "(wallSize.width) / columns) + (4 * brickSize.width)",
+      "brick_position_y": "16"
+    },
+    {
+      "brick_type": "plain",
+      "brick_color": "red",
+      "brick_position_x": "(wallSize.width) / columns) + (5 * brickSize.width)",
+      "brick_position_y": "16"
+    },
+    {
+      "brick_type": "plain",
+      "brick_color": "red",
+      "brick_position_x": "(wallSize.width) / columns) + (6 * brickSize.width)",
+      "brick_position_y": "16"
+    },
+    {
+      "brick_type": "plain",
+      "brick_color": "red",
+      "brick_position_x": "(wallSize.width) / columns) + (7 * brickSize.width)",
+      "brick_position_y": "16"
+    },
+    {
+      "brick_type": "plain",
+      "brick_color": "red",
+      "brick_position_x": "(wallSize.width) / columns) + (8 * brickSize.width)",
+      "brick_position_y": "16"
+    },
+    {
+      "brick_type": "plain",
+      "brick_color": "red",
+      "brick_position_x": "(wallSize.width) / columns) + (9 * brickSize.width)",
+      "brick_position_y": "16"
+    },
+    {
+      "brick_type": "plain",
+      "brick_color": "red",
+      "brick_position_x": "(wallSize.width) / columns) + (10 * brickSize.width)",
+      "brick_position_y": "16"
+    },
+    {
+      "brick_type": "plain",
+      "brick_color": "blue",
+      "brick_position_x": "(wallSize.width) / columns) + (11 * brickSize.width)",
+      "brick_position_y": "16"
+    },
+    {
+      "brick_type": "plain",
+      "brick_color": "red",
+      "brick_position_x": "(wallSize.width) / columns) + (12 * brickSize.width)",
+      "brick_position_y": "16"
+    },
+
+    {
+    "brick_type": "plain",
+    "brick_color": "red",
+    "brick_position_x": "(wallSize.width) / columns) + brickSize.width)",
+    "brick_position_y": "16"
+    },
+    {
+      "brick_type": "plain",
+      "brick_color": "green",
+      "brick_position_x": "Vector2(((wallSize.width) / columns) + (2 * brickSize.width), brickList[0].bricks![i]?.brickPositionY ?? 0.0)",
+      "brick_position_y": "10"
+    },
+    {
+      "brick_type": "plain",
+      "brick_color": "red",
+      "brick_position_x": "(wallSize.width) / columns) + (3 * brickSize.width)",
+      "brick_position_y": "10"
+    },
+    {
+      "brick_type": "plain",
+      "brick_color": "red",
+      "brick_position_x": "(wallSize.width) / columns) + (4 * brickSize.width)",
+      "brick_position_y": "10"
+    },
+    {
+      "brick_type": "plain",
+      "brick_color": "red",
+      "brick_position_x": "(wallSize.width) / columns) + (5 * brickSize.width)",
+      "brick_position_y": "10"
+    },
+    {
+      "brick_type": "plain",
+      "brick_color": "red",
+      "brick_position_x": "(wallSize.width) / columns) + (6 * brickSize.width)",
+      "brick_position_y": "10"
+    },
+    {
+      "brick_type": "plain",
+      "brick_color": "red",
+      "brick_position_x": "(wallSize.width) / columns) + (7 * brickSize.width)",
+      "brick_position_y": "10"
+    },
+    {
+      "brick_type": "plain",
+      "brick_color": "red",
+      "brick_position_x": "(wallSize.width) / columns) + (8 * brickSize.width)",
+      "brick_position_y": "10"
+    },
+    {
+      "brick_type": "plain",
+      "brick_color": "red",
+      "brick_position_x": "(wallSize.width) / columns) + (9 * brickSize.width)",
+      "brick_position_y": "10"
+    },
+    {
+      "brick_type": "plain",
+      "brick_color": "red",
+      "brick_position_x": "(wallSize.width) / columns) + (10 * brickSize.width)",
+      "brick_position_y": "10"
+    },
+    {
+      "brick_type": "plain",
+      "brick_color": "blue",
+      "brick_position_x": "(wallSize.width) / columns) + (11 * brickSize.width)",
+      "brick_position_y": "10"
+    },
+    {
+      "brick_type": "plain",
+      "brick_color": "red",
+      "brick_position_x": "(wallSize.width) / columns) + (12 * brickSize.width)",
+      "brick_position_y": "10"
+    }
+  ]
+   }
+  ]
+
