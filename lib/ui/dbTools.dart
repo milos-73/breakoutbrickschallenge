@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import 'package:firebase_database/firebase_database.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:username_gen/username_gen.dart';
 
 class DbTools {
@@ -108,16 +109,23 @@ class DbTools {
     String? userName;
 
     DatabaseReference dbRef = FirebaseDatabase.instance.ref();
-
+    var prefs = await SharedPreferences.getInstance();
 
     var snapshot = await dbRef.child('leaderboard/$keyID/userName').once();
-    if (snapshot.snapshot.value == null) {
-      String localUserProfileName = UsernameGen().generate();
-      return localUserProfileName;
-    } else {
-      await dbRef.child('leaderboard/$keyID/userName').once().then((value) =>
-      userName = value.snapshot.value.toString());
-      return userName ?? '';
-    }
+    var publicName = prefs.getString('customUserProfileName' ?? '');
+
+    print('publikName: $publicName');
+
+    if (snapshot.snapshot.value == null){
+      if (publicName == null) {
+        String localUserProfileName = UsernameGen().generate();
+        return localUserProfileName;
+      }else {
+        return publicName;
+      }
+
+     }else {await dbRef.child('leaderboard/$keyID/userName').once().then((value) =>
+    userName = value.snapshot.value.toString());
+    return userName ?? '';}
   }
 }

@@ -470,8 +470,8 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               )),
           SizedBox(height: (widget.game.camera.viewport.canvasSize?.y)!/50,),
-        Center(child: widget.game.prefs.getString('customUserProfileName') != null ? Text('Last login as: ${widget.game.prefs.getString('customUserProfileName')}',style: TextStyle(fontSize: 14,color: Colors.white),)
-            : Text('Last login as: No logged in yet',style: TextStyle(fontSize: 14,color: Colors.white),),)
+        Center(child: widget.game.prefs.getString('customUserProfileName') != null ? Text('Last login: ${widget.game.prefs.getString('customUserProfileName')}',style: TextStyle(fontSize: 14,color: Colors.white),)
+            : Text('Last login: Not logged in yet',style: TextStyle(fontSize: 14,color: Colors.white),),)
       ],
       ),
     );
