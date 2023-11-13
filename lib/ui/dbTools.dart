@@ -109,6 +109,7 @@ class DbTools {
 
     DatabaseReference dbRef = FirebaseDatabase.instance.ref();
 
+
     var snapshot = await dbRef.child('leaderboard/$keyID/userName').once();
     if (snapshot.snapshot.value == null) {
       String localUserProfileName = UsernameGen().generate();

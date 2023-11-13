@@ -669,8 +669,9 @@ Future<void> resetGameData() async {
     if (userSignedInProvider != null) {
       print('==========LOG IN WITH GOOGLE GETTING DATA==========');
       loggedInName = _auth.currentUser?.displayName;
-      publicUserProfileName = await dbTools.getUserName(_auth.currentUser!.uid);
       localUserProfileName = prefs.getString('customUserProfileName' ?? '');
+      publicUserProfileName = await dbTools.getUserName(_auth.currentUser!.uid);
+
       //if(loggedInName == ''){publicUserProfileName = localUserProfileName;}
       loggedInEmail = _auth.currentUser?.email;
       keyID = _auth.currentUser?.uid;
