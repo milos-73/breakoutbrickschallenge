@@ -1,8 +1,10 @@
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import '../forge2d_game_world.dart';
+import '../services/ad_helper.dart';
 import '../services/hex_color.dart';
 import '../ui/dbTools.dart';
 
@@ -18,7 +20,9 @@ class MainMenu extends StatefulWidget {
 
 class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin {
 
-  DbTools dbTools = DbTools();
+  BannerAd? _bannerAd;
+
+DbTools dbTools = DbTools();
 
   late AnimationController _animationController;
   late Animation<Offset> _animation;
@@ -66,11 +70,30 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
     board = board1;
     logIn = logIn1;
     settings = settings1;
+
+    BannerAd(
+      adUnitId: AdHelper.bannerAdUnitId2,
+      request: AdRequest(),
+      size: AdSize.banner,
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          setState(() {
+            _bannerAd = ad as BannerAd;
+          });
+        },
+        onAdFailedToLoad: (ad, err) {
+          print('Failed to load a banner ad: ${err.message}');
+          ad.dispose();
+        },
+      ),
+    ).load();
+
   }
 
   @override
   void dispose() {
     _animationController.dispose();
+    _bannerAd?.dispose();
     super.dispose();
   }
 
@@ -103,6 +126,33 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
                child: Column(mainAxisAlignment: MainAxisAlignment.end, crossAxisAlignment: CrossAxisAlignment.center,
                  children: [
 
+                   Padding(
+                     padding: const EdgeInsets.only(top: 20,bottom: 20),
+                     child: Center(
+                       child: Container(width: 1080,height: 40,
+                           child: Padding(
+                             padding: const EdgeInsets.only(left: 15,right: 15),
+                             child: Row(mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center, children: [
+                               _bannerAd != null ? Align(
+                             alignment: Alignment.center,
+                               child: Container(
+                                 //width: widget.game!.size.x * 40,
+                                 width: _bannerAd!.size.width.toDouble(),
+                                 height: _bannerAd!.size.height.toDouble(),
+                                 child: AdWidget(ad: _bannerAd!),
+                               ),
+                             ):
+                               SizedBox()
+
+
+
+                             ],),
+                           )
+
+                       ),
+                     ),
+                   ),
+
                    SlideTransition( position: _animation, child: Stack(alignment: Alignment.bottomCenter,
                      children: [
                        Column( mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.center,
@@ -112,10 +162,11 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
                            _levelsButton(context, widget.game),
                            _boardButton(context, widget.game),
                            _myAccount(context, widget.game),
-                           Padding(
-                             padding: const EdgeInsets.only(top: 10),
-                             child: _settings(context, widget.game),
-                           ),
+                           // Padding(
+                           //   padding: const EdgeInsets.only(top: 10),
+                           //   child: _settings(context, widget.game),
+                           // ),
+                           Padding(padding: const EdgeInsets.only(bottom: 40),)
                          ], )], ), ),
                    Padding(
                      padding: const EdgeInsets.only(top: 20),
@@ -141,7 +192,7 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
     ))));
   }
 
-  Widget _challengeButton(BuildContext context, BrickBreakGame game) {
+Widget _challengeButton(BuildContext context, BrickBreakGame game) {
     return GestureDetector(
 
       onTapDown: (tap) async {
@@ -425,7 +476,6 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
       },
     );
   }
-
 
 }
 
