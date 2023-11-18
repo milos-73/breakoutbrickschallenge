@@ -129,7 +129,7 @@ DbTools dbTools = DbTools();
                    Padding(
                      padding: const EdgeInsets.only(top: 20,bottom: 20),
                      child: Center(
-                       child: Container(width: 1080,height: 40,
+                       child: Container(width: 1080,height: 50,
                            child: Padding(
                              padding: const EdgeInsets.only(left: 15,right: 15),
                              child: Row(mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center, children: [
