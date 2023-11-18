@@ -2,8 +2,10 @@ import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import '../forge2d_game_world.dart';
+import '../services/ad_helper.dart';
 import 'overlay_builder.dart';
 
 class GamePausedMenuOverlay extends StatefulWidget {
@@ -21,11 +23,15 @@ class GamePausedMenuOverlay extends StatefulWidget {
 }
 
 late int currentGameLevel;
+const int maxFailedLoadAttempts = 3;
 
 class _GamePausedMenuOverlayState extends State<GamePausedMenuOverlay> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<Offset> _animation;
   bool _isBoxVisible = false;
+
+  InterstitialAd? _interstitialAd;
+  int _interstitialLoadAttempts = 1;
 
   late String reply;
   String reply1 = 'assets/images/buttons/restartButton.png';
@@ -48,6 +54,9 @@ class _GamePausedMenuOverlayState extends State<GamePausedMenuOverlay> with Sing
   void initState() {
 
     super.initState();
+
+    _createInterstitialAd();
+
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
@@ -65,6 +74,53 @@ class _GamePausedMenuOverlayState extends State<GamePausedMenuOverlay> with Sing
     resume = resume1;
     pickLevel = pickLevel1;
   }
+
+  void _createInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: AdHelper.interstitialAdUnitId2,
+      request: AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (InterstitialAd ad) {
+          _interstitialAd = ad;
+          _interstitialLoadAttempts = 0;
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          _interstitialLoadAttempts += 1;
+          _interstitialAd = null;
+          if (_interstitialLoadAttempts <= maxFailedLoadAttempts) {
+            _createInterstitialAd();
+          }
+        },
+      ),
+    );
+  }
+
+  Future<void> _mainMenuOverlays() async {
+
+    widget.game.pauseEngine();
+    widget.game.gameState = GameState.paused;
+    if(widget.game.overlays.isActive('GamePausedMenuOverlay')){widget.game.overlays.remove('GamePausedMenuOverlay');}
+    widget.game.overlays.add('MainMenu');
+ }
+
+  void _showInterstitialAd() {
+    if (_interstitialAd != null) {
+      _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+        onAdDismissedFullScreenContent: (InterstitialAd ad) {
+          ad.dispose();
+          _mainMenuOverlays();
+          _createInterstitialAd();
+        },
+        onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+          ad.dispose();
+          _mainMenuOverlays();
+          _createInterstitialAd();
+        },
+      );
+      _interstitialAd!.show();
+    }
+  }
+
 
   @override
   void dispose() {
@@ -181,10 +237,13 @@ class _GamePausedMenuOverlayState extends State<GamePausedMenuOverlay> with Sing
         if (game.audioSettings == AudioSettings.on) {
           await FlameAudio.play('button3.mp3');
         }
-        widget.game.pauseEngine();
-        widget.game.gameState = GameState.paused;
-        if(widget.game.overlays.isActive('GamePausedMenuOverlay')){widget.game.overlays.remove('GamePausedMenuOverlay');}
-        widget.game.overlays.add('MainMenu');
+        _showInterstitialAd();
+        // widget.game.pauseEngine();
+        // widget.game.gameState = GameState.paused;
+        // if(widget.game.overlays.isActive('GamePausedMenuOverlay')){widget.game.overlays.remove('GamePausedMenuOverlay');}
+        // _showInterstitialAd();
+        // widget.game.overlays.add('MainMenu');
+
       },
       onTapUp: (tap) {
         setState(() {

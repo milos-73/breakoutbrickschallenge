@@ -1,5 +1,6 @@
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:initial_project/overlays/main_menu.dart';
 import 'package:initial_project/ui/sign_with_google.dart';
 import 'package:initial_project/ui/welcome_user.dart';
@@ -10,6 +11,7 @@ import '../overlays/friendsList.dart';
 import '../overlays/google_signin.dart';
 import '../overlays/leaderBoard.dart';
 import '../overlays/searching_friend_text_field.dart';
+import '../services/ad_helper.dart';
 import 'challeneg_game_over.dart';
 import 'game_paused_menu.dart';
 import 'my_account_overlay.dart';
@@ -242,10 +244,16 @@ class PostGameOverlay extends StatefulWidget {
   State<PostGameOverlay> createState() => _PostGameOverlayState();
 }
 
+
+
 class _PostGameOverlayState extends State<PostGameOverlay> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<Offset> _animation;
   bool _isBoxVisible = false;
+
+  static const int maxFailedLoadAttempts = 3;
+  InterstitialAd? _interstitialAd;
+  int _interstitialLoadAttempts = 1;
 
   late String reply;
   String reply1 = 'assets/images/buttons/replyButton.png';
@@ -263,6 +271,9 @@ class _PostGameOverlayState extends State<PostGameOverlay> with SingleTickerProv
   @override
   void initState() {
     super.initState();
+
+    _createInterstitialAd();
+
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
@@ -278,6 +289,104 @@ class _PostGameOverlayState extends State<PostGameOverlay> with SingleTickerProv
     imgMainMenu = imgMainMenu1;
     reply = reply1;
     pickLevel = pickLevel1;
+  }
+
+  void _createInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: AdHelper.interstitialAdUnitId2,
+      request: AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (InterstitialAd ad) {
+          _interstitialAd = ad;
+          _interstitialLoadAttempts = 0;
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          _interstitialLoadAttempts += 1;
+          _interstitialAd = null;
+          if (_interstitialLoadAttempts <= maxFailedLoadAttempts) {
+            _createInterstitialAd();
+          }
+        },
+      ),
+    );
+  }
+
+  Future<void> _mainMenuOverlays() async {
+    widget.game.pauseEngine();
+    widget.game.gameState = GameState.paused;
+    if(widget.game.overlays.isActive('PostGame')){widget.game.overlays.remove('PostGame');}
+    widget.game.overlays.add('MainMenu');
+  }
+
+  Future<void> _replyOverlays() async {
+
+    if(widget.game.overlays.isActive('PostGame')){widget.game.overlays.remove('PostGame');}
+    widget.game.resetGame();
+
+  }
+
+  Future<void> _pickLevelOverlays() async {
+
+    widget.game.pauseEngine();
+    widget.game.gameState = GameState.paused;
+    if(widget.game.overlays.isActive('WinGame')){widget.game.overlays.remove('WinGame');}
+    if(widget.game.overlays.isActive('LostLife')){widget.game.overlays.remove('LostLife');}
+    print('--- PICK LEVEL BUTTON ---');
+    widget.game.overlays.add('LevelsMap');
+  }
+
+  void _showInterstitialAdMainMenu() {
+    if (_interstitialAd != null) {
+      _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+        onAdDismissedFullScreenContent: (InterstitialAd ad) {
+          ad.dispose();
+          _mainMenuOverlays();
+          _createInterstitialAd();
+        },
+        onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+          ad.dispose();
+          _mainMenuOverlays();
+          _createInterstitialAd();
+        },
+      );
+      _interstitialAd!.show();
+    }
+  }
+
+  void _showInterstitialAdReplay() {
+    if (_interstitialAd != null) {
+      _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+        onAdDismissedFullScreenContent: (InterstitialAd ad) {
+          ad.dispose();
+          _replyOverlays();
+          _createInterstitialAd();
+        },
+        onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+          ad.dispose();
+          _replyOverlays();
+          _createInterstitialAd();
+        },
+      );
+      _interstitialAd!.show();
+    }
+  }
+
+  void _showInterstitialAdPickLevel() {
+    if (_interstitialAd != null) {
+      _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+        onAdDismissedFullScreenContent: (InterstitialAd ad) {
+          ad.dispose();
+          _pickLevelOverlays();
+          _createInterstitialAd();
+        },
+        onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+          ad.dispose();
+          _pickLevelOverlays();
+          _createInterstitialAd();
+        },
+      );
+      _interstitialAd!.show();
+    }
   }
 
   @override
@@ -340,13 +449,12 @@ class _PostGameOverlayState extends State<PostGameOverlay> with SingleTickerProv
       if (game.audioSettings == AudioSettings.on) {
         await FlameAudio.play('button3.mp3');
       }
-      widget.game.pauseEngine();
-      widget.game.gameState = GameState.paused;
-      if(widget.game.overlays.isActive('PostGame')){widget.game.overlays.remove('PostGame');}
-      widget.game.overlays.add('MainMenu');
-
-
-    },
+      _showInterstitialAdMainMenu();
+      // widget.game.pauseEngine();
+      // widget.game.gameState = GameState.paused;
+      // if(widget.game.overlays.isActive('PostGame')){widget.game.overlays.remove('PostGame');}
+      // widget.game.overlays.add('MainMenu');
+      },
       onTapUp: (tap) {
         setState(() {
           imgMainMenu = imgMainMenu1;
@@ -383,8 +491,9 @@ class _PostGameOverlayState extends State<PostGameOverlay> with SingleTickerProv
       if (game.audioSettings == AudioSettings.on) {
         await FlameAudio.play('button3.mp3');
       }
-      if(widget.game.overlays.isActive('PostGame')){widget.game.overlays.remove('PostGame');}
-      game.resetGame();
+      _showInterstitialAdReplay();
+      // if(widget.game.overlays.isActive('PostGame')){widget.game.overlays.remove('PostGame');}
+      // game.resetGame();
     },
       onTapUp: (tap) {
         setState(() {
@@ -423,12 +532,14 @@ class _PostGameOverlayState extends State<PostGameOverlay> with SingleTickerProv
       if (game.audioSettings == AudioSettings.on) {
         await FlameAudio.play('button3.mp3');
       }
-      widget.game.pauseEngine();
-      widget.game.gameState = GameState.paused;
-      if(widget.game.overlays.isActive('WinGame')){widget.game.overlays.remove('WinGame');}
-      if(widget.game.overlays.isActive('LostLife')){widget.game.overlays.remove('LostLife');}
-      print('--- PICK LEVEL BUTTON ---');
-      game.overlays.add('LevelsMap');
+
+      _showInterstitialAdPickLevel();
+      // widget.game.pauseEngine();
+      // widget.game.gameState = GameState.paused;
+      // if(widget.game.overlays.isActive('WinGame')){widget.game.overlays.remove('WinGame');}
+      // if(widget.game.overlays.isActive('LostLife')){widget.game.overlays.remove('LostLife');}
+      // print('--- PICK LEVEL BUTTON ---');
+      // game.overlays.add('LevelsMap');
     },
       onTapUp: (tap) {
         setState(() {
@@ -473,10 +584,16 @@ class WinGameOverlay extends StatefulWidget {
   State<WinGameOverlay> createState() => _WinGameOverlayState();
 }
 
+
+
 class _WinGameOverlayState extends State<WinGameOverlay> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<Offset> _animation;
   bool _isBoxVisible = false;
+
+  InterstitialAd? _interstitialAd;
+  int _interstitialLoadAttempts = 1;
+  static const int maxFailedLoadAttempts = 3;
 
   late String reply;
   String reply1 = 'assets/images/buttons/replyButton.png';
@@ -500,6 +617,9 @@ class _WinGameOverlayState extends State<WinGameOverlay> with SingleTickerProvid
     print('WIN GAME OVERLAY: ${widget.game.gameState}');
 
     super.initState();
+
+    _createInterstitialAd();
+
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
@@ -518,6 +638,26 @@ class _WinGameOverlayState extends State<WinGameOverlay> with SingleTickerProvid
     nextLevel = nextLevel1;
   }
 
+
+  void _createInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: AdHelper.interstitialAdUnitId2,
+      request: AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (InterstitialAd ad) {
+          _interstitialAd = ad;
+          _interstitialLoadAttempts = 0;
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          _interstitialLoadAttempts += 1;
+          _interstitialAd = null;
+          if (_interstitialLoadAttempts <= maxFailedLoadAttempts) {
+            _createInterstitialAd();
+          }
+        },
+      ),
+    );
+  }
   @override
   void dispose() {
     _animationController.dispose();
@@ -533,6 +673,56 @@ class _WinGameOverlayState extends State<WinGameOverlay> with SingleTickerProvid
         _animationController.reverse();
       }
     });
+  }
+
+  Future<void> _nextLevelOverlays() async {
+
+    widget.game.currentGameLevelStars = 0;
+    widget.game.nextLevel(level: widget.game.currentPlayedLevelNumber+1);
+  }
+
+  Future<void> _mainMenuOverlays() async {
+
+    widget.game.pauseEngine();
+    widget.game.gameState = GameState.paused;
+    if(widget.game.overlays.isActive('WinGame')){widget.game.overlays.remove('WinGame');}
+    widget.game.overlays.add('MainMenu');
+  }
+
+  void _showInterstitialAdNextLevel() {
+    if (_interstitialAd != null) {
+      _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+        onAdDismissedFullScreenContent: (InterstitialAd ad) {
+          ad.dispose();
+          _nextLevelOverlays();
+          _createInterstitialAd();
+        },
+        onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+          ad.dispose();
+          _nextLevelOverlays();
+          _createInterstitialAd();
+        },
+      );
+      _interstitialAd!.show();
+    }
+  }
+
+  void _showInterstitialAdMainMenu() {
+    if (_interstitialAd != null) {
+      _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+        onAdDismissedFullScreenContent: (InterstitialAd ad) {
+          ad.dispose();
+          _mainMenuOverlays();
+          _createInterstitialAd();
+        },
+        onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+          ad.dispose();
+          _mainMenuOverlays();
+          _createInterstitialAd();
+        },
+      );
+      _interstitialAd!.show();
+    }
   }
 
   @override
@@ -577,13 +767,9 @@ class _WinGameOverlayState extends State<WinGameOverlay> with SingleTickerProvid
       if (game.audioSettings == AudioSettings.on) {
         await FlameAudio.play('button3.mp3');
       }
-      widget.game.pauseEngine();
-      widget.game.gameState = GameState.paused;
-      if(widget.game.overlays.isActive('WinGame')){widget.game.overlays.remove('WinGame');}
-      widget.game.overlays.add('MainMenu');
+      _showInterstitialAdMainMenu();
+     },
 
-
-        },
       onTapUp: (tap){setState(() {
         imgMainMenu = imgMainMenu1;
       });},
@@ -665,8 +851,9 @@ class _WinGameOverlayState extends State<WinGameOverlay> with SingleTickerProvid
       if (game.audioSettings == AudioSettings.on) {
         await FlameAudio.play('button3.mp3');
       }
-        game.currentGameLevelStars = 0;
-      game.nextLevel(level: game.currentPlayedLevelNumber+1);
+      _showInterstitialAdNextLevel();
+      // game.currentGameLevelStars = 0;
+      // game.nextLevel(level: game.currentPlayedLevelNumber+1);
         },
 
       onTapUp: (tap){setState(() {

@@ -47,23 +47,15 @@ class BackToMenuButton extends SpriteComponent with Tappable, HasGameRef<BrickBr
     },
     onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
       ad.dispose();
-
+      _overlays();
      _createInterstitialAd();
     },
    );
-
    await _interstitialAd!.show();
-
   }
  }
 
  Future<void> _overlays() async {
-
-
-  if (game.audioSettings == AudioSettings.on)  {
-   FlameAudio.play('button3.mp3');}
-
-
 
   savedValues.saveLevelInProgressNumber(gameRef.currentPlayedLevelNumber);
 
@@ -81,15 +73,8 @@ class BackToMenuButton extends SpriteComponent with Tappable, HasGameRef<BrickBr
   gameRef.pauseEngine();
   gameRef.gameState = GameState.paused;
 
-
-
   gameRef.overlays.add('MainMenu');
-
 }
-
-
-
-
 
  @override
  Future<void> onLoad() async {
@@ -110,10 +95,11 @@ class BackToMenuButton extends SpriteComponent with Tappable, HasGameRef<BrickBr
  @override
  bool onTapDown(TapDownInfo info) {
 
+  if (game.audioSettings == AudioSettings.on)  {
+   FlameAudio.play('button3.mp3');}
+
   _showInterstitialAd();
 
-
-  print('GAME STATE: ${gameRef.gameState}');
   // if (game.audioSettings == AudioSettings.on)  {
   // FlameAudio.play('button3.mp3');}
   // savedValues.saveLevelInProgressNumber(gameRef.currentPlayedLevelNumber);
@@ -143,7 +129,10 @@ class BackToMenuButton extends SpriteComponent with Tappable, HasGameRef<BrickBr
   print("tap cancel");
   return false;
  }
+
 }
+
+
 
 
 
