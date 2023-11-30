@@ -1,8 +1,10 @@
 
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import '../forge2d_game_world.dart';
+import '../services/ad_helper.dart';
 
 class NextLevelChallengeModeOverlay extends StatefulWidget {
   //final String message;
@@ -23,6 +25,10 @@ class _NextLevelChallengeModeOverlayState extends State<NextLevelChallengeModeOv
   late Animation<Offset> _animation;
   bool _isBoxVisible = false;
 
+  static const int maxFailedLoadAttempts = 3;
+  InterstitialAd? _interstitialAd;
+  int _interstitialLoadAttempts = 1;
+
   late String reply;
   String reply1 = 'assets/images/buttons/restartButton.png';
   String reply2 = 'assets/images/buttons/restartButton_hover.png';
@@ -41,6 +47,9 @@ class _NextLevelChallengeModeOverlayState extends State<NextLevelChallengeModeOv
     print('WIN CHALLENGE LEVEL OVERLAY: ${widget.game.gameState}');
 
     super.initState();
+
+    _createInterstitialAd();
+
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
@@ -56,6 +65,99 @@ class _NextLevelChallengeModeOverlayState extends State<NextLevelChallengeModeOv
     imgMainMenu = imgMainMenu1;
     reply = reply1;
     nextLevel = nextLevel1;
+  }
+
+  void _createInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: AdHelper.interstitialAdUnitId2,
+      request: AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (InterstitialAd ad) {
+          _interstitialAd = ad;
+          _interstitialLoadAttempts = 0;
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          _interstitialLoadAttempts += 1;
+          _interstitialAd = null;
+          if (_interstitialLoadAttempts <= maxFailedLoadAttempts) {
+            _createInterstitialAd();
+          }
+        },
+      ),
+    );
+  }
+
+  Future<void> _mainMenuOverlays() async {
+    widget.game.pauseEngine();
+    widget.game.gameState = GameState.paused;
+    if(widget.game.overlays.isActive('NextLevelChallengeModeOverlay')){widget.game.overlays.remove('NextLevelChallengeModeOverlay');}
+    widget.game.overlays.add('MainMenu');
+      }
+
+  Future<void> _replyOverlays() async {
+    if(widget.game.overlays.isActive('NextLevelChallengeModeOverlay')){widget.game.overlays.remove('NextLevelChallengeModeOverlay');}
+    widget.game.resetGame();
+    await widget.game.pickLevel(1);
+  }
+
+  Future<void> _nextLevelOverlays() async {
+    widget.game.levelPoints = 0;
+    if(widget.game.overlays.isActive('NextLevelChallengeModeOverlay')){widget.game.overlays.remove('NextLevelChallengeModeOverlay');}
+    widget.game.nextLevel(level: widget.game.challengeCurrentLevel);
+  }
+
+  void _showInterstitialAdMainMenu() {
+    if (_interstitialAd != null) {
+      _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+        onAdDismissedFullScreenContent: (InterstitialAd ad) {
+          ad.dispose();
+          _mainMenuOverlays();
+          _createInterstitialAd();
+        },
+        onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+          ad.dispose();
+          _mainMenuOverlays();
+          _createInterstitialAd();
+        },
+      );
+      _interstitialAd!.show();
+    }
+  }
+
+  void _showInterstitialAdReplay() {
+    if (_interstitialAd != null) {
+      _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+        onAdDismissedFullScreenContent: (InterstitialAd ad) {
+          ad.dispose();
+          _replyOverlays();
+          _createInterstitialAd();
+        },
+        onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+          ad.dispose();
+          _replyOverlays();
+          _createInterstitialAd();
+        },
+      );
+      _interstitialAd!.show();
+    }
+  }
+
+  void _showInterstitialAdNextLevel() {
+    if (_interstitialAd != null) {
+      _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+        onAdDismissedFullScreenContent: (InterstitialAd ad) {
+          ad.dispose();
+          _nextLevelOverlays();
+          _createInterstitialAd();
+        },
+        onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+          ad.dispose();
+          _nextLevelOverlays();
+          _createInterstitialAd();
+        },
+      );
+      _interstitialAd!.show();
+    }
   }
 
   @override
@@ -115,10 +217,11 @@ class _NextLevelChallengeModeOverlayState extends State<NextLevelChallengeModeOv
       if (game.audioSettings == AudioSettings.on) {
         await FlameAudio.play('button3.mp3');
       }
-      widget.game.pauseEngine();
-      widget.game.gameState = GameState.paused;
-      if(widget.game.overlays.isActive('NextLevelChallengeModeOverlay')){widget.game.overlays.remove('NextLevelChallengeModeOverlay');}
-      widget.game.overlays.add('MainMenu');
+      _showInterstitialAdMainMenu();
+      // widget.game.pauseEngine();
+      // widget.game.gameState = GameState.paused;
+      // if(widget.game.overlays.isActive('NextLevelChallengeModeOverlay')){widget.game.overlays.remove('NextLevelChallengeModeOverlay');}
+      // widget.game.overlays.add('MainMenu');
 
         },
       onTapUp: (tap){setState(() {
@@ -160,10 +263,11 @@ class _NextLevelChallengeModeOverlayState extends State<NextLevelChallengeModeOv
         //game.totalPointsInCurrentGame = 0;
       if (game.audioSettings == AudioSettings.on) {
         await FlameAudio.play('button3.mp3');
-      }
-
-      widget.game.resetGame();
-      await widget.game.pickLevel(1);},
+       }
+      _showInterstitialAdReplay();
+      // widget.game.resetGame();
+      // await widget.game.pickLevel(1);
+      },
 
       onTapUp: (tap){setState(() {
         reply = reply1;
@@ -203,6 +307,7 @@ class _NextLevelChallengeModeOverlayState extends State<NextLevelChallengeModeOv
       if (game.audioSettings == AudioSettings.on) {
         await FlameAudio.play('button3.mp3');
       }
+      _showInterstitialAdNextLevel();
       game.levelPoints = 0;
       game.nextLevel(level: game.challengeCurrentLevel);
         },
