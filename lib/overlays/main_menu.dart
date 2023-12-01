@@ -135,10 +135,10 @@ DbTools dbTools = DbTools();
                              child: Row(mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center, children: [
                                _bannerAd != null ? Align(
                              alignment: Alignment.center,
-                               child: Container(
-                                 //width: widget.game!.size.x * 40,
-                                 width: _bannerAd!.size.width.toDouble(),
-                                 height: _bannerAd!.size.height.toDouble(),
+                               child: SizedBox(
+                                 width: (widget.game.camera.viewport.canvasSize?.x)!*0.8,
+                                 //width: _bannerAd!.size.width.toDouble(),
+                                 //height: _bannerAd!.size.height.toDouble(),
                                  child: AdWidget(ad: _bannerAd!),
                                ),
                              ):
