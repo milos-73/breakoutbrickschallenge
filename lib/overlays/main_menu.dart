@@ -136,7 +136,7 @@ DbTools dbTools = DbTools();
                                _bannerAd != null ? Align(
                              alignment: Alignment.center,
                                child: SizedBox(
-                                 width: (widget.game.camera.viewport.canvasSize?.x)!*0.8,
+                                 width: (widget.game.camera.viewport.canvasSize?.x)!*0.75,
                                  //width: _bannerAd!.size.width.toDouble(),
                                  //height: _bannerAd!.size.height.toDouble(),
                                  child: AdWidget(ad: _bannerAd!),

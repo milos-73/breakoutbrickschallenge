@@ -27,7 +27,7 @@ class _BannerAdOverlayState extends State<BannerAdOverlay> {
     BannerAd(
       adUnitId: AdHelper.bannerAdUnitId,
       request: AdRequest(),
-      size: AdSize.banner,
+      size: AdSize.fullBanner,
       listener: BannerAdListener(
         onAdLoaded: (ad) {
           setState(() {
@@ -51,10 +51,11 @@ class _BannerAdOverlayState extends State<BannerAdOverlay> {
         alignment: Alignment.topCenter,
         child: Padding(
           padding: const EdgeInsets.all(3.0),
-          child: Container(
+          child: SizedBox(
             //width: widget.game!.size.x * 40,
-            width: _bannerAd!.size.width.toDouble(),
-            height: _bannerAd!.size.height.toDouble(),
+            width: (widget.game?.camera.viewport.canvasSize?.x)!*0.95,
+            height: (widget.game?.camera.viewport.canvasSize?.y)!/14,
+            //height: _bannerAd!.size.height.toDouble(),
             child: AdWidget(ad: _bannerAd!),
           ),
         ),
