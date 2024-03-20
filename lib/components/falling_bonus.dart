@@ -30,7 +30,7 @@ class FallingBonus extends Component with HasGameRef<BrickBreakGame> {
   Future<void> onLoad() async {
     super.onLoad();
     //print('FALLING BONUS on LOAD');
-    bonusTimer = TimerComponent(period: 12, repeat: true, removeOnFinish: true, onTick: () {elapseTics += 1; getBonus();});
+    bonusTimer = TimerComponent(period: 5, repeat: true, removeOnFinish: true, onTick: () {elapseTics += 1; getBonus();});
     //print('ELAPSE TIME: $elapseTics');
     add(bonusTimer);
   }
@@ -115,8 +115,8 @@ class FallingBonus extends Component with HasGameRef<BrickBreakGame> {
     double vectorX = (Random().nextInt(30)+5).toDouble();
     double vectorY = (Random().nextInt(30)+10).toDouble();
 
-    var indexNumber = Random().nextInt(6)+1;
-    //var indexNumber = 1;
+    //var indexNumber = Random().nextInt(6)+1;
+    var indexNumber = 4;
     switch (indexNumber) {
       case 1:
         BonusBullets bonus = BonusBullets(size: const Size(1.8,1.8), position: Vector2(vectorX, vectorY),);

@@ -420,10 +420,10 @@ class _LoginPageState extends State<LoginPage> {
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: Row(
                 children: [
-                  Expanded(
-                      child:
-                      SquareTile(imagePath: 'assets/images/apple.png', onTap: () {}, game: widget.game, buttonText: 'Apple',)
-                  ),
+                  // Expanded(
+                  //     child:
+                  //     SquareTile(imagePath: 'assets/images/apple.png', onTap: () {}, game: widget.game, buttonText: 'Apple',)
+                  // ),
                 ],
               ),
             ),

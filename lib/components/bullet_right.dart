@@ -7,6 +7,7 @@ import 'package:initial_project/components/hud_bar.dart';
 import 'package:initial_project/components/obstacle.dart';
 
 import '../forge2d_game_world.dart';
+import 'brick2.dart';
 
 class BulletRight extends BodyComponent<BrickBreakGame> with ContactCallbacks {
 
@@ -42,6 +43,10 @@ class BulletRight extends BodyComponent<BrickBreakGame> with ContactCallbacks {
   @override
   void beginContact(Object other, Contact contact){
     if (other is Brick){
+      print('BRICK TO Bullet CONTACT');
+      destroy = true;
+    }
+    if (other is Brick2){
       print('BRICK TO Bullet CONTACT');
       destroy = true;
     }

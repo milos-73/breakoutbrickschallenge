@@ -211,7 +211,7 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
         gameRef.world.destroyBody(child.body);
       // FlameAudio.play(brickSound[Random().nextInt(2)]);
        if (game.audioSettings == AudioSettings.on)  {
-         print('BRICK SOUND');
+         //print('BRICK SOUND');
        FlameAudio.play('brick3.mp3');}
        remove(child);
          }
@@ -238,6 +238,32 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
         gameRef.world.destroyBody(child.body);
         remove(child);
       }
+
+
+      if (child is Brick3 && child.destroy){
+        for ( final fixture in [...child.body.fixtures]){
+          child.body.destroyFixture(fixture);
+        }
+        gameRef.world.destroyBody(child.body);
+        // FlameAudio.play(brickSound[Random().nextInt(2)]);
+        if (game.audioSettings == AudioSettings.on)  {
+          //print('BRICK SOUND');
+          FlameAudio.play('brick3.mp3');}
+        remove(child);
+      }
+
+      if (child is BrickCracked1 && child.destroy){
+        for ( final fixture in [...child.body.fixtures]){
+          child.body.destroyFixture(fixture);
+        }
+        gameRef.world.destroyBody(child.body);
+        // FlameAudio.play(brickSound[Random().nextInt(2)]);
+        if (game.audioSettings == AudioSettings.on)  {
+          //print('BRICK SOUND');
+          FlameAudio.play('brick3.mp3');}
+        remove(child);
+      }
+
 
       if (child is BrickCracked2 && child.destroy){
 
