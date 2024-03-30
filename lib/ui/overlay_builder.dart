@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -99,6 +101,7 @@ class OverlayBuilder {
     return WinGameOverlay(game: game, );
   }
   static Widget challengeGameOverOverlay(BuildContext context, BrickBreakGame game) {
+
     return ChallengeGameOverOverlay(game: game);
   }
   }
@@ -167,8 +170,6 @@ print('PRE GAME OVERLAY${widget.game.gameState}');
 }
 
 
-
-
 class LostLife extends StatefulWidget {
   final BrickBreakGame game;
 
@@ -229,7 +230,6 @@ class _LostLifeState extends State<LostLife> with SingleTickerProviderStateMixin
   }
 }
 
-
 class PostGameOverlay extends StatefulWidget {
   //final String message;
   final BrickBreakGame game;
@@ -244,12 +244,11 @@ class PostGameOverlay extends StatefulWidget {
   State<PostGameOverlay> createState() => _PostGameOverlayState();
 }
 
-
-
 class _PostGameOverlayState extends State<PostGameOverlay> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<Offset> _animation;
   bool _isBoxVisible = false;
+  Random random = new Random();
 
   static const int maxFailedLoadAttempts = 3;
   InterstitialAd? _interstitialAd;
@@ -450,15 +449,12 @@ class _PostGameOverlayState extends State<PostGameOverlay> with SingleTickerProv
         await FlameAudio.play('button3.mp3');
       }
       _showInterstitialAdMainMenu();
-      // widget.game.pauseEngine();
-      // widget.game.gameState = GameState.paused;
-      // if(widget.game.overlays.isActive('PostGame')){widget.game.overlays.remove('PostGame');}
-      // widget.game.overlays.add('MainMenu');
       },
-      onTapUp: (tap) {
+      onTapUp: (tap) async {
         setState(() {
           imgMainMenu = imgMainMenu1;
         });
+
       },
 
       onLongPress: () {
@@ -534,12 +530,6 @@ class _PostGameOverlayState extends State<PostGameOverlay> with SingleTickerProv
       }
 
       _showInterstitialAdPickLevel();
-      // widget.game.pauseEngine();
-      // widget.game.gameState = GameState.paused;
-      // if(widget.game.overlays.isActive('WinGame')){widget.game.overlays.remove('WinGame');}
-      // if(widget.game.overlays.isActive('LostLife')){widget.game.overlays.remove('LostLife');}
-      // print('--- PICK LEVEL BUTTON ---');
-      // game.overlays.add('LevelsMap');
     },
       onTapUp: (tap) {
         setState(() {
@@ -569,7 +559,6 @@ class _PostGameOverlayState extends State<PostGameOverlay> with SingleTickerProv
   }
 }
 
-
 class WinGameOverlay extends StatefulWidget {
   //final String message;
   final BrickBreakGame game;
@@ -583,8 +572,6 @@ class WinGameOverlay extends StatefulWidget {
   @override
   State<WinGameOverlay> createState() => _WinGameOverlayState();
 }
-
-
 
 class _WinGameOverlayState extends State<WinGameOverlay> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;

@@ -1,6 +1,9 @@
+import 'dart:math';
+
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import '../forge2d_game_world.dart';
@@ -21,6 +24,7 @@ class MainMenu extends StatefulWidget {
 class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin {
 
   BannerAd? _bannerAd;
+  Random random = new Random();
 
 DbTools dbTools = DbTools();
 
@@ -162,10 +166,10 @@ DbTools dbTools = DbTools();
                            _levelsButton(context, widget.game),
                            _boardButton(context, widget.game),
                            _myAccount(context, widget.game),
-                           // Padding(
-                           //   padding: const EdgeInsets.only(top: 10),
-                           //   child: _settings(context, widget.game),
-                           // ),
+                           Padding(
+                             padding: const EdgeInsets.only(top: 10),
+                             child: _settings(context, widget.game),
+                           ),
                            Padding(padding: const EdgeInsets.only(bottom: 40),)
                          ], )], ), ),
                    Padding(
@@ -195,6 +199,8 @@ DbTools dbTools = DbTools();
 Widget _challengeButton(BuildContext context, BrickBreakGame game) {
     return GestureDetector(
 
+
+
       onTapDown: (tap) async {
                setState(() {
         challenge = challenge2;
@@ -205,7 +211,10 @@ Widget _challengeButton(BuildContext context, BrickBreakGame game) {
 
         game.gameMode = GameMode.challenge;
         print('1 ---- GAME MODE FROM CHALLENGE BUTTON: ${game.gameMode}');
-        await widget.game.pickLevel(1);},
+        //await widget.game.pickLevel(1);
+               await widget.game.pickLevel(random.nextInt(5) + 1);
+
+      },
 
       onTapUp: (tap){setState(() {
         challenge = challenge1;

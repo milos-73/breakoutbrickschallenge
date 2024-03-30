@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
@@ -29,6 +31,7 @@ class _GamePausedMenuOverlayState extends State<GamePausedMenuOverlay> with Sing
   late AnimationController _animationController;
   late Animation<Offset> _animation;
   bool _isBoxVisible = false;
+  Random random = new Random();
 
   InterstitialAd? _interstitialAd;
   int _interstitialLoadAttempts = 1;
@@ -190,8 +193,6 @@ class _GamePausedMenuOverlayState extends State<GamePausedMenuOverlay> with Sing
 
       if(widget.game.pauseButtonState == PauseButtonState.startGame){widget.game.overlays.add('PreGame'); widget.game.gameState = GameState.ready; widget.game.resumeEngine();}
 
-      //if(widget.game.gameState == GameState.preGamePaused){widget.game.overlays.add('PreGame'); widget.game.gameState = GameState.ready;}
-
       if(game.ballState == BallState.lost){
         game.lostBallReset();
       }
@@ -284,7 +285,7 @@ class _GamePausedMenuOverlayState extends State<GamePausedMenuOverlay> with Sing
       currentGameLevel = game.prefs.getInt('currentPlayedLevelNumber') ?? 1;
       if(widget.game.overlays.isActive('GamePausedMenuOverlay')){widget.game.overlays.remove('GamePausedMenuOverlay');}
       if (game.gameMode == GameMode.levels){await widget.game.pickLevel(currentGameLevel);}
-      if (game.gameMode == GameMode.challenge){await widget.game.pickLevel(1);}
+      if (game.gameMode == GameMode.challenge){await widget.game.pickLevel(random.nextInt(5) + 1);}
 
     },
       onTapUp: (tap) {

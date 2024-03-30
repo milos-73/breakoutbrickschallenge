@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
@@ -26,6 +28,7 @@ class _ChallengeGameOverOverlayState extends State<ChallengeGameOverOverlay> wit
   late AnimationController _animationController;
   late Animation<Offset> _animation;
   bool _isBoxVisible = false;
+  Random random = new Random();
 
   static const int maxFailedLoadAttempts = 3;
   InterstitialAd? _interstitialAd;
@@ -93,7 +96,7 @@ class _ChallengeGameOverOverlayState extends State<ChallengeGameOverOverlay> wit
 
   Future<void> _replyOverlays() async {
     if(widget.game.overlays.isActive('ChallengeGameOverOverlay')){widget.game.overlays.remove('ChallengeGameOverOverlay');}
-    await widget.game.pickLevel(1);
+    await widget.game.pickLevel(random.nextInt(5) + 1);
     }
 
   void _showInterstitialAdMainMenu() {
@@ -194,10 +197,6 @@ class _ChallengeGameOverOverlayState extends State<ChallengeGameOverOverlay> wit
         await FlameAudio.play('button3.mp3');
       }
       _showInterstitialAdMainMenu();
-      // widget.game.pauseEngine();
-      // widget.game.gameState = GameState.paused;
-      // if(widget.game.overlays.isActive('ChallengeGameOverOverlay')){widget.game.overlays.remove('ChallengeGameOverOverlay');}
-      // widget.game.overlays.add('MainMenu');
     },
       onTapUp: (tap) {
         setState(() {
@@ -228,7 +227,9 @@ class _ChallengeGameOverOverlayState extends State<ChallengeGameOverOverlay> wit
   }
 
   Widget _resetButton(BuildContext context, BrickBreakGame game) {
-    return GestureDetector(onTapDown: (tap) async {
+    return GestureDetector(
+
+      onTapDown: (tap) async {
       setState(() {
         reply = reply2;
       });
@@ -236,14 +237,15 @@ class _ChallengeGameOverOverlayState extends State<ChallengeGameOverOverlay> wit
         await FlameAudio.play('button3.mp3');
       }
       _showInterstitialAdReplay();
-      //widget.game.resetGame();
-      // if(widget.game.overlays.isActive('ChallengeGameOverOverlay')){widget.game.overlays.remove('ChallengeGameOverOverlay');}
-      // await widget.game.pickLevel(1);
-    },
-      onTapUp: (tap) {
+
+
+        },
+
+      onTapUp: (tap) async {
         setState(() {
           reply = reply1;
         });
+
       },
       onLongPress: () {
         setState(() {

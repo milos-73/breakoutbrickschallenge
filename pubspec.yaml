@@ -48,6 +48,7 @@ dependencies:
   cloud_firestore: ^4.13.0
   firebase_dynamic_links: ^5.4.4
   google_mobile_ads: ^3.1.0
+  url_launcher: ^6.1.6
 #  flame_splash_screen: ^0.1.0
 
   # The following adds the Cupertino Icons font to your application.

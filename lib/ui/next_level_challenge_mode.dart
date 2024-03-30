@@ -1,4 +1,6 @@
 
+import 'dart:math';
+
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -24,6 +26,7 @@ class _NextLevelChallengeModeOverlayState extends State<NextLevelChallengeModeOv
   late AnimationController _animationController;
   late Animation<Offset> _animation;
   bool _isBoxVisible = false;
+  Random random = new Random();
 
   static const int maxFailedLoadAttempts = 3;
   InterstitialAd? _interstitialAd;
@@ -97,7 +100,7 @@ class _NextLevelChallengeModeOverlayState extends State<NextLevelChallengeModeOv
   Future<void> _replyOverlays() async {
     if(widget.game.overlays.isActive('NextLevelChallengeModeOverlay')){widget.game.overlays.remove('NextLevelChallengeModeOverlay');}
     widget.game.resetGame();
-    await widget.game.pickLevel(1);
+    await widget.game.pickLevel(random.nextInt(5) + 1);
   }
 
   Future<void> _nextLevelOverlays() async {

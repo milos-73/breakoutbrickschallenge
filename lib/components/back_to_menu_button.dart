@@ -100,26 +100,6 @@ class BackToMenuButton extends SpriteComponent with Tappable, HasGameRef<BrickBr
 
   _showInterstitialAd();
 
-  // if (game.audioSettings == AudioSettings.on)  {
-  // FlameAudio.play('button3.mp3');}
-  // savedValues.saveLevelInProgressNumber(gameRef.currentPlayedLevelNumber);
-  //
-  // if (gameRef.overlays.isActive('PreGame')){gameRef.overlays.remove('PreGame');}
-  // if (gameRef.overlays.isActive('LostLife')){gameRef.overlays.remove('LostLife');}
-  // if (gameRef.overlays.isActive('GamePausedMenuOverlay')){gameRef.overlays.remove('GamePausedMenuOverlay');}
-  // if (gameRef.overlays.isActive('ChallengeGameOverOverlay')){gameRef.overlays.remove('ChallengeGameOverOverlay');}
-  // if (gameRef.overlays.isActive('NextLevelChallengeModeOverlay')){gameRef.overlays.remove('NextLevelChallengeModeOverlay');}
-  // if (gameRef.overlays.isActive('WinGame')){gameRef.overlays.remove('WinGame');}
-  // if (gameRef.overlays.isActive('LostLife')){gameRef.overlays.remove('LostLife');}
-  //
-  // if(gameRef.gameMode == GameMode.challenge){gameRef.fallingPoints?.resetFallingPoints();}
-  // if(gameRef.gameMode == GameMode.levels){gameRef.fallingStars?.resetFallingStars();}
-  //
-  // gameRef.pauseEngine();
-  // gameRef.gameState = GameState.paused;
-  //
-  // gameRef.overlays.add('MainMenu');
-
   info.handled = true;
   return true;
  }

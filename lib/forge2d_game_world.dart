@@ -430,52 +430,6 @@ final Tween<double> noise = Tween(begin: -1, end: 1);
     return false;
   }
 
-//   Future<void>loadLevelDataForLocalUse() async {
-//
-//   starsPerLevelInStringLocal = prefs.getString('starsPerLevelInString' ?? '');
-//
-//   if (starsPerLevelInStringLocal != null || starsPerLevelInStringLocal != '') {
-//     starsPerLevelInStringListLocal = starsPerLevelInStringLocal!.split(',');
-//
-//       for (var i in starsPerLevelInStringListLocal) {
-//         int? value = int.tryParse(i!);
-//
-//         starsPerLevelInIntListLocal.add(value);
-//       }
-//   } else {starsPerLevelInIntListLocal = [];
-//   }
-// }
-//
-// Future<void>downloadLevelData() async {
-//
-//     print('keyID: ${keyID}');
-//
-//     starsPerLevelInStringDB = await dbTools.getAllLevelsStarsString(keyID!);
-//
-//   if(starsPerLevelInStringDB != 'error'){
-//
-//   starsPerLevelInStringListLocal = starsPerLevelInStringDB!.split(',');
-//
-//   int counter = 0;
-//   int numberOfAllStars = 0;
-//
-//   for (var i in starsPerLevelInStringListLocal) {
-//     int? value = int.tryParse(i!);
-//
-//     starsPerLevelInIntListLocal.add(value);
-//     prefs.setInt('numberOfStars$counter', value!);
-//     counter = counter + 1;
-//     numberOfAllStars = numberOfAllStars + value;
-//     syncStatus = SyncStatus.ok;
-//
-//   }
-//   prefs.setInt('lastFinishedLevel', counter);
-//   lastFinishedLevel = counter;
-//   totalStars = numberOfAllStars;
-//
-// }else  {syncStatus = SyncStatus.error;}
-// }
-
 Future<void>uploadLevelData() async {
 
   starsPerLevelInStringLocal = prefs.getString('starsPerLevelInString');

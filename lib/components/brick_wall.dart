@@ -367,11 +367,6 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
     removeAll(children);
     currentLevelNumber = i;
 
-    // children.register<Brick>();
-    // children.register<Brick3>();
-    // children.register<BrickCracked1>();
-    // children.register<BrickCracked2>();
-
     await buildWall(i);
 
       }
