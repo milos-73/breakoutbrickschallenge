@@ -48,9 +48,13 @@ DbTools dbTools = DbTools();
   String logIn1 = 'assets/images/buttons/myAccountButton.png';
   String logIn2 = 'assets/images/buttons/myAccountButton_hover.png';
 
-  late String settings;
-  String settings1 = 'assets/images/buttons/settingsButton.png';
-  String settings2 = 'assets/images/buttons/settingsButton_hover.png';
+  // late String settings;
+  // String settings1 = 'assets/images/buttons/settingsButton.png';
+  // String settings2 = 'assets/images/buttons/settingsButton_hover.png';
+
+  late String about;
+  String about1 = 'assets/images/buttons/infoButton.png';
+  String about2 = 'assets/images/buttons/infoButton_hover.png';
 
   @override
   void initState() {
@@ -73,7 +77,8 @@ DbTools dbTools = DbTools();
     levels = levels1;
     board = board1;
     logIn = logIn1;
-    settings = settings1;
+    //settings = settings1;
+    about = about1;
 
     BannerAd(
       adUnitId: AdHelper.bannerAdUnitId2,
@@ -168,7 +173,8 @@ DbTools dbTools = DbTools();
                            _myAccount(context, widget.game),
                            Padding(
                              padding: const EdgeInsets.only(top: 10),
-                             child: _settings(context, widget.game),
+                             // child: _settings(context, widget.game),
+                             child: _about(context, widget.game),
                            ),
                            Padding(padding: const EdgeInsets.only(bottom: 40),)
                          ], )], ), ),
@@ -318,39 +324,6 @@ Widget _challengeButton(BuildContext context, BrickBreakGame game) {
             board = board1;
           });
         }
-
-
-        // DatabaseReference dbRef = FirebaseDatabase.instance.ref("leaderboard/9ROOfcPvEGRwVP87b9mBi2KhbMe2");
-        //
-        //
-        // await dbRef.update({
-        //   'name': 'milossalus',
-        //   'points': '300',
-        //   'userName' : 'Milos.2023'
-        // });
-
-
-        // DatabaseReference dbRef = FirebaseDatabase.instance.ref("leaderboard");
-        //
-        //
-        // await dbRef.update({
-        //   'keyId': '7ROOfcPvEGRwVP87b9mBi5KhbMe4',
-        //   'name': 'Miloš Sálus',
-        //   'points': '300',
-        //   'userName' : 'Milos.1973'
-        // });
-
-
-       // if(await dbTools.checkUserName('Milos.74') == true){
-       // print('USER ALREADY EXISTS');
-       // } else {print('USER OK');}
-
-       // DatabaseReference dbRef = FirebaseDatabase.instance.ref();
-       // var existingUser = dbRef..child('leaderboard').orderByChild('userName').equalTo('Milos.74').limitToFirst(1).once().then((value) => print('EXISTING USER: ${value.snapshot.exists}'));
-
-     //DatabaseReference child = dbRef.child("userName");
-
-        //print('EXISTING USER: ${existingUser.key}');
       },
 
       onLongPress: () {
@@ -421,42 +394,80 @@ Widget _challengeButton(BuildContext context, BrickBreakGame game) {
   }
 
 
-  Widget _settings(BuildContext context, BrickBreakGame game) {
+  // Widget _settings(BuildContext context, BrickBreakGame game) {
+  //   return GestureDetector(
+  //
+  //     onTapDown: (tap) async {
+  //       setState(() {
+  //         settings = settings2;
+  //       });
+  //
+  //     },
+  //
+  //     onTapUp: (tap){setState(() {
+  //       settings = settings1;
+  //     });},
+  //
+  //     onLongPress: () {
+  //       setState(() {
+  //         print('LONG PRESS');
+  //         settings = settings2;
+  //       });
+  //     },
+  //     onLongPressEnd: (tap) {
+  //       setState(() {
+  //         print('onLongPressStart');
+  //         settings = settings1;
+  //       });
+  //     },
+  //     onLongPressDown: (tap) {
+  //       setState(() {
+  //         print('onLongPressDown');
+  //         settings = settings2;
+  //       });
+  //     },
+  //
+  //     child: Image.asset(settings, height: (widget.game.camera.viewport.canvasSize?.y)!/14.5,),
+  //   );
+  // }
+
+  Widget _about(BuildContext context, BrickBreakGame game) {
     return GestureDetector(
 
       onTapDown: (tap) async {
         setState(() {
-          settings = settings2;
+          about = about2;
         });
 
       },
 
       onTapUp: (tap){setState(() {
-        settings = settings1;
+        about = about1;
       });},
 
       onLongPress: () {
         setState(() {
           print('LONG PRESS');
-          settings = settings2;
+          about = about2;
         });
       },
       onLongPressEnd: (tap) {
         setState(() {
           print('onLongPressStart');
-          settings = settings1;
+          about = about1;
         });
       },
       onLongPressDown: (tap) {
         setState(() {
           print('onLongPressDown');
-          settings = settings2;
+          about = about2;
         });
       },
 
-      child: Image.asset(settings, height: (widget.game.camera.viewport.canvasSize?.y)!/14.5,),
+      child: Image.asset(about, height: (widget.game.camera.viewport.canvasSize?.y)!/14.5,),
     );
   }
+
 
    Future<void> _pleaseLogInMessage() async {
     return showDialog<void>(

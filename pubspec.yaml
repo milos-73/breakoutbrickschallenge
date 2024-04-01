@@ -192,6 +192,8 @@ flutter:
     - assets/images/objects/object2.png
     - assets/images/explosion/
     - assets/images/stars/
+    - assets/images/buttons/infoButton.png
+    - assets/images/buttons/infoButton_hover.png
     - assets/images/buttons/mainMenuButton.png
     - assets/images/buttons/nextLevelButton.png
     - assets/images/buttons/nextLevelButton_hover.png
