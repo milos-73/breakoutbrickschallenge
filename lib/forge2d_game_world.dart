@@ -559,16 +559,18 @@ Future<void> resetGameData() async {
       for (var i in starsPerLevelInStringListLocal) {
 
         print('++++++++++ i ++++++++++ ${i}');
-        int? value = int.tryParse(i!);
+        int? value = int.tryParse(i!) ?? 0;
 
         print('++++++++++ value ++++++++++ ${value}');
 
         starsPerLevelInIntListLocal.add(value);
-        prefs.setInt('numberOfStars${counter + 1}', value!);
-        counter = counter + 1;
+        prefs.setInt('numberOfStars${counter + 1}', value);
+        if (counter != 0){counter = counter + 1;};
         numberOfAllStars = numberOfAllStars + value;
 
       }
+
+      print('=================== ${counter} ===================');
       syncStatus = SyncStatus.ok;
       prefs.setInt('lastFinishedLevel', counter);
       localLastFinishedLevel = counter;
@@ -714,6 +716,10 @@ Future<void> resetGameData() async {
       });
     }
     if (lastFinishedLevelDb! < localLastFinishedLevel!){
+      prefs.setInt('lastFinishedLevel', lastFinishedLevelDb!);
+    }
+
+    if (lastFinishedLevelDb! == localLastFinishedLevel!){
       prefs.setInt('lastFinishedLevel', lastFinishedLevelDb!);
     }
 

@@ -231,6 +231,12 @@ class _LoginPageState extends State<LoginPage> {
                       child: ElevatedButton(
                         onPressed: () async {
                           await widget.game.resetGameData();
+                          setState(() {
+                            widget.game.totalStars = 0;
+                            widget.game.publicTopTotalPoints = 0;
+                            widget.game.localLastFinishedLevel = 0;
+
+                          });
                         },
                         style: ElevatedButton.styleFrom(backgroundColor: Colors.transparent,side: BorderSide(width: 1, color: HexColor('#ffca72').withOpacity(0.7))),
                         child: const Text(
