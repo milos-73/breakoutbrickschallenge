@@ -169,6 +169,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         setState(() {
           error = 0;
         });
+        print('EMAIL AUTH: ${email}');
       } on FirebaseAuthException catch (e) {print('***e***:${e.code}');
         if (e.code == 'weak-password'){
           setState(() {
