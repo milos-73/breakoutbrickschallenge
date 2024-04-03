@@ -565,7 +565,7 @@ Future<void> resetGameData() async {
 
         starsPerLevelInIntListLocal.add(value);
         prefs.setInt('numberOfStars${counter + 1}', value);
-        if (counter != 0){counter = counter + 1;};
+        if (value != 0){counter = counter + 1;};
         numberOfAllStars = numberOfAllStars + value;
 
       }

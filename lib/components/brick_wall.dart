@@ -48,7 +48,7 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
     children.register<Brick3>();
     children.register<BrickCracked1>();
     children.register<BrickCracked2>();
-   }
+  }
 
   @override
   Future<void> update(double dt) async {
@@ -63,7 +63,7 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
 
     if (numberOfBrick.isEmpty && numberOfBrick3.isEmpty && numberOfBrickCracked1.isEmpty && numberOfBrickCracked2.isEmpty && gameRef.gameState == GameState.running){
       if (game.audioSettings == AudioSettings.on)  {
-      FlameAudio.play('levelUp1.mp3');}
+        FlameAudio.play('levelUp1.mp3');}
 
       gameRef.particleState = ParticleState.off;
       gameRef.cannonBall?.resetCannonBall();
@@ -71,7 +71,7 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
 
       if (gameRef.gameMode == GameMode.challenge) {
 
-       ///Writes TOTAL CURRENT GAME POINTS to existing TOTAL POINTS IN CURRENT GAME.
+        ///Writes TOTAL CURRENT GAME POINTS to existing TOTAL POINTS IN CURRENT GAME.
         //gameRef.totalPointsInCurrentGame = gameRef.totalPointsInCurrentGame + gameRef.levelPoints;
         await gameRef.prefs.setInt('totalPointsInCurrentGame', gameRef.totalPointsInCurrentGame);
 
@@ -116,7 +116,7 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
 
       if (gameRef.gameMode == GameMode.levels){
 
-      lastFinishedLevel = await savedValues.getLastFinishedLevel();
+        lastFinishedLevel = await savedValues.getLastFinishedLevel();
 
         if (currentLevelNumber! <= lastFinishedLevel){
 
@@ -139,7 +139,7 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
 
             print('gameRef.loggedIn: ${gameRef.loggedIn}');
 
-           if(gameRef.loggedIn != null){
+            if(gameRef.loggedIn != null){
 
               DatabaseReference dbRef = FirebaseDatabase.instance.ref().child('leaderboard/${gameRef.keyID}');
 
@@ -148,14 +148,15 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
                 'stars' : gameRef.totalStars,
                 'userName' : gameRef.publicUserProfileName,
               });
-              } else {
+            } else {
               print('PLEASE LOG IN to upload game DATA');}
-            }
-          gameRef.gameState = GameState.won;
           }
+          gameRef.gameState = GameState.won;
+        }
 
         if (currentLevelNumber == lastFinishedLevel + 1) {
           await gameRef.prefs.setInt('lastFinishedLevel', currentLevelNumber!);
+          gameRef.localLastFinishedLevel = currentLevelNumber;
 
           print('currentGameLevelStars***0***: ${gameRef.currentGameLevelStars}');
           print('starsPerLevelInIntListLocal***0***: ${gameRef.starsPerLevelInIntListLocal}');
@@ -172,15 +173,15 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
 
           print('gameRef.starsPerLevelInStringLocal: ${gameRef.starsPerLevelInStringLocal}');
 
-              int totalStars = gameRef.totalStars! + gameRef.currentGameLevelStars;
+          int totalStars = gameRef.totalStars! + gameRef.currentGameLevelStars;
 
           print('totalStars2: ${totalStars}');
 
-              await gameRef.prefs.setInt('numberOfStars$currentLevelNumber', gameRef.currentGameLevelStars);
-              await gameRef.prefs.setString('starsPerLevelInString', gameRef.starsPerLevelInStringLocal!);
-              await gameRef.prefs.setInt('totalStars', gameRef.totalStars! + gameRef.currentGameLevelStars);
+          await gameRef.prefs.setInt('numberOfStars$currentLevelNumber', gameRef.currentGameLevelStars);
+          await gameRef.prefs.setString('starsPerLevelInString', gameRef.starsPerLevelInStringLocal!);
+          await gameRef.prefs.setInt('totalStars', gameRef.totalStars! + gameRef.currentGameLevelStars);
 
-              gameRef.totalStars = totalStars;
+          gameRef.totalStars = totalStars;
 
           print('//////////////starsPerLevelInIntListLocal-2/////////////: ${gameRef.starsPerLevelInIntListLocal}');
 
@@ -189,32 +190,32 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
 
             DatabaseReference dbRef = FirebaseDatabase.instance.ref().child('leaderboard/${gameRef.keyID}');
 
-          await dbRef.update({
-            'listOfStarsPerLevel': gameRef.starsPerLevelInStringLocal,
-            'stars' : gameRef.totalStars,
-            'userName' : gameRef.publicUserProfileName,
-            'lastFinishedLevel' : currentLevelNumber
-          });}else{
+            await dbRef.update({
+              'listOfStarsPerLevel': gameRef.starsPerLevelInStringLocal,
+              'stars' : gameRef.totalStars,
+              'userName' : gameRef.publicUserProfileName,
+              'lastFinishedLevel' : currentLevelNumber
+            });}else{
             print('PLEASE LOG IN to upload game DATA');}
-          }
-          gameRef.gameState = GameState.won;
-                   }
+        }
+        gameRef.gameState = GameState.won;
+      }
 
-   }
+    }
 
 
     for (final child in [... children]){
       if (child is Brick && child.destroy){
-       for ( final fixture in [...child.body.fixtures]){
+        for ( final fixture in [...child.body.fixtures]){
           child.body.destroyFixture(fixture);
         }
         gameRef.world.destroyBody(child.body);
-      // FlameAudio.play(brickSound[Random().nextInt(2)]);
-       if (game.audioSettings == AudioSettings.on)  {
-         //print('BRICK SOUND');
-       FlameAudio.play('brick3.mp3');}
-       remove(child);
-         }
+        // FlameAudio.play(brickSound[Random().nextInt(2)]);
+        if (game.audioSettings == AudioSettings.on)  {
+          print('BRICK SOUND');
+          FlameAudio.play('brick3.mp3');}
+        remove(child);
+      }
 
       if (child is Brick3 && child.crack1){
 
@@ -239,42 +240,16 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
         remove(child);
       }
 
-
-      if (child is Brick3 && child.destroy){
-        for ( final fixture in [...child.body.fixtures]){
-          child.body.destroyFixture(fixture);
-        }
-        gameRef.world.destroyBody(child.body);
-        // FlameAudio.play(brickSound[Random().nextInt(2)]);
-        if (game.audioSettings == AudioSettings.on)  {
-          //print('BRICK SOUND');
-          FlameAudio.play('brick3.mp3');}
-        remove(child);
-      }
-
-      if (child is BrickCracked1 && child.destroy){
-        for ( final fixture in [...child.body.fixtures]){
-          child.body.destroyFixture(fixture);
-        }
-        gameRef.world.destroyBody(child.body);
-        // FlameAudio.play(brickSound[Random().nextInt(2)]);
-        if (game.audioSettings == AudioSettings.on)  {
-          //print('BRICK SOUND');
-          FlameAudio.play('brick3.mp3');}
-        remove(child);
-      }
-
-
       if (child is BrickCracked2 && child.destroy){
 
         for (final fixture in [...child.body.fixtures]){
-         child.body.destroyFixture(fixture);
+          child.body.destroyFixture(fixture);
         }
         gameRef.world.destroyBody(child.body);
         remove(child);
       }
     }
-        super.update(dt);
+    super.update(dt);
   }
 
   Future<void> buildWall(int levelNumber) async {
@@ -282,41 +257,41 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
     if(gameRef.gameMode == GameMode.levels){
       List brickList = brickList_1[levelNumber - 1];
 
-    var i = 0;
-    for (var r = 0; r < brickList.length; r++){
-      if (brickList == []){continue;}
-      for (var c = 0; c < brickList[r].length; c++) {
-        var brick = brickList[r][c] > 83 ? await getBrick(brickList[r][c]) : brickList[r][c];
+      var i = 0;
+      for (var r = 0; r < brickList.length; r++){
+        if (brickList == []){continue;}
+        for (var c = 0; c < brickList[r].length; c++) {
+          var brick = brickList[r][c] > 83 ? await getBrick(brickList[r][c]) : brickList[r][c];
 
-        if (brick == '' || brick == '10' || brick == '0') {continue;}
+          if (brick == '' || brick == '10' || brick == '0') {continue;}
 
-        if (brickList[r][c] > 10 && brickList[r][c] <= 83){await add(Brick(spriteName: 'bricks4/b${brickList[r][c]}.png',size: brickSize,position: Vector2((c * brickSize.width) + 2.45, ((r * brickSize.height) + 20))));i = i + 1;}
-        if (brickList[r][c] > 93 && brickList[r][c] <= 99 ){await add(Brick2(spriteName: 'bricks3/$brick',size: brickSize,position: Vector2((c * brickSize.width) + 2.45, ((r * brickSize.height) + 20))));}
-        if (brickList[r][c] > 98 ){await add(Brick3(spriteName: 'bricks3/$brick',size: brickSize,position: Vector2((c * brickSize.width) + 2.45, ((r * brickSize.height) + 20))));i = i + 3;}
+          if (brickList[r][c] > 10 && brickList[r][c] <= 83){await add(Brick(spriteName: 'bricks4/b${brickList[r][c]}.png',size: brickSize,position: Vector2((c * brickSize.width) + 2.45, ((r * brickSize.height) + 20))));i = i + 1;}
+          if (brickList[r][c] > 93 && brickList[r][c] <= 99 ){await add(Brick2(spriteName: 'bricks3/$brick',size: brickSize,position: Vector2((c * brickSize.width) + 2.45, ((r * brickSize.height) + 20))));}
+          if (brickList[r][c] > 98 ){await add(Brick3(spriteName: 'bricks3/$brick',size: brickSize,position: Vector2((c * brickSize.width) + 2.45, ((r * brickSize.height) + 20))));i = i + 3;}
 
-       }
-    }
-    //gameRef.starInterval = i~/5;
-    gameRef.starInterval = (i - (i~/5))~/5;
-    gameRef.numberOfBrickHitsLeft =  i - (i~/5);
+        }
+      }
+      //gameRef.starInterval = i~/5;
+      gameRef.starInterval = (i - (i~/5))~/5;
+      gameRef.numberOfBrickHitsLeft =  i - (i~/5);
     }
     else{ List brickList = brickList_2[levelNumber - 1];
 
-        for (var r = 0; r < brickList.length; r++){
-          if (brickList == []){continue;}
+    for (var r = 0; r < brickList.length; r++){
+      if (brickList == []){continue;}
 
-          for (var c = 0; c < brickList[r].length; c++) {
+      for (var c = 0; c < brickList[r].length; c++) {
 
-            var brick = brickList[r][c] > 83 ? await getBrick(brickList[r][c]) : brickList[r][c];
-            if (brick == '' || brick == '10' || brick == '0') {continue;}
+        var brick = brickList[r][c] > 83 ? await getBrick(brickList[r][c]) : brickList[r][c];
+        if (brick == '' || brick == '10' || brick == '0') {continue;}
 
-            if (brickList[r][c] > 10 && brickList[r][c] <= 83){await add(Brick(spriteName: 'bricks4/b${brickList[r][c]}.png',size: brickSize,position: Vector2((c * brickSize.width) + 2.45, ((r * brickSize.height) + 20))));}
-            if (brickList[r][c] > 93 && brickList[r][c] <= 99 ){await add(Brick2(spriteName: 'bricks3/$brick',size: brickSize,position: Vector2((c * brickSize.width) + 2.45, ((r * brickSize.height) + 20))));}
-            if (brickList[r][c] > 98 ){await add(Brick3(spriteName: 'bricks3/$brick',size: brickSize,position: Vector2((c * brickSize.width) + 2.45, ((r * brickSize.height) + 20))));}
-          }
-        }
+        if (brickList[r][c] > 10 && brickList[r][c] <= 83){await add(Brick(spriteName: 'bricks4/b${brickList[r][c]}.png',size: brickSize,position: Vector2((c * brickSize.width) + 2.45, ((r * brickSize.height) + 20))));}
+        if (brickList[r][c] > 93 && brickList[r][c] <= 99 ){await add(Brick2(spriteName: 'bricks3/$brick',size: brickSize,position: Vector2((c * brickSize.width) + 2.45, ((r * brickSize.height) + 20))));}
+        if (brickList[r][c] > 98 ){await add(Brick3(spriteName: 'bricks3/$brick',size: brickSize,position: Vector2((c * brickSize.width) + 2.45, ((r * brickSize.height) + 20))));}
       }
-       }
+    }
+    }
+  }
 
   ///CHOOSE BRICK
   Future<String> getBrick(int brickType) async {
@@ -367,7 +342,12 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
     removeAll(children);
     currentLevelNumber = i;
 
+    // children.register<Brick>();
+    // children.register<Brick3>();
+    // children.register<BrickCracked1>();
+    // children.register<BrickCracked2>();
+
     await buildWall(i);
 
-      }
+  }
 }
