@@ -2,14 +2,20 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../forge2d_game_world.dart';
+
 class FriendsListBuilder extends StatefulWidget {
-  const FriendsListBuilder({Key? key}) : super(key: key);
+
+  final BrickBreakGame game;
+
+  FriendsListBuilder({required this.game, Key? key}) : super(key: key);
 
   @override
   State<FriendsListBuilder> createState() => _FriendsListBuilderState();
 }
 
 final dbRef =  FirebaseDatabase.instance.ref().child('leaderboard').orderByChild('friends/7ROOfcPvEGRwVP87b9mBi5KhbMe2').equalTo('7ROOfcPvEGRwVP87b9mBi5KhbMe2');
+//final dbRef =  FirebaseDatabase.instance.ref().child('leaderboard').orderByChild('friends/${game.keyID}').equalTo(widget.game.keyID);
 
 List<Map<dynamic, dynamic>> list = [];
 List<Map> friends = [];

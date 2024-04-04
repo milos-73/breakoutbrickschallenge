@@ -47,7 +47,7 @@ class _SentFriendshipRequestState extends State<SentFriendshipRequest> {
             children: [
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text('${leaderBoard['points']}',style: TextStyle(color: Colors.orange.shade200),),
+                  Text('${leaderBoard['points']} / ${leaderBoard['stars']}',style: TextStyle(color: Colors.orange.shade200),),
                   const SizedBox(width: 15,),
                   GestureDetector(onTap: () {removeSentRequest(friendDetails: leaderBoard, userKey: widget.game.keyID );},
                     child: FaIcon(FontAwesomeIcons.x,color: HexColor('#72a7ff'),size: 15,),),

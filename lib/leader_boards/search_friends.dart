@@ -20,7 +20,7 @@ enum FriendIsExisting {
 
 class SearchFriends extends StatefulWidget {
 
-  BrickBreakGame game;
+  final BrickBreakGame game;
   SearchFriends({required this.game, Key? key}) : super(key: key);
 
   @override
@@ -106,7 +106,7 @@ class _SearchFriendsState extends State<SearchFriends> {
                        children: [
                          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.center,
                            children: [
-                             Text('${leaderBoard['points']}',style: TextStyle(color: Colors.orange.shade200),),
+                             Text('${leaderBoard['points']} / ${leaderBoard['stars']}',style: TextStyle(color: Colors.orange.shade200),),
                              const SizedBox(width: 15,),
                                GestureDetector(onTap: () {
                                  requestFriendship(friendDetails: leaderBoard, userKey: widget.game.keyID );

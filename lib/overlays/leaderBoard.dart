@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:initial_project/forge2d_game_world.dart';
 import 'package:initial_project/leader_boards/sent_friendship_request.dart';
+import 'package:initial_project/leader_boards/top20Levels_friends.dart';
 import 'package:initial_project/leader_boards/top20_board.dart';
 import 'package:initial_project/services/fetch_data.dart';
 
@@ -11,7 +12,7 @@ import '../leader_boards/my_friends.dart';
 import '../leader_boards/recieved_friendship_requests.dart';
 import '../leader_boards/search_friends.dart';
 import '../leader_boards/to20levels_board.dart';
-import '../leader_boards/top20Levels_friends.dart';
+
 import '../leader_boards/top20challenege_friends.dart';
 
 
@@ -94,8 +95,8 @@ class _LeaderBoardState extends State<LeaderBoard> {
                       child: Column(mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           //leaderBoard == LeaderBoardScreen.top20 ? const Expanded(child: FetchData())
-                          leaderBoard == LeaderBoardScreen.top20challenge ? const Flexible(child: FriendsListBuilder())
-                              : leaderBoard == LeaderBoardScreen.top20stars ? const Flexible(child: Top20LevelsFriends())
+                          leaderBoard == LeaderBoardScreen.top20challenge ? Flexible(child: Top20challengeFriends(game: widget.game))
+                              : leaderBoard == LeaderBoardScreen.top20stars ? Flexible(child: Top20LevelsFriends(game: widget.game))
                               : leaderBoard == LeaderBoardScreen.friendsList ? Flexible(child: SearchFriends(game: widget.game))
                               : leaderBoard == LeaderBoardScreen.friendRequests ? Flexible(child: SentFriendshipRequest(game: widget.game))
                               : const Center(child: Text('List of Users',style: TextStyle(color: Colors.white),),),

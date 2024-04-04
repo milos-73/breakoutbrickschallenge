@@ -1,72 +1,95 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:initial_project/forge2d_game_world.dart';
-import 'list_of_friends.dart';
 
-class Top20LevelsBoardFriends extends StatefulWidget {
+class Top20LevelsFriends extends StatefulWidget {
 
-  BrickBreakGame game;
+  final BrickBreakGame game;
 
-  Top20LevelsBoardFriends({required this.game, Key? key}) : super(key: key);
+  Top20LevelsFriends({required this.game, Key? key}) : super(key: key);
 
   @override
-  State<Top20LevelsBoardFriends> createState() => _Top20LevelsBoardFriendsState();
+  State<Top20LevelsFriends> createState() => _Top20LevelsFriendsState();
 }
 
-Map snapshotMapMap = {};
-Map filteredMap = {};
+class _Top20LevelsFriendsState extends State<Top20LevelsFriends> {
 
-DatabaseReference reference = FirebaseDatabase.instance.ref().child('leaderBoard');
-
-
-class _Top20LevelsBoardFriendsState extends State<Top20LevelsBoardFriends> {
-
+  List<Map<dynamic, dynamic>> list = [];
+  List<Map> friends = [];
+  late Query dbRef;
 
   @override
   void initState() {
+    dbRef =  FirebaseDatabase.instance.ref().child('leaderboard').orderByChild('friends/${widget.game.keyID}').equalTo('${widget.game.keyID}');
     super.initState();
-  }
-
-  Widget listItem({required Map leaderBoard}) {
-    return Container(
-      margin: const EdgeInsets.all(6),
-      padding: const EdgeInsets.only(top: 6,bottom: 6,left: 15,right: 15),
-      height: 40,
-      color: Colors.black26.withOpacity(0.5),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            children: [
-              Text('${leaderBoard['userName']}',style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w400, color: Colors.white),),
-            ],),
-          Column(children: [
-            Text('${leaderBoard['stars'] ?? 0}',style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w400, color: Colors.white)),
-          ],),
-        ],
-      ),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
+    print('IN STERAMBUILDER');
+    return FutureBuilder(
+        future: dbRef.once(),
+        builder: (context, AsyncSnapshot<DatabaseEvent> snapshot) {
 
-    Query dbRef = FirebaseDatabase.instance.ref().child('leaderboard').orderByChild('friends/${widget.game.keyID}').equalTo(widget.game.keyID);
-    const FriendsListBuilder();
+          if(snapshot.data?.snapshot.value != null){
 
-    return FirebaseAnimatedList(shrinkWrap: true, reverse: true,
+            if (snapshot.hasData) {
+              print('SNAPSHOT: ${snapshot.data?.snapshot.value}');
+              list.clear();
+              friends.clear();
+              Map<dynamic,dynamic> values = snapshot.data?.snapshot.value as Map<dynamic, dynamic>;
+              values.forEach((key, value) {
+                list.add(values);
 
-      query: dbRef,
-      itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index) {
+              });
 
-        Map leaderBoard = snapshot.value as Map<dynamic,dynamic>;
-        leaderBoard['key'] = snapshot.key;
+              for(var i = 0; i < list.length; i++){
+                friends.add({'userName': list[i].values.elementAt(i)['userName'], 'stars' : list[i].values.elementAt(i)['stars']});
+              }
+              friends.sort((a,b) => (b['stars']).compareTo(a['stars']));
 
-        List<Map<dynamic, dynamic>> filteredNewMap = [];
+              if (list.isNotEmpty) {
+                return ListView.builder(
 
-        return listItem(leaderBoard: leaderBoard);
-      },
+                  shrinkWrap: true,
+                  itemCount: friends.length,
+                  itemBuilder: (BuildContext context, int index){
+                    return Container(
+                      margin: const EdgeInsets.all(6),
+                      padding: const EdgeInsets.only(top: 6,bottom: 6,left: 15,right: 15),
+                      height: 40,
+                      color: Colors.black26.withOpacity(0.5),
+                      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Column(mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('${friends[index]['userName']}',style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400, color: Colors.orange.shade200)),
+                            ],
+                          ),
+                          Column(mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('${friends[index]['stars'] ?? 0}' ,style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400, color: Colors.orange.shade200)),
+                            ],
+                          ),
+
+                        ],),);
+                  },
+
+                );
+
+              } else {
+                return const Center(child: Text('There are no friends in your list',style: TextStyle(color: Colors.white),));
+              }
+
+            }else {return const CircularProgressIndicator();
+
+            }
+          }
+          return const Center(child: Text('There are no friends in your list',style: TextStyle(color: Colors.white),));
+
+        }
+
     );
   }
 }

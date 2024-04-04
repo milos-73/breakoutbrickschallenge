@@ -1,20 +1,32 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:initial_project/forge2d_game_world.dart';
 
-class Top20LevelsFriends extends StatefulWidget {
-  const Top20LevelsFriends({Key? key}) : super(key: key);
+class Top20challengeFriends extends StatefulWidget {
+
+  final BrickBreakGame game;
+
+  Top20challengeFriends({required this.game, Key? key}) : super(key: key);
 
   @override
-  State<Top20LevelsFriends> createState() => _Top20LevelsFriendsState();
+  State<Top20challengeFriends> createState() => _Top20challengeFriendsState();
 }
 
-final dbRef =  FirebaseDatabase.instance.ref().child('leaderboard').orderByChild('friends/7ROOfcPvEGRwVP87b9mBi5KhbMe2').equalTo('7ROOfcPvEGRwVP87b9mBi5KhbMe2');
+class _Top20challengeFriendsState extends State<Top20challengeFriends> {
 
-List<Map<dynamic, dynamic>> list = [];
-List<Map> friends = [];
+  //final dbRef =  FirebaseDatabase.instance.ref().child('leaderboard').orderByChild('friends/7ROOfcPvEGRwVP87b9mBi5KhbMe2').equalTo('7ROOfcPvEGRwVP87b9mBi5KhbMe2');
 
-class _Top20LevelsFriendsState extends State<Top20LevelsFriends> {
+
+  List<Map<dynamic, dynamic>> list = [];
+  List<Map> friends = [];
+  late Query dbRef;
+
+  @override
+  void initState() {
+    dbRef =  FirebaseDatabase.instance.ref().child('leaderboard').orderByChild('friends/${widget.game.keyID}').equalTo('${widget.game.keyID}');
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +38,7 @@ class _Top20LevelsFriendsState extends State<Top20LevelsFriends> {
           if(snapshot.data?.snapshot.value != null){
 
             if (snapshot.hasData) {
-              print(snapshot.data?.snapshot.value);
+              print('SNAPSHOT: ${snapshot.data?.snapshot.value}');
               list.clear();
               friends.clear();
               Map<dynamic,dynamic> values = snapshot.data?.snapshot.value as Map<dynamic, dynamic>;
@@ -36,9 +48,9 @@ class _Top20LevelsFriendsState extends State<Top20LevelsFriends> {
               });
 
               for(var i = 0; i < list.length; i++){
-                friends.add({'userName': list[i].values.elementAt(i)['userName'], 'stars' : list[i].values.elementAt(i)['stars']});
+                friends.add({'userName': list[i].values.elementAt(i)['userName'], 'points' : list[i].values.elementAt(i)['points']});
               }
-              friends.sort((a,b) => (b['stars']).compareTo(a['stars']));
+              friends.sort((a,b) => (b['points']).compareTo(a['points']));
 
               if (list.isNotEmpty) {
                 return ListView.builder(
@@ -60,7 +72,7 @@ class _Top20LevelsFriendsState extends State<Top20LevelsFriends> {
                           ),
                           Column(mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text('${friends[index]['stars'] ?? 0}' ,style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400, color: Colors.orange.shade200)),
+                              Text('${friends[index]['points'] ?? 0}' ,style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400, color: Colors.orange.shade200)),
                             ],
                           ),
 

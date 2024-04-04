@@ -10,7 +10,7 @@ import '../services/hex_color.dart';
 
 class MyFriendsList extends StatefulWidget {
 
-  BrickBreakGame game;
+  final BrickBreakGame game;
 
 
   MyFriendsList({required this.game, Key? key}) : super(key: key);
@@ -47,7 +47,7 @@ class _MyFriendsListState extends State<MyFriendsList> {
             children: [
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text('${leaderBoard['points']}',style: TextStyle(color: Colors.orange.shade200),),
+                  Text('${leaderBoard['points']} / ${leaderBoard['stars']}',style: TextStyle(color: Colors.orange.shade200),),
                   const SizedBox(width: 15,),
                   GestureDetector(onTap: () {removeFriend(friendDetails: leaderBoard, userKey: widget.game.keyID );},
                     child: FaIcon(FontAwesomeIcons.x,color: HexColor('#72a7ff'),size: 15,),
