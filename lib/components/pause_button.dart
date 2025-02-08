@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame_audio/flame_audio.dart';
-import 'package:initial_project/services/saved_values.dart';
+import 'package:brickbreaker/services/saved_values.dart';
 import '../forge2d_game_world.dart';
 
 class PauseButton extends SpriteComponent with Tappable, HasGameRef<BrickBreakGame>{

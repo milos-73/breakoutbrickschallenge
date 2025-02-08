@@ -3,10 +3,10 @@ import 'dart:math';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
-import 'package:initial_project/components/bullet_left.dart';
-import 'package:initial_project/components/bullet_right.dart';
-import 'package:initial_project/components/dead_zone.dart';
-import 'package:initial_project/components/paddle.dart';
+import 'package:brickbreaker/components/bullet_left.dart';
+import 'package:brickbreaker/components/bullet_right.dart';
+import 'package:brickbreaker/components/dead_zone.dart';
+import 'package:brickbreaker/components/paddle.dart';
 import '../forge2d_game_world.dart';
 import 'ball.dart';
 

@@ -1,12 +1,12 @@
 import 'dart:math';
 
 import 'package:flame/components.dart';
-import 'package:initial_project/components/bonus_cannon.dart';
-import 'package:initial_project/components/bonus_fast.dart';
-import 'package:initial_project/components/bonus_power_ball.dart';
-import 'package:initial_project/components/bonus_slow.dart';
-import 'package:initial_project/components/bonus_sticky_ball.dart';
-import 'package:initial_project/forge2d_game_world.dart';
+import 'package:brickbreaker/components/bonus_cannon.dart';
+import 'package:brickbreaker/components/bonus_fast.dart';
+import 'package:brickbreaker/components/bonus_power_ball.dart';
+import 'package:brickbreaker/components/bonus_slow.dart';
+import 'package:brickbreaker/components/bonus_sticky_ball.dart';
+import 'package:brickbreaker/forge2d_game_world.dart';
 import 'package:flutter/material.dart';
 
 import 'bonus_bullet.dart';

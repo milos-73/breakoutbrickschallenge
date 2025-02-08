@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:initial_project/forge2d_game_world.dart';
+import 'package:brickbreaker/forge2d_game_world.dart';
 
 class SquareTile extends StatelessWidget {
   final String imagePath;

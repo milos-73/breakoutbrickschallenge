@@ -5,7 +5,7 @@ import 'package:flame/components.dart';
 import 'package:flame_forge2d/flame_forge2d.dart' hide Particle;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:initial_project/components/paddle.dart';
+import 'package:brickbreaker/components/paddle.dart';
 
 
 import '../forge2d_game_world.dart';

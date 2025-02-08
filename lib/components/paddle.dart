@@ -5,8 +5,8 @@ import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
-import 'package:initial_project/components/gun.dart';
-import 'package:initial_project/components/star.dart';
+import 'package:brickbreaker/components/gun.dart';
+import 'package:brickbreaker/components/star.dart';
 import '../forge2d_game_world.dart';
 import 'package:flame/input.dart';
 

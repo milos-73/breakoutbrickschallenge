@@ -96,7 +96,8 @@ class _ChallengeGameOverOverlayState extends State<ChallengeGameOverOverlay> wit
 
   Future<void> _replyOverlays() async {
     if(widget.game.overlays.isActive('ChallengeGameOverOverlay')){widget.game.overlays.remove('ChallengeGameOverOverlay');}
-    await widget.game.pickLevel(random.nextInt(5) + 1);
+    await widget.game.pickLevel(random.nextInt(12));
+
     }
 
   void _showInterstitialAdMainMenu() {
@@ -115,6 +116,7 @@ class _ChallengeGameOverOverlayState extends State<ChallengeGameOverOverlay> wit
       );
       _interstitialAd!.show();
     }
+    else {_mainMenuOverlays();}
   }
 
   void _showInterstitialAdReplay() {
@@ -133,6 +135,7 @@ class _ChallengeGameOverOverlayState extends State<ChallengeGameOverOverlay> wit
       );
       _interstitialAd!.show();
     }
+    else {_replyOverlays();}
   }
 
   @override

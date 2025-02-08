@@ -1,6 +1,6 @@
 import 'package:flame/components.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
-import 'package:initial_project/forge2d_game_world.dart';
+import 'package:brickbreaker/forge2d_game_world.dart';
 
 class Gun extends BodyComponent<BrickBreakGame> {
 

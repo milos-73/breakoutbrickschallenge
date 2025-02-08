@@ -2,7 +2,7 @@ import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:initial_project/forge2d_game_world.dart';
+import 'package:brickbreaker/forge2d_game_world.dart';
 import 'dart:math';
 import '../services/saved_values.dart';
 import 'levels_screen_items.dart';

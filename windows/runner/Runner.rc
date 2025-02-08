@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "sk.saluspub" "\0"
-            VALUE "FileDescription", "breakoutbrickschallenge" "\0"
+            VALUE "FileDescription", "brickbreaker" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "breakoutbrickschallenge" "\0"
+            VALUE "InternalName", "brickbreaker" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2023 sk.saluspub. All rights reserved." "\0"
-            VALUE "OriginalFilename", "breakoutbrickschallenge.exe" "\0"
-            VALUE "ProductName", "breakoutbrickschallenge" "\0"
+            VALUE "OriginalFilename", "brickbreaker.exe" "\0"
+            VALUE "ProductName", "brickbreaker" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

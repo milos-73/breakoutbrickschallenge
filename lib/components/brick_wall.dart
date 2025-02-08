@@ -2,13 +2,13 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:firebase_database/firebase_database.dart';
+//import 'package:firebase_database/firebase_database.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:flame/components.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:initial_project/components/walls_1.dart';
-import 'package:initial_project/components/walls_2.dart';
+//import 'package:google_sign_in/google_sign_in.dart';
+import 'package:brickbreaker/components/walls_1.dart';
+import 'package:brickbreaker/components/walls_2.dart';
 import '../forge2d_game_world.dart';
 import '../services/saved_values.dart';
 import 'brick.dart';
@@ -28,12 +28,14 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
   BrickWall({Vector2? position, this.size, required this.levelNumber}) : position = position ?? Vector2.zero();
 
   SavedValues savedValues = SavedValues();
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
   Size brickSize = const Size(3.09,1.6);
   int levelPointsTop = 0;
   int numberOfStarsPerLevel = 0;
   int? currentLevelNumber;
+  int? challengeLevelNumber;
+  int? currentChallengeLevelPoints;
   int starsNumber = 0;
+  int challengeLevels = 0;
   late int lastFinishedLevel;
 
   List brickSound = ['brick1.mp3','brick2.mp3',];
@@ -58,6 +60,7 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
     var numberOfBrickCracked1 = children.query<BrickCracked1>();
     var numberOfBrickCracked2 = children.query<BrickCracked2>();
 
+
     gameRef.numberOfBrickHits = numberOfBrick.length + numberOfBrick3.length + numberOfBrickCracked1.length + numberOfBrickCracked2.length;
     //var starInterval = (numberOfBrick.length+numberOfBrick3.length+numberOfBrickCracked1.length+numberOfBrickCracked2.length)~/5;
 
@@ -71,6 +74,11 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
 
       if (gameRef.gameMode == GameMode.challenge) {
 
+        challengeLevelNumber = await gameRef.prefs.getInt('challengeLevel') ?? 0;
+        currentChallengeLevelPoints = await gameRef.prefs.getInt('challengeLevelPoints$challengeLevelNumber') ?? 0;
+
+        if (gameRef.levelPoints > currentChallengeLevelPoints! ) {await gameRef.prefs.setInt('challengeLevelPoints$challengeLevelNumber', currentChallengeLevelPoints!);}
+
         ///Writes TOTAL CURRENT GAME POINTS to existing TOTAL POINTS IN CURRENT GAME.
         //gameRef.totalPointsInCurrentGame = gameRef.totalPointsInCurrentGame + gameRef.levelPoints;
         await gameRef.prefs.setInt('totalPointsInCurrentGame', gameRef.totalPointsInCurrentGame);
@@ -78,24 +86,7 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
         ///COMPARING Total Points In Current Game with Total Points and WRITING the Current Game Points to Total Game Points if larger
         if(gameRef.totalPointsInCurrentGame > gameRef.totalGamePoints){
 
-          await gameRef.logInStatus();
-
-          if(gameRef.loggedIn != null && gameRef.totalPointsInCurrentGame > gameRef.publicTopTotalPoints!) {
-
-            await gameRef.prefs.setInt('totalGamePoints', gameRef.totalPointsInCurrentGame);
-
-            gameRef.publicTopTotalPoints = gameRef.totalPointsInCurrentGame;
-
-            DatabaseReference dbRef = FirebaseDatabase.instance.ref().child('leaderboard/${gameRef.keyID}');
-
-            await dbRef.update({
-              'points': gameRef.totalPointsInCurrentGame,
-              'userName' : gameRef.publicUserProfileName,
-            });
-          }else{
-            //ToDo DIALOG S možnosťou prihlásenia
-            print('PLEASE LOG IN');}
-          await gameRef.prefs.setInt('totalGamePoints', gameRef.totalPointsInCurrentGame);
+         await gameRef.prefs.setInt('totalGamePoints', gameRef.totalPointsInCurrentGame);
         }
 
         ///GETTING Total Level Points from Shared Preferences
@@ -110,13 +101,13 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
           print('GAME STATUS: ${gameRef.gameState}');
         }
         ///SET Game Status to ChallengeNextLevel
-        gameRef.challengeCurrentLevel = gameRef.challengeCurrentLevel + 1;
+        gameRef.challengeCurrentLevel = await randomChallengeLevelNumber();
         gameRef.gameState = GameState.challengeNextLevel;
       }
 
       if (gameRef.gameMode == GameMode.levels){
 
-        lastFinishedLevel = await savedValues.getLastFinishedLevel();
+       lastFinishedLevel = await savedValues.getLastFinishedLevel();
 
         if (currentLevelNumber! <= lastFinishedLevel){
 
@@ -124,10 +115,8 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
 
           if (numberOfStarsPerLevel < gameRef.currentGameLevelStars){
 
-            gameRef.starsPerLevelInIntListLocal[currentLevelNumber!-1] = gameRef.currentGameLevelStars;
-            gameRef.starsPerLevelInStringLocal = gameRef.starsPerLevelInIntListLocal.join(',');
-            //gameRef.starsPerLevelInStringLocal = utf8.decode(gameRef.starsPerLevelInIntListLocal);
-            //gameRef.starsPerLevelInStringLocal = gameRef.starsPerLevelInIntListLocal.map((e) => e.toString()).join(',');
+            //gameRef.starsPerLevelInIntListLocal[currentLevelNumber!-1] = gameRef.currentGameLevelStars;
+            //gameRef.starsPerLevelInStringLocal = gameRef.starsPerLevelInIntListLocal.join(',');
 
             int totalStars = gameRef.totalStars! + (gameRef.currentGameLevelStars - numberOfStarsPerLevel);
 
@@ -136,21 +125,9 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
             await gameRef.prefs.setInt('totalStars', totalStars);
 
             gameRef.totalStars = totalStars;
+            //if (gameRef.currentGameLevelStars == 5) {await gameRef.prefs.setInt('fiveStarsLevels', gameRef.fiveStarsLevels! + 1);}
 
-            print('gameRef.loggedIn: ${gameRef.loggedIn}');
-
-            if(gameRef.loggedIn != null){
-
-              DatabaseReference dbRef = FirebaseDatabase.instance.ref().child('leaderboard/${gameRef.keyID}');
-
-              await dbRef.update({
-                'listOfStarsPerLevel': gameRef.starsPerLevelInStringLocal,
-                'stars' : gameRef.totalStars,
-                'userName' : gameRef.publicUserProfileName,
-              });
-            } else {
-              print('PLEASE LOG IN to upload game DATA');}
-          }
+            }
           gameRef.gameState = GameState.won;
         }
 
@@ -158,45 +135,14 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
           await gameRef.prefs.setInt('lastFinishedLevel', currentLevelNumber!);
           gameRef.localLastFinishedLevel = currentLevelNumber;
 
-          print('currentGameLevelStars***0***: ${gameRef.currentGameLevelStars}');
-          print('starsPerLevelInIntListLocal***0***: ${gameRef.starsPerLevelInIntListLocal}');
-
-
-          gameRef.currentGameLevelStars > 0 ? gameRef.starsPerLevelInIntListLocal.add(gameRef.currentGameLevelStars) : gameRef.starsPerLevelInIntListLocal.add(0);
-
-          print('currentGameLevelStars: ${gameRef.currentGameLevelStars}');
-          print('starsPerLevelInIntListLocal: ${gameRef.starsPerLevelInIntListLocal}');
-
-
-          gameRef.starsPerLevelInStringLocal =  gameRef.starsPerLevelInIntListLocal.join(',');
-          //gameRef.starsPerLevelInStringLocal = gameRef.starsPerLevelInIntListLocal.map((e) => e.toString()).join(',');
-
-          print('gameRef.starsPerLevelInStringLocal: ${gameRef.starsPerLevelInStringLocal}');
-
           int totalStars = gameRef.totalStars! + gameRef.currentGameLevelStars;
-
-          print('totalStars2: ${totalStars}');
 
           await gameRef.prefs.setInt('numberOfStars$currentLevelNumber', gameRef.currentGameLevelStars);
           await gameRef.prefs.setString('starsPerLevelInString', gameRef.starsPerLevelInStringLocal!);
           await gameRef.prefs.setInt('totalStars', gameRef.totalStars! + gameRef.currentGameLevelStars);
 
           gameRef.totalStars = totalStars;
-
-          print('//////////////starsPerLevelInIntListLocal-2/////////////: ${gameRef.starsPerLevelInIntListLocal}');
-
-          print('gameRef.loggedIn: ${gameRef.loggedIn}');
-          if(gameRef.loggedIn != null){
-
-            DatabaseReference dbRef = FirebaseDatabase.instance.ref().child('leaderboard/${gameRef.keyID}');
-
-            await dbRef.update({
-              'listOfStarsPerLevel': gameRef.starsPerLevelInStringLocal,
-              'stars' : gameRef.totalStars,
-              'userName' : gameRef.publicUserProfileName,
-              'lastFinishedLevel' : currentLevelNumber
-            });}else{
-            print('PLEASE LOG IN to upload game DATA');}
+          //if (gameRef.currentGameLevelStars == 5) {await gameRef.prefs.setInt('fiveStarsLevels', gameRef.fiveStarsLevels! + 1);}
         }
         gameRef.gameState = GameState.won;
       }
@@ -252,7 +198,17 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
     super.update(dt);
   }
 
+  Future<int> randomChallengeLevelNumber() async {
+  final _random = Random();
+    int countLevels = brickList_2.length;
+    int challengeLevel = _random.nextInt(countLevels);
+    await gameRef.prefs.setInt('challengeLevel', challengeLevel+1);
+    return challengeLevel;
+}
+
   Future<void> buildWall(int levelNumber) async {
+
+    int challengeLevelNumber = await randomChallengeLevelNumber();
 
     if(gameRef.gameMode == GameMode.levels){
       List brickList = brickList_1[levelNumber - 1];
@@ -275,7 +231,7 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
       gameRef.starInterval = (i - (i~/5))~/5;
       gameRef.numberOfBrickHitsLeft =  i - (i~/5);
     }
-    else{ List brickList = brickList_2[levelNumber - 1];
+    else{ List brickList = brickList_2[challengeLevelNumber];
 
     for (var r = 0; r < brickList.length; r++){
       if (brickList == []){continue;}

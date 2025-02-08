@@ -4,7 +4,7 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:initial_project/services/saved_values.dart';
+import 'package:brickbreaker/services/saved_values.dart';
 import '../forge2d_game_world.dart';
 import '../services/ad_helper.dart';
 
@@ -53,6 +53,7 @@ class BackToMenuButton extends SpriteComponent with Tappable, HasGameRef<BrickBr
    );
    await _interstitialAd!.show();
   }
+  else {_overlays();}
  }
 
  Future<void> _overlays() async {

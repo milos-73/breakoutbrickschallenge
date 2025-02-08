@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:flame/components.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
-import 'package:initial_project/components/star.dart';
-import 'package:initial_project/forge2d_game_world.dart';
+import 'package:brickbreaker/components/star.dart';
+import 'package:brickbreaker/forge2d_game_world.dart';
 
 class FallingStars extends Component with HasGameRef<BrickBreakGame> {
   FallingStars() : super(priority: 6);

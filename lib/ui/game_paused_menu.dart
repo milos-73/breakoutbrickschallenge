@@ -122,6 +122,7 @@ class _GamePausedMenuOverlayState extends State<GamePausedMenuOverlay> with Sing
       );
       _interstitialAd!.show();
     }
+    else {_mainMenuOverlays();}
   }
 
 

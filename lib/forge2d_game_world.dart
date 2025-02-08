@@ -1,8 +1,9 @@
 import 'dart:math';
 
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
+//import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:firebase_core/firebase_core.dart';
+//import 'package:firebase_database/firebase_database.dart';
+import 'package:flame/camera.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/flame.dart';
@@ -13,17 +14,18 @@ import 'package:flame_forge2d/flame_forge2d.dart' hide Particle;
 import 'package:flame/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:initial_project/components/cannon_ball.dart';
-import 'package:initial_project/components/falling_bonus.dart';
-import 'package:initial_project/components/falling_points.dart';
-import 'package:initial_project/components/paralax_background.dart';
-import 'package:initial_project/components/stars_status.dart';
-import 'package:initial_project/components/total_stars_hud.dart';
-import 'package:initial_project/services/saved_values.dart';
-import 'package:initial_project/ui/dbTools.dart';
+//import 'package:google_sign_in/google_sign_in.dart';
+import 'package:brickbreaker/components/cannon_ball.dart';
+import 'package:brickbreaker/components/falling_bonus.dart';
+import 'package:brickbreaker/components/falling_points.dart';
+import 'package:brickbreaker/components/paralax_background.dart';
+import 'package:brickbreaker/components/stars_status.dart';
+import 'package:brickbreaker/components/total_stars_hud.dart';
+import 'package:brickbreaker/services/saved_values.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:username_gen/username_gen.dart';
+import 'components/level_number_challenge.dart';
 import 'components/arena.dart';
 import 'components/back_to_menu_button.dart';
 import 'components/ball.dart';
@@ -232,13 +234,17 @@ bool _bannerAdIsLoaded = false;
   int currentGameLevelStars = 0;
   int? totalStars;
 
+  int? fiveStarsLevels = 0;
+  int? challengeLevels = 0;
+  int challengeLevelsPerGame = 0;
+
   String? starsPerLevelInStringLocal = '';
   List<String?> starsPerLevelInStringListLocal = [];
   List<int?> starsPerLevelInIntListLocal = [];
 
-  String? starsPerLevelInStringDB = '';
-  List<String?> starsPerLevelInStringListDB = [];
-  List<int?> starsPerLevelInIntListDB = [];
+  //String? starsPerLevelInStringDB = '';
+  //List<String?> starsPerLevelInStringListDB = [];
+  //List<int?> starsPerLevelInIntListDB = [];
 
   int starPoints = 0;
 
@@ -263,8 +269,8 @@ bool _bannerAdIsLoaded = false;
  String? userSignedInProvider;
  String? loggedIn;
 
- int? publicTopTotalPoints = 0;
- int? publicTotalStars = 0;
+ //int? publicTopTotalPoints = 0;
+ //int? publicTotalStars = 0;
 
  String? syncErrorMessage;
 
@@ -272,9 +278,9 @@ bool _bannerAdIsLoaded = false;
  Map? profileOfSearchedFriend;
 
 
- late FirebaseAuth _auth;
- final GoogleSignIn _googleSignIn = GoogleSignIn();
- final DbTools dbTools = DbTools();
+ //late FirebaseAuth _auth;
+ //final GoogleSignIn _googleSignIn = GoogleSignIn();
+ //final DbTools dbTools = DbTools();
 
  //bool loggedInWithEmail = false;
 
@@ -294,23 +300,23 @@ final Tween<double> noise = Tween(begin: -1, end: 1);
 
     prefs = await SharedPreferences.getInstance();
 
-    FirebaseApp defaultApp = await Firebase.initializeApp();
-    _auth = FirebaseAuth.instanceFor(app: defaultApp);
-
     camera.viewport = FixedResolutionViewport(Vector2(1080,2340));
 
     await Flame.device.fullScreen();
     await Flame.device.setPortrait();
 
-    localUserProfileName = prefs.getString('customUserProfileName' ?? '');
-    if(localUserProfileName == '') {prefs.setString('customUserProfileName', 'user name not set');}
+    //localUserProfileName = prefs.getString('customUserProfileName' ?? '');
+    //if(localUserProfileName == '') {prefs.setString('customUserProfileName', 'user name not set');}
     localLastFinishedLevel = prefs.getInt('lastFinishedLevel') ?? 0;
     totalGamePoints = prefs.getInt('totalGamePoints') ?? 0;
     totalStars = prefs.getInt('totalStars') ?? 0;
-    starsPerLevelInStringLocal = prefs.getString('starsPerLevelInString') ?? '';
+    //starsPerLevelInStringLocal = prefs.getString('starsPerLevelInString') ?? '';
+
+    fiveStarsLevels = prefs.getInt('fiveStarsLevels') ?? 0;
+    challengeLevels = prefs.getInt('challengeLevels') ?? 0;
 
     //await loadLevelDataForLocalUse();
-    await logInStatus();
+
     //await getUserData();
     await _initializeGame();
     }
@@ -430,22 +436,6 @@ final Tween<double> noise = Tween(begin: -1, end: 1);
     return false;
   }
 
-Future<void>uploadLevelData() async {
-
-  starsPerLevelInStringLocal = prefs.getString('starsPerLevelInString');
-  totalStars = prefs.getInt('totalStars');
-  localLastFinishedLevel = await savedValues.getLastFinishedLevel();
-  localUserProfileName = prefs.getString('customUserProfileName' ?? '');
-
-  DatabaseReference dbRef = FirebaseDatabase.instance.ref().child('leaderboard/$keyID');
-  await dbRef.update({
-    'listOfStarsPerLevel': starsPerLevelInStringLocal,
-    'stars' : totalStars,
-    'lastFinishedLevel' : localLastFinishedLevel,
-    'userName' : localUserProfileName
-  });
-}
-
   Future<void> resetLocalGameData() async {
 
     int? numberOfLevels = prefs.getInt('lastFinishedLevel') ?? 0;
@@ -472,16 +462,12 @@ Future<void>uploadLevelData() async {
     currentGameLevelStars = 0;
     totalStars;
 
-    publicTopTotalPoints = 0;
-    publicTotalStars = 0;
+    //publicTopTotalPoints = 0;
+    //publicTotalStars = 0;
 
     starsPerLevelInStringLocal = '';
     starsPerLevelInStringListLocal = [];
     starsPerLevelInIntListLocal = [];
-
-    starsPerLevelInStringDB = '';
-    starsPerLevelInStringListDB = [];
-    starsPerLevelInIntListDB = [];
 
     life = 3;
     localLastFinishedLevel;
@@ -490,96 +476,82 @@ Future<void>uploadLevelData() async {
 
   }
 
-Future<void> resetGameData() async {
-
-    int? numberOfLevels = prefs.getInt('lastFinishedLevel') ?? 0;
-
-    if (numberOfLevels > 0) {
-      for (var i = 1; i < numberOfLevels + 1; i++ ) {
-        await prefs.remove('numberOfStars$i');
-    }
-   }
-
-    await prefs.remove('starsPerLevelInString');
-    await prefs.remove('lastFinishedLevel');
-    await prefs.remove('totalGamePoints');
-    await prefs.remove('totalStars');
-    await prefs.remove('currentPlayedLevelNumber');
-    await prefs.remove('levelInProgress');
-
-    levelPoints = 0;
-    levelPointTop = 0;
-    totalPointsInCurrentGame = 0;
-    totalGamePoints = 0;
-
-    levelStars = 0;
-    currentGameLevelStars = 0;
-    totalStars;
-
-    publicTopTotalPoints = 0;
-    publicTotalStars = 0;
-
-    starsPerLevelInStringLocal = '';
-    starsPerLevelInStringListLocal = [];
-    starsPerLevelInIntListLocal = [];
-
-    starsPerLevelInStringDB = '';
-    starsPerLevelInStringListDB = [];
-    starsPerLevelInIntListDB = [];
-
-    life = 3;
-    localLastFinishedLevel;
-    lastFinishedLevelDb;
-    currentPlayedLevelNumber = 1;
-    
-    DatabaseReference dbRef = FirebaseDatabase.instance.ref().child('leaderboard/$keyID');
-
-    await dbRef.update({
-      'lastFinishedLevel': 0,
-      'stars': 0,
-      'points': 0,
-      'listOfStarsPerLevel' : ''
-    });
-}
+// Future<void> resetGameData() async {
+//
+//     int? numberOfLevels = prefs.getInt('lastFinishedLevel') ?? 0;
+//
+//     if (numberOfLevels > 0) {
+//       for (var i = 1; i < numberOfLevels + 1; i++ ) {
+//         await prefs.remove('numberOfStars$i');
+//     }
+//    }
+//
+//     await prefs.remove('starsPerLevelInString');
+//     await prefs.remove('lastFinishedLevel');
+//     await prefs.remove('totalGamePoints');
+//     await prefs.remove('totalStars');
+//     await prefs.remove('currentPlayedLevelNumber');
+//     await prefs.remove('levelInProgress');
+//
+//     levelPoints = 0;
+//     levelPointTop = 0;
+//     totalPointsInCurrentGame = 0;
+//     totalGamePoints = 0;
+//
+//     levelStars = 0;
+//     currentGameLevelStars = 0;
+//     totalStars;
+//
+//     //publicTopTotalPoints = 0;
+//     //publicTotalStars = 0;
+//
+//     starsPerLevelInStringLocal = '';
+//     starsPerLevelInStringListLocal = [];
+//     starsPerLevelInIntListLocal = [];
+//
+//     life = 3;
+//     localLastFinishedLevel;
+//     lastFinishedLevelDb;
+//     currentPlayedLevelNumber = 1;
+//
+// }
 
   ///Set the list of stars amount pre each level if user is logged in
 
-  Future<void> setLevelDataWhileOnline() async {
-
-    print('************starsPerLevelInStringDB***********: ${starsPerLevelInStringDB}');
-
-    if(starsPerLevelInStringDB != 'error'){
-      starsPerLevelInStringListLocal = starsPerLevelInStringDB!.split(',');
-
-      print('++++++starsPerLevelInStringDB+++++${starsPerLevelInStringDB}');
-      print('${starsPerLevelInStringListLocal}');
-      int counter = 0;
-      int numberOfAllStars = 0;
-
-      for (var i in starsPerLevelInStringListLocal) {
-
-        print('++++++++++ i ++++++++++ ${i}');
-        int? value = int.tryParse(i!) ?? 0;
-
-        print('++++++++++ value ++++++++++ ${value}');
-
-        starsPerLevelInIntListLocal.add(value);
-        prefs.setInt('numberOfStars${counter + 1}', value);
-        if (value != 0){counter = counter + 1;};
-        numberOfAllStars = numberOfAllStars + value;
-
-      }
-
-      print('=================== ${counter} ===================');
-      syncStatus = SyncStatus.ok;
-      prefs.setInt('lastFinishedLevel', counter);
-      localLastFinishedLevel = counter;
-      totalStars = numberOfAllStars;
-
-    } else  {
-      print('ERROR in STARTS DB');
-      starsPerLevelInIntListLocal = [];}
-  }
+  // Future<void> setLevelDataWhileOnline() async {
+  //
+  //   if(starsPerLevelInStringDB != 'error'){
+  //     starsPerLevelInStringListLocal = starsPerLevelInStringDB!.split(',');
+  //
+  //     print('++++++starsPerLevelInStringDB+++++${starsPerLevelInStringDB}');
+  //     print('${starsPerLevelInStringListLocal}');
+  //     int counter = 0;
+  //     int numberOfAllStars = 0;
+  //
+  //     for (var i in starsPerLevelInStringListLocal) {
+  //
+  //       print('++++++++++ i ++++++++++ ${i}');
+  //       int? value = int.tryParse(i!) ?? 0;
+  //
+  //       print('++++++++++ value ++++++++++ ${value}');
+  //
+  //       starsPerLevelInIntListLocal.add(value);
+  //       prefs.setInt('numberOfStars${counter + 1}', value);
+  //       if (value != 0){counter = counter + 1;};
+  //       numberOfAllStars = numberOfAllStars + value;
+  //
+  //     }
+  //
+  //     print('=================== ${counter} ===================');
+  //     syncStatus = SyncStatus.ok;
+  //     prefs.setInt('lastFinishedLevel', counter);
+  //     localLastFinishedLevel = counter;
+  //     totalStars = numberOfAllStars;
+  //
+  //   } else  {
+  //     print('ERROR in STARTS DB');
+  //     starsPerLevelInIntListLocal = [];}
+  // }
 
   ///Set user data if user is not logged
 
@@ -612,193 +584,106 @@ Future<void> resetGameData() async {
 
   ///Check if user is logged, which provider is used and update user data accordingly
 
-  Future<void> logInStatus() async {
-    print('+++++++ IN LOGIN STATUS ++++++++');
 
-  loggedIn = FirebaseAuth.instance.currentUser?.email;
-  userSignedInProvider = FirebaseAuth.instance.currentUser?.displayName;
-
-  print('loggedIn: ${loggedIn}');
-  print('userSignedInProvider: ${userSignedInProvider}');
-
-  if (loggedIn != null) {
-    if (userSignedInProvider != null) {
-      print('==========LOG IN WITH GOOGLE GETTING DATA==========');
-      loggedInName = _auth.currentUser?.displayName;
-      localUserProfileName = prefs.getString('customUserProfileName' ?? '');
-      publicUserProfileName = await dbTools.getUserName(_auth.currentUser!.uid);
-
-      //if(loggedInName == ''){publicUserProfileName = localUserProfileName;}
-      loggedInEmail = _auth.currentUser?.email;
-      keyID = _auth.currentUser?.uid;
-      if (publicUserProfileName != localUserProfileName) {
-        await getUserData();
-      }
-      if (publicUserProfileName == localUserProfileName) {
-        await updateUserData();
-      }
-    }
-
-    if (userSignedInProvider == null) {
-        print('=======LOG IN WITH EMAIL GETTING DATA==========');
-        loggedInName = await dbTools.getUserName(FirebaseAuth.instance.currentUser!.uid);
-        print('**loggedInName**:${loggedInName}');
-        publicUserProfileName = loggedInName;
-        localUserProfileName = prefs.getString('customUserProfileName' ?? '');
-        //if(loggedInName == ''){publicUserProfileName = localUserProfileName;}
-        print('**publicUserProfileName**:${publicUserProfileName}');
-        loggedInEmail = FirebaseAuth.instance.currentUser?.email;
-        keyID = FirebaseAuth.instance.currentUser?.uid;
-        print('**localUserProfileName**:${localUserProfileName}');
-        if (publicUserProfileName != localUserProfileName) {
-          await getUserData();
-        }
-        if (publicUserProfileName == localUserProfileName) {
-          await updateUserData();
-        }
-
-    }
-  }else{
-    await setLevelDataWhileOffline();
-  }
-}
 
   ///Get user data if user has changed the account in phone
 
-  Future<void> getUserData() async {
-
-   await prefs.clear();
-
-   starsPerLevelInStringListLocal = [];
-   starsPerLevelInIntListLocal = [];
-
-   starsPerLevelInStringListDB = [];
-   starsPerLevelInIntListDB = [];
-
-
-   prefs.setString('customUserProfileName', publicUserProfileName ?? '');
-
-   publicTopTotalPoints = await dbTools.checkTopTotalPoints(keyID!) ?? 0;
-   await prefs.setInt('totalGamePoints', publicTopTotalPoints!);
-
-   publicTotalStars = await dbTools.checkTotalStars(keyID!) ?? 0;
-   await prefs.setInt('totalStars', publicTotalStars!);
-   totalStars = publicTotalStars;
-
-   starsPerLevelInStringDB = await dbTools.getAllLevelsStarsString(keyID!) ?? '';
-   if (starsPerLevelInStringDB != 'error') {
-     await prefs.setString( 'starsPerLevelInString', starsPerLevelInStringDB ?? '');
-     starsPerLevelInStringLocal = starsPerLevelInStringDB;
-   } else {
-     await prefs.setString( 'starsPerLevelInString','');
-     starsPerLevelInStringLocal = '';
-   }
-
-   localLastFinishedLevel = await dbTools.getLastFinishedLevel(keyID!) ?? 0;
-   await prefs.setInt('lastFinishedLevel', localLastFinishedLevel ?? 0);
-
-   await setLevelDataWhileOnline();
- }
+ //  Future<void> getUserData() async {
+ //
+ //   await prefs.clear();
+ //
+ //   starsPerLevelInStringListLocal = [];
+ //   starsPerLevelInIntListLocal = [];
+ //
+ //
+ //   prefs.setString('customUserProfileName', publicUserProfileName ?? '');
+ //
+ //   await prefs.setInt('totalGamePoints', publicTopTotalPoints!);
+ //
+ //
+ //   await prefs.setInt('totalStars', publicTotalStars!);
+ //   totalStars = publicTotalStars;
+ //
+ //     await prefs.setString( 'starsPerLevelInString','');
+ //     starsPerLevelInStringLocal = '';
+ //
+ //   await prefs.setInt('lastFinishedLevel', localLastFinishedLevel ?? 0);
+ //
+ // }
 
   ///Update user data if user has logged in with the same account as was set in SharedPreferences
 
-  Future<void> updateUserData() async {
-
-    lastFinishedLevelDb = await dbTools.getLastFinishedLevel(keyID!);
-    localLastFinishedLevel = prefs.getInt('lastFinishedLevel') ?? 0;
-
-    if (lastFinishedLevelDb! < localLastFinishedLevel!){
-
-      DatabaseReference dbRef = FirebaseDatabase.instance.ref().child('leaderboard/$keyID');
-
-      await dbRef.update({
-        'lastFinishedLevel': localLastFinishedLevel,
-      });
-    }
-    if (lastFinishedLevelDb! < localLastFinishedLevel!){
-      prefs.setInt('lastFinishedLevel', lastFinishedLevelDb!);
-    }
-
-    if (lastFinishedLevelDb! == localLastFinishedLevel!){
-      prefs.setInt('lastFinishedLevel', lastFinishedLevelDb!);
-    }
-
-    publicTopTotalPoints = await dbTools.checkTopTotalPoints(keyID!) ?? 0;
-
-    publicTopTotalPoints ??= totalGamePoints;
-
-    if (publicTopTotalPoints != null && publicTopTotalPoints! > totalGamePoints) {
-      totalGamePoints = publicTopTotalPoints!;
-      await prefs.setInt('totalGamePoints', publicTopTotalPoints!);
-    }
-
-    if (publicTopTotalPoints != null &&
-        publicTopTotalPoints! < totalGamePoints) {
-      publicTopTotalPoints = totalGamePoints;
-
-      DatabaseReference dbRef = FirebaseDatabase.instance.ref().child('leaderboard/$keyID');
-
-      await dbRef.update({
-        'points': totalGamePoints,
-      });
-    }
-
-    publicTotalStars = await dbTools.checkTotalStars(keyID!) ?? 0;
-    totalStars = prefs.getInt('totalStars') ?? 0;
-    starsPerLevelInStringDB = await dbTools.getAllLevelsStarsString(keyID!) ?? '';
-    starsPerLevelInStringLocal = prefs.getString('starsPerLevelInString');
-
-    publicTotalStars ??= totalStars;
-
-    if (publicTotalStars != null && publicTotalStars! > totalStars!) {
-      totalStars = publicTotalStars!;
-
-      await prefs.setInt('totalStars', publicTotalStars!);
-
-        if (starsPerLevelInStringDB != 'error') {
-        await prefs.setString('starsPerLevelInString', starsPerLevelInStringDB ?? '');
-        starsPerLevelInStringLocal = starsPerLevelInStringDB;
-      } else {
-        await prefs.setString('starsPerLevelInString', '');
-        starsPerLevelInStringLocal = '';
-      }
-    }
-
-    if (publicTotalStars != null && publicTotalStars! < totalStars!) {
-      DatabaseReference dbRef = FirebaseDatabase.instance.ref().child('leaderboard/$keyID');
-
-      await dbRef.update({
-        'stars': totalStars,
-        'listOfStarsPerLevel': starsPerLevelInStringLocal
-      });
-      starsPerLevelInStringDB = starsPerLevelInStringLocal;
-    }
-
-    if (publicTotalStars != null && publicTotalStars! == totalStars!) {
-      if (lastFinishedLevelDb! < localLastFinishedLevel!) {
-        starsPerLevelInStringDB = starsPerLevelInStringLocal;
-      } else {
-        starsPerLevelInStringLocal = starsPerLevelInStringDB;
-      }
-
-      if (lastFinishedLevelDb! > localLastFinishedLevel!) {
-        localLastFinishedLevel = lastFinishedLevelDb;
-      }
-      await prefs.setInt('lastFinishedLevel', lastFinishedLevelDb ?? 0);
-      if (lastFinishedLevelDb! < localLastFinishedLevel!) {
-        lastFinishedLevelDb = localLastFinishedLevel;
-      }
-      DatabaseReference dbRef = FirebaseDatabase.instance.ref().child(
-          'leaderboard/$keyID');
-
-      await dbRef.update({
-        'lastFinishedLevel': localLastFinishedLevel
-      });
-
-      print('IN UPDATE USER DATA');
-      await setLevelDataWhileOnline();
-    }
-  }
+  // Future<void> updateUserData() async {
+  //
+  //
+  //   localLastFinishedLevel = prefs.getInt('lastFinishedLevel') ?? 0;
+  //
+  //   if (lastFinishedLevelDb! < localLastFinishedLevel!){
+  //
+  //
+  //
+  //     }
+  //   if (lastFinishedLevelDb! < localLastFinishedLevel!){
+  //     prefs.setInt('lastFinishedLevel', lastFinishedLevelDb!);
+  //   }
+  //
+  //   if (lastFinishedLevelDb! == localLastFinishedLevel!){
+  //     prefs.setInt('lastFinishedLevel', lastFinishedLevelDb!);
+  //   }
+  //
+  //
+  //
+  //   publicTopTotalPoints ??= totalGamePoints;
+  //
+  //   if (publicTopTotalPoints != null && publicTopTotalPoints! > totalGamePoints) {
+  //     totalGamePoints = publicTopTotalPoints!;
+  //     await prefs.setInt('totalGamePoints', publicTopTotalPoints!);
+  //   }
+  //
+  //   if (publicTopTotalPoints != null &&
+  //       publicTopTotalPoints! < totalGamePoints) {
+  //     publicTopTotalPoints = totalGamePoints;
+  //
+  //
+  //   }
+  //
+  //
+  //   totalStars = prefs.getInt('totalStars') ?? 0;
+  //
+  //   starsPerLevelInStringLocal = prefs.getString('starsPerLevelInString');
+  //
+  //   publicTotalStars ??= totalStars;
+  //
+  //   if (publicTotalStars != null && publicTotalStars! > totalStars!) {
+  //     totalStars = publicTotalStars!;
+  //
+  //     await prefs.setInt('totalStars', publicTotalStars!);
+  //
+  //       await prefs.setString('starsPerLevelInString', '');
+  //       starsPerLevelInStringLocal = '';
+  //
+  //   }
+  //
+  //   if (publicTotalStars != null && publicTotalStars! == totalStars!) {
+  //     if (lastFinishedLevelDb! < localLastFinishedLevel!) {
+  //       starsPerLevelInStringDB = starsPerLevelInStringLocal;
+  //     } else {
+  //       starsPerLevelInStringLocal = starsPerLevelInStringDB;
+  //     }
+  //
+  //     if (lastFinishedLevelDb! > localLastFinishedLevel!) {
+  //       localLastFinishedLevel = lastFinishedLevelDb;
+  //     }
+  //     await prefs.setInt('lastFinishedLevel', lastFinishedLevelDb ?? 0);
+  //     if (lastFinishedLevelDb! < localLastFinishedLevel!) {
+  //       lastFinishedLevelDb = localLastFinishedLevel;
+  //     }
+  //
+  //
+  //     print('IN UPDATE USER DATA');
+  //     await setLevelDataWhileOnline();
+  //   }
+  // }
 
   Future<void> getCustomUserName(String? keyID) async {
 
@@ -807,8 +692,8 @@ Future<void> resetGameData() async {
 
     publicUserProfileName = localUserProfileName;
 
-    DatabaseReference dbRef = FirebaseDatabase.instance.ref().child('leaderboard/$keyID');
-    await dbRef.update({'userName': localUserProfileName,});
+
+
   }
 
   Future<void> _initializeGame() async {
@@ -818,7 +703,7 @@ Future<void> resetGameData() async {
     hudBar = HudBar();
     add(hudBar);
     //hudBarChallenge = HudBar(children: [LifeCounter(), TotalPointInCurrentGame(), TotalPointCounter(), LevelPointCounter(), LevelPointTopCounter()]);
-    hudBarChallenge = HudBar(children: [TotalPointInCurrentGame(), LevelPointCounter(), LevelPointTopCounter()]);
+    hudBarChallenge = HudBar(children: [TotalPointInCurrentGame(), LevelPointCounter(), LevelNumberChallenge(), LevelPointTopCounter()]);
     hudBarLevels = HudBar(children: [LevelNumber(), StarsLevelTotal(), StarsStatusPerLevel()]);
     //hudBarLevels = HudBar(children: [StarsStatusPerLevel(), StarsLevelTotal()]);
     //hudBarLevels = HudBar(children: [LifeCounter(), StarsStatusPerLevel(), StarsLevelTotal()]);
@@ -931,6 +816,7 @@ Future<void> resetGameData() async {
     bool? fallingPointsMounted = fallingPoints?.isMounted;
     bool? totalPointCounterMounted = totalPointCounter?.isMounted;
     bool? starsLevelTotalMounted = totalStarsCounter?.isMounted;
+    challengeLevelsPerGame = 0;
     currentPlayedLevelNumber = prefs.getInt('currentPlayedLevelNumber') ?? 0;
     levelPointTop = prefs.getInt('topLevelPoints1') ?? 0;
     totalGamePoints = prefs.getInt('totalGamePoints') ?? 0;
@@ -1127,7 +1013,7 @@ Future<void> resetGameData() async {
     }
   }
 
-///PICK LEVEL
+  ///PICK LEVEL
   Future<void> pickLevel(int level) async {
 
     print('starsPerLevelInIntListLocal***FROM PICK LEVEL***: ${starsPerLevelInIntListLocal}');
@@ -1145,6 +1031,7 @@ Future<void> resetGameData() async {
   currentGameLevelStars = 0;
   totalPointsInCurrentGame = 0;
   levelPoints = 0;
+  challengeLevelsPerGame = 0;
   currentPlayedLevelNumber = level;
 
   levelPointTop = prefs.getInt('topLevelPoints$level') ?? 0;
@@ -1153,6 +1040,7 @@ Future<void> resetGameData() async {
   levelStars = prefs.getInt('numberOfStars$level') ?? 0;
   localLastFinishedLevel = prefs.getInt('lastFinishedLevel') ?? 0;
 
+  print('levelStars $level ${levelStars}');
   await prefs.setInt('currentPlayedLevelNumber', level);
 
   if (ball2On == 1) {

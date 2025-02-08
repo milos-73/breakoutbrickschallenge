@@ -1,12 +1,10 @@
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 
-import 'package:initial_project/ui/overlay_builder.dart';
+import 'package:brickbreaker/ui/overlay_builder.dart';
 
 import 'forge2d_game_world.dart';
 import 'main_game.dart';
@@ -17,7 +15,7 @@ Future<void> main() async {
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   Flame.device.fullScreen();
-  await Firebase.initializeApp();
+  //await Firebase.initializeApp(options: FirebaseOptions(apiKey: 'AIzaSyDu0N2T4yb1DOkn4Lr7SRxzDcsnaLTKDK8', appId: '1:168883929200:android:e593ed2ca67e09371f34b5', messagingSenderId: '168883929200', projectId: 'breakout-bricks-challenge'));
 
 
   runApp(const MyApp());

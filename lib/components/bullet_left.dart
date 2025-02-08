@@ -1,9 +1,9 @@
 import 'package:flame/components.dart';
 import 'package:flame_forge2d/contact_callbacks.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
-import 'package:initial_project/components/brick.dart';
-import 'package:initial_project/components/hud_bar.dart';
-import 'package:initial_project/components/obstacle.dart';
+import 'package:brickbreaker/components/brick.dart';
+import 'package:brickbreaker/components/hud_bar.dart';
+import 'package:brickbreaker/components/obstacle.dart';
 
 import '../forge2d_game_world.dart';
 import 'brick2.dart';

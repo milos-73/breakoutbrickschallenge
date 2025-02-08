@@ -1,4 +1,4 @@
-# breakoutbrickschallenge
+# brickbreaker
 
 A new Flutter project.
 

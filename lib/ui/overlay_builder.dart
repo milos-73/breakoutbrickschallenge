@@ -3,20 +3,17 @@ import 'dart:math';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:initial_project/overlays/main_menu.dart';
-import 'package:initial_project/ui/sign_with_google.dart';
-import 'package:initial_project/ui/welcome_user.dart';
+import 'package:brickbreaker/overlays/main_menu.dart';
+
 import '../forge2d_game_world.dart';
+import '../overlays/about_info.dart';
 import '../overlays/banner_ad_overlay.dart';
 import '../overlays/black_screen.dart';
-import '../overlays/friendsList.dart';
-import '../overlays/google_signin.dart';
-import '../overlays/leaderBoard.dart';
-import '../overlays/searching_friend_text_field.dart';
+
 import '../services/ad_helper.dart';
 import 'challeneg_game_over.dart';
 import 'game_paused_menu.dart';
-import 'my_account_overlay.dart';
+
 import 'levels.dart';
 import 'next_level_challenge_mode.dart';
 
@@ -31,35 +28,7 @@ class OverlayBuilder {
     return BannerAdOverlay(game: game);
   }
 
-  static Widget friendsList(BuildContext context, BrickBreakGame game) {
-    return FriendsList(game: game);
-  }
-
-  static Widget searchFriend(BuildContext context, BrickBreakGame game) {
-    return SearchingFriend (game: game);
-  }
-
-  static Widget signWithGoogle(BuildContext context, BrickBreakGame game) {
-    return SignWithGoogle (game: game);
-  }
-
-  static Widget loginPageWidget(BuildContext context, BrickBreakGame game) {
-        return LoginPageWidget(game: game);
-  }
-
-  // static Widget logInScreen(BuildContext context, BrickBreakGame game) {
-  //   return LoginPage(game: game);
-  // }
-
-  static Widget myAccount(BuildContext context, BrickBreakGame game) {
-    return MyAccount(game: game);
-  }
-
-  static Widget leaderBoard(BuildContext context, BrickBreakGame game) {
-    return LeaderBoard(game: game);
-  }
-
-  static Widget preGame(BuildContext context, BrickBreakGame game) {
+ static Widget preGame(BuildContext context, BrickBreakGame game) {
     return PreGameOverlay(game: game);
   }
 
@@ -81,6 +50,11 @@ class OverlayBuilder {
 
   static Widget levelsMap(BuildContext context, BrickBreakGame game) {
     return Levels(gameRef: game);
+    //return LevelsMap(gameRef: game);
+  }
+
+  static Widget aboutInfo(BuildContext context, BrickBreakGame game) {
+    return AboutInfo(gameRef: game);
     //return LevelsMap(gameRef: game);
   }
 
@@ -350,6 +324,7 @@ class _PostGameOverlayState extends State<PostGameOverlay> with SingleTickerProv
       );
       _interstitialAd!.show();
     }
+    else {_mainMenuOverlays();}
   }
 
   void _showInterstitialAdReplay() {
@@ -368,6 +343,7 @@ class _PostGameOverlayState extends State<PostGameOverlay> with SingleTickerProv
       );
       _interstitialAd!.show();
     }
+    else {_replyOverlays();}
   }
 
   void _showInterstitialAdPickLevel() {
@@ -386,6 +362,7 @@ class _PostGameOverlayState extends State<PostGameOverlay> with SingleTickerProv
       );
       _interstitialAd!.show();
     }
+    else {_pickLevelOverlays();}
   }
 
   @override
@@ -488,6 +465,7 @@ class _PostGameOverlayState extends State<PostGameOverlay> with SingleTickerProv
         await FlameAudio.play('button3.mp3');
       }
       _showInterstitialAdReplay();
+
       // if(widget.game.overlays.isActive('PostGame')){widget.game.overlays.remove('PostGame');}
       // game.resetGame();
     },
@@ -692,6 +670,7 @@ class _WinGameOverlayState extends State<WinGameOverlay> with SingleTickerProvid
       );
       _interstitialAd!.show();
     }
+    else {_nextLevelOverlays();}
   }
 
   void _showInterstitialAdMainMenu() {
@@ -710,6 +689,7 @@ class _WinGameOverlayState extends State<WinGameOverlay> with SingleTickerProvid
       );
       _interstitialAd!.show();
     }
+    else {_mainMenuOverlays();}
   }
 
   @override

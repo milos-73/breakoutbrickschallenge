@@ -2,7 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame/src/parallax.dart';
-import 'package:initial_project/forge2d_game_world.dart';
+import 'package:brickbreaker/forge2d_game_world.dart';
 
 class Background extends ParallaxComponent<BrickBreakGame>{
 

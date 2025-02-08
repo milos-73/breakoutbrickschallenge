@@ -1,7 +1,7 @@
 // import 'package:flutter/material.dart';
 // import 'package:flame/components.dart';
-// import 'package:initial_project/brick_walls/brick_wall_json_model.dart';
-// import 'package:initial_project/brick_walls/get_wall_bricks.dart';
+// import 'package:brickbreaker/brick_walls/brick_wall_json_model.dart';
+// import 'package:brickbreaker/brick_walls/get_wall_bricks.dart';
 // import '../components/brick.dart';
 // import '../components/brick2.dart';
 // import '../forge2d_game_world.dart';

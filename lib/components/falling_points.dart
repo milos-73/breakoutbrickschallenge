@@ -1,8 +1,8 @@
 import 'dart:math';
 
 import 'package:flame/components.dart';
-import 'package:initial_project/components/point_number.dart';
-import 'package:initial_project/forge2d_game_world.dart';
+import 'package:brickbreaker/components/point_number.dart';
+import 'package:brickbreaker/forge2d_game_world.dart';
 import 'package:flutter/material.dart';
 
 class FallingPoints extends Component with HasGameRef<BrickBreakGame> {

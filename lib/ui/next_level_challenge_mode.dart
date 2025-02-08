@@ -44,13 +44,17 @@ class _NextLevelChallengeModeOverlayState extends State<NextLevelChallengeModeOv
   String nextLevel1 = 'assets/images/buttons/nextLevelButton.png';
   String nextLevel2 = 'assets/images/buttons/nextLevelButton_hover.png';
 
+  int challengeLevels = 0;
+
 
   @override
   void initState() {
     print('WIN CHALLENGE LEVEL OVERLAY: ${widget.game.gameState}');
 
-    super.initState();
 
+
+    super.initState();
+    updateChallengeLevelCount();
     _createInterstitialAd();
 
     _animationController = AnimationController(
@@ -68,6 +72,12 @@ class _NextLevelChallengeModeOverlayState extends State<NextLevelChallengeModeOv
     imgMainMenu = imgMainMenu1;
     reply = reply1;
     nextLevel = nextLevel1;
+  }
+
+  Future<void> updateChallengeLevelCount()async {
+    widget.game.challengeLevelsPerGame = widget.game.challengeLevelsPerGame + 1;
+    challengeLevels = widget.game.prefs.getInt('challengeLevels') ?? 0;
+    if (widget.game.challengeLevelsPerGame > challengeLevels) {await widget.game.prefs.setInt('challengeLevels', widget.game.challengeLevelsPerGame);}
   }
 
   void _createInterstitialAd() {
@@ -125,6 +135,7 @@ class _NextLevelChallengeModeOverlayState extends State<NextLevelChallengeModeOv
       );
       _interstitialAd!.show();
     }
+    else {_mainMenuOverlays();}
   }
 
   void _showInterstitialAdReplay() {
@@ -143,6 +154,7 @@ class _NextLevelChallengeModeOverlayState extends State<NextLevelChallengeModeOv
       );
       _interstitialAd!.show();
     }
+    else {_replyOverlays();}
   }
 
   void _showInterstitialAdNextLevel() {
@@ -161,6 +173,7 @@ class _NextLevelChallengeModeOverlayState extends State<NextLevelChallengeModeOv
       );
       _interstitialAd!.show();
     }
+    else {_nextLevelOverlays();}
   }
 
   @override

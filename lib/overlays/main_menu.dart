@@ -9,7 +9,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '../forge2d_game_world.dart';
 import '../services/ad_helper.dart';
 import '../services/hex_color.dart';
-import '../ui/dbTools.dart';
+
 
 class MainMenu extends StatefulWidget {
   //final String message;
@@ -26,7 +26,7 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
   BannerAd? _bannerAd;
   Random random = new Random();
 
-DbTools dbTools = DbTools();
+
 
   late AnimationController _animationController;
   late Animation<Offset> _animation;
@@ -83,7 +83,7 @@ DbTools dbTools = DbTools();
     BannerAd(
       adUnitId: AdHelper.bannerAdUnitId2,
       request: AdRequest(),
-      size: AdSize.banner,
+      size: AdSize.fullBanner,
       listener: BannerAdListener(
         onAdLoaded: (ad) {
           setState(() {
@@ -141,21 +141,16 @@ DbTools dbTools = DbTools();
                        child: Container(width: 1080,height: 50,
                            child: Padding(
                              padding: const EdgeInsets.only(left: 15,right: 15),
-                             child: Row(mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center, children: [
-                               _bannerAd != null ? Align(
-                             alignment: Alignment.center,
-                               child: SizedBox(
-                                 width: (widget.game.camera.viewport.canvasSize?.x)!*0.75,
-                                 //width: _bannerAd!.size.width.toDouble(),
-                                 //height: _bannerAd!.size.height.toDouble(),
-                                 child: AdWidget(ad: _bannerAd!),
-                               ),
-                             ):
-                               SizedBox()
-
-
-
-                             ],),
+                             child: _bannerAd != null ? Align(
+                                     alignment: Alignment.center,
+                             child: SizedBox(
+                               width: (widget.game.camera.viewport.canvasSize?.x)!*0.95,
+                               //width: _bannerAd!.size.width.toDouble(),
+                               //height: _bannerAd!.size.height.toDouble(),
+                               child: AdWidget(ad: _bannerAd!),
+                             ),
+                                                          ):
+                             SizedBox(),
                            )
 
                        ),
@@ -169,8 +164,8 @@ DbTools dbTools = DbTools();
 
                            _challengeButton(context, widget.game),
                            _levelsButton(context, widget.game),
-                           _boardButton(context, widget.game),
-                           _myAccount(context, widget.game),
+                           //_boardButton(context, widget.game),
+                           //_myAccount(context, widget.game),
                            Padding(
                              padding: const EdgeInsets.only(top: 10),
                              // child: _settings(context, widget.game),
@@ -178,23 +173,23 @@ DbTools dbTools = DbTools();
                            ),
                            Padding(padding: const EdgeInsets.only(bottom: 40),)
                          ], )], ), ),
-                   Padding(
-                     padding: const EdgeInsets.only(top: 20),
-                     child: Center(
-                       child: Container(width: 1080,height: 40,decoration: BoxDecoration(color: Colors.black.withOpacity(0.7)),
-                           child: Padding(
-                             padding: const EdgeInsets.only(left: 15,right: 15),
-                             child: FittedBox(fit: BoxFit.scaleDown,
-                               child: Row(mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center, children: [
-                                 widget.game.loggedInName == '' ? const Text('Please sign in to save your best score to leader board.',style: TextStyle(color: Colors.white),) :
-                                 Text('You are signed in as ${widget.game.publicUserProfileName}',style: const TextStyle(color: Colors.white),),
-                               ],),
-                             ),
-                           )
-
-                       ),
-                     ),
-                   )
+                   // Padding(
+                   //   padding: const EdgeInsets.only(top: 20),
+                   //   child: Center(
+                   //     child: Container(width: 1080,height: 40,decoration: BoxDecoration(color: Colors.black.withOpacity(0.7)),
+                   //         child: Padding(
+                   //           padding: const EdgeInsets.only(left: 15,right: 15),
+                   //           child: FittedBox(fit: BoxFit.scaleDown,
+                   //             child: Row(mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center, children: [
+                   //               widget.game.loggedInName == '' ? const Text('Please sign in to save your best score to leader board.',style: TextStyle(color: Colors.white),) :
+                   //               Text('You are signed in as ${widget.game.publicUserProfileName}',style: const TextStyle(color: Colors.white),),
+                   //             ],),
+                   //           ),
+                   //         )
+                   //
+                   //     ),
+                   //   ),
+                   // )
                  ],  ),
              ),
            ],),
@@ -291,155 +286,21 @@ Widget _challengeButton(BuildContext context, BrickBreakGame game) {
     );
   }
 
-  Widget _boardButton(BuildContext context, BrickBreakGame game) {
-    return GestureDetector(
-
-      onTapDown: (tap) async {
-
-        setState(() {
-          board = board2;
-        });
-
-        if (game.audioSettings == AudioSettings.on) {
-          await FlameAudio.play('button3.mp3');
-        }
-        await game.logInStatus();
-        if (game.loggedIn != null){
-
-          game.overlays.add('LeaderBoard');
-          game.overlays.remove('MainMenu');
-        }else{
-
-          await _pleaseLogInMessage();
-
-        }
-        //game.overlays.add('FriendsList');
-
-      },
-
-      onTapUp: (tap) async {
-
-        if (game.loggedIn != null) {
-          setState(() {
-            board = board1;
-          });
-        }
-      },
-
-      onLongPress: () {
-
-        setState(() {
-          print('LONG PRESS');
-          board = board2;
-        });
-      },
-      onLongPressEnd: (tap) {
-        setState(() {
-          print('onLongPressStart');
-          board = board1;
-        });
-      },
-      onLongPressDown: (tap) {
-        if (game.loggedIn != null) {
-          setState(() {
-            print('onLongPressDown');
-            board = board2;
-          });
-        }
-      },
-
-
-      child: Image.asset(board, height: (widget.game.camera.viewport.canvasSize?.y)!/14.5,),
-    );
-  }
-
-  Widget _myAccount(BuildContext context, BrickBreakGame game) {
-    return GestureDetector(
-
-      onTapDown: (tap) async {
-         setState(() {
-        logIn = logIn2;
-      });
-         if (game.audioSettings == AudioSettings.on) {
-           await FlameAudio.play('button3.mp3');
-         }
-      game.overlays.add('MyAccount');
-      },
-
-      onTapUp: (tap){setState(() {
-        logIn = logIn1;
-      });},
-
-      onLongPress: () {
-        setState(() {
-          print('LONG PRESS');
-          logIn = logIn2;
-        });
-      },
-      onLongPressEnd: (tap) {
-        setState(() {
-          print('onLongPressStart');
-          logIn = logIn1;
-        });
-      },
-      onLongPressDown: (tap) {
-        setState(() {
-          print('onLongPressDown');
-          logIn = logIn2;
-        });
-      },
-
-      child: Image.asset(logIn, height: (widget.game.camera.viewport.canvasSize?.y)!/14.5,),
-    );
-  }
-
-
-  // Widget _settings(BuildContext context, BrickBreakGame game) {
-  //   return GestureDetector(
-  //
-  //     onTapDown: (tap) async {
-  //       setState(() {
-  //         settings = settings2;
-  //       });
-  //
-  //     },
-  //
-  //     onTapUp: (tap){setState(() {
-  //       settings = settings1;
-  //     });},
-  //
-  //     onLongPress: () {
-  //       setState(() {
-  //         print('LONG PRESS');
-  //         settings = settings2;
-  //       });
-  //     },
-  //     onLongPressEnd: (tap) {
-  //       setState(() {
-  //         print('onLongPressStart');
-  //         settings = settings1;
-  //       });
-  //     },
-  //     onLongPressDown: (tap) {
-  //       setState(() {
-  //         print('onLongPressDown');
-  //         settings = settings2;
-  //       });
-  //     },
-  //
-  //     child: Image.asset(settings, height: (widget.game.camera.viewport.canvasSize?.y)!/14.5,),
-  //   );
-  // }
 
   Widget _about(BuildContext context, BrickBreakGame game) {
     return GestureDetector(
 
-      onTapDown: (tap) async {
-        setState(() {
-          about = about2;
-        });
+        onTapDown: (tap) async {
 
-      },
+      setState(() {
+        levels = levels2;
+      });
+
+      if (game.audioSettings == AudioSettings.on) {
+        await FlameAudio.play('button3.mp3');
+      }
+      game.gameMode = GameMode.levels;
+      game.overlays.add('AboutInfo');},
 
       onTapUp: (tap){setState(() {
         about = about1;
@@ -476,7 +337,7 @@ Widget _challengeButton(BuildContext context, BrickBreakGame game) {
         return AlertDialog(
           backgroundColor: HexColor('#ffdfab').withOpacity(0.7),
           title: const Text('Leader Board', style: TextStyle(fontWeight: FontWeight.w700),),
-          content: const Column(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center,
+          content: Column(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text('Please log in to use this feature',textAlign: TextAlign.center, style: TextStyle(fontSize: 17),),
             ],

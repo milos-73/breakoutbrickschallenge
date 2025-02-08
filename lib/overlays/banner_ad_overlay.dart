@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:initial_project/forge2d_game_world.dart';
+import 'package:brickbreaker/forge2d_game_world.dart';
 
 import '../services/ad_helper.dart';
 

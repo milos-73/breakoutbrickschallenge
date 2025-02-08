@@ -3,10 +3,10 @@ import 'dart:math';
 import 'package:flame/components.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
-import 'package:initial_project/components/bullet_left.dart';
-import 'package:initial_project/components/bullet_right.dart';
-import 'package:initial_project/components/star.dart';
-import 'package:initial_project/forge2d_game_world.dart';
+import 'package:brickbreaker/components/bullet_left.dart';
+import 'package:brickbreaker/components/bullet_right.dart';
+import 'package:brickbreaker/components/star.dart';
+import 'package:brickbreaker/forge2d_game_world.dart';
 
 import 'gun.dart';
 

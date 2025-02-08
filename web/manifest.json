@@ -1,6 +1,6 @@
 {
-    "name": "breakoutbrickschallenge",
-    "short_name": "breakoutbrickschallenge",
+    "name": "brickbreaker",
+    "short_name": "brickbreaker",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
