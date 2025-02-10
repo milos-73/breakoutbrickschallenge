@@ -1,7 +1,22 @@
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
 plugins {
     id "com.android.application"
     id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
 }
 
 def localProperties = new Properties()
@@ -30,7 +45,8 @@ apply plugin: 'kotlin-android'
 android {
     namespace "sk.saluspub.brickbreaker"
     compileSdkVersion flutter.compileSdkVersion
-    ndkVersion flutter.ndkVersion
+    //ndkVersion flutter.ndkVersion
+    ndkVersion = "27.0.12077973"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
@@ -73,6 +89,9 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.android.support:multidex:2.0.1'
     implementation("com.android.support:multidex:1.0.3")
+    implementation("com.google.android.gms:play-services-games-v2:20.1.2")
+    implementation 'com.google.android.gms:play-services-auth:21.3.0'
+    implementation "com.google.android.gms:play-services-base:18.5.0"
 
 }
 

@@ -13,6 +13,7 @@ import 'package:flame_audio/flame_audio.dart';
 import 'package:flame_forge2d/flame_forge2d.dart' hide Particle;
 import 'package:flame/extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:games_services/games_services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 //import 'package:google_sign_in/google_sign_in.dart';
 import 'package:brickbreaker/components/cannon_ball.dart';
@@ -291,10 +292,22 @@ bool _bannerAdIsLoaded = false;
 final random = Random();
 final Tween<double> noise = Tween(begin: -1, end: 1);
 
-  @override
+void signIn() async {
+  try {
+    await GamesServices.signIn();
+  } catch (e) {
+    print("Sign-in failed: $e");
+  }
+}
+
+
+
+@override
   Future<void> onLoad() async {
 
     super.onLoad();
+
+    //signIn();
 
     await FlameAudio.audioCache.loadAll(['plop1.mp3','collectCoin1.mp3','plop2.mp3','plop3.mp3','brick1.mp3','brick2.mp3','brick3.mp3','brickNoBreak.mp3','levelUp1.mp3','gameOver.mp3', 'lostBall1.mp3', 'gameOver.mp3','button3.mp3','levelSelection.mp3','bottomTap.mp3','wrong1.mp3','cannon.mp3','bullet.mp3','bonus.mp3','positiveNumber.mp3','negativeNumber.mp3']);
 

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Google Play game services IDs. Save this file as res/values/games-ids.xml in your project.-->
+<resources>
+    <!--app_id-->
+    <string name="app_id" translatable="false">845167331755</string>
+    <!--package_name-->
+    <string name="package_name" translatable="false">sk.saluspub.brickbreaker</string>
+    <!--achievement 10 stars-->
+    <string name="achievement_10_stars" translatable="false">CgkIq5OYv8wYEAIQAw</string>
+    <!--leaderboard Best Challenge Score-->
+    <string name="leaderboard_best_challenge_score" translatable="false">CgkIq5OYv8wYEAIQAQ</string>
+    <string translatable="false"  name="game_services_project_id"> 845167331755 </string>
+</resources>

@@ -4,6 +4,7 @@ import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:games_services/games_services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import '../forge2d_game_world.dart';
@@ -117,6 +118,16 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
     });
   }
 
+  void signIn() async {
+    try {
+     //await GameAuth.signIn();
+     await GameAuth.signIn();
+     print('SIGNED IN');
+     } catch (e) {
+      print("Sign-in failed: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(resizeToAvoidBottomInset: false,
@@ -164,7 +175,7 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
 
                            _challengeButton(context, widget.game),
                            _levelsButton(context, widget.game),
-                           //_boardButton(context, widget.game),
+                           _boardButton(context, widget.game),
                            //_myAccount(context, widget.game),
                            Padding(
                              padding: const EdgeInsets.only(top: 10),
@@ -197,7 +208,7 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
     ))));
   }
 
-Widget _challengeButton(BuildContext context, BrickBreakGame game) {
+  Widget _challengeButton(BuildContext context, BrickBreakGame game) {
     return GestureDetector(
 
 
@@ -286,7 +297,6 @@ Widget _challengeButton(BuildContext context, BrickBreakGame game) {
     );
   }
 
-
   Widget _about(BuildContext context, BrickBreakGame game) {
     return GestureDetector(
 
@@ -326,6 +336,66 @@ Widget _challengeButton(BuildContext context, BrickBreakGame game) {
       },
 
       child: Image.asset(about, height: (widget.game.camera.viewport.canvasSize?.y)!/14.5,),
+    );
+  }
+
+  Widget _boardButton(BuildContext context, BrickBreakGame game) {
+    return GestureDetector(
+
+      onTapDown: (tap) async {
+        setState(() {
+          board = board2;
+        });
+        if (game.audioSettings == AudioSettings.on) {
+          await FlameAudio.play('button3.mp3');
+        }
+
+        //game.gameMode = GameMode.challenge;
+        print('1 ---- GAME MODE FROM CHALLENGE BUTTON: ${game.gameMode}');
+        signIn();
+        //Leaderb  oards.showLeaderboards(androidLeaderboardID: 'CgkIq5OYv8wYEAIQAg');
+        //Achievements.showAchievements();
+       final result = await GameAuth.isSignedIn;
+        print('SIGNED???: ${result}');
+        //Leaderboards.submitScore(score: Score(androidLeaderboardID: 'CgkIq5OYv8wYEAIQAQ', value: 5300));
+       final result2 = await Player.getPlayerName();
+        //final result2 = await Player.getPlayerName();
+        await Leaderboards.showLeaderboards(androidLeaderboardID: 'CgkIq5OYv8wYEAIQAQ');
+
+        //final result3 = await Leaderboards.showLeaderboards(androidLeaderboardID: 'CgkIq5OYv8wYEAIQAQ');
+
+        print('Player???: ${result2}');
+        //print('SIGNED??? : ${result}');
+        //print('NAME: ${result2}');
+        //print('NAME: ${result3}');
+
+
+      },
+
+      onTapUp: (tap){setState(() {
+        board = board1;
+      });},
+
+      onLongPress: () {
+        setState(() {
+          print('LONG PRESS');
+          board = board2;
+        });
+      },
+      onLongPressEnd: (tap) {
+        setState(() {
+          print('onLongPressStart');
+          board = board1;
+        });
+      },
+      onLongPressDown: (tap) {
+        setState(() {
+          print('onLongPressDown');
+          board = board2;
+        });
+      },
+
+      child: Image.asset(board, height: (widget.game.camera.viewport.canvasSize?.y)!/14.5,),
     );
   }
 
