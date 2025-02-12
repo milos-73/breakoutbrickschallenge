@@ -26,6 +26,7 @@ import 'package:brickbreaker/services/saved_values.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:username_gen/username_gen.dart';
+import 'components/google_play_game_services.dart';
 import 'components/level_number_challenge.dart';
 import 'components/arena.dart';
 import 'components/back_to_menu_button.dart';
@@ -157,14 +158,12 @@ Color backgroundColor() =>  const Color(0x00FF9000);
 
   BrickBreakGame() : super(gravity: Vector2.zero(),zoom: 30,);
 
-
 BannerAd? _bannerAd;
 bool _bannerAdIsLoaded = false;
 
   late Ball ball;
   Ball2? ball2;
   StickyBall? stickyBall;
-  //Star? star;
 
   late final Background background;
   late final Arena arena;
@@ -177,18 +176,14 @@ bool _bannerAdIsLoaded = false;
   late final Obstacles obstacles;
   late final FallingBonus fallingBonus;
   FallingStars? fallingStars;
-  // BulletLeft? bulletLeft;
-  // BulletRight? bulletRight;
   FallingPoints? fallingPoints;
   Bullets? bullets;
   CannonBall? cannonBall;
   late TimerComponent interval;
-  //late TimerComponent bulletsInterval;
   TimerComponent? bullet;
   TimerComponent? gun;
   TotalPointCounter? totalPointCounter;
   TotalStarsCounter? totalStarsCounter;
-  //late TimerComponent stickyBall;
 
   late final SharedPreferences prefs;
 
@@ -224,7 +219,6 @@ bool _bannerAdIsLoaded = false;
   int countDown = 0;
   int countDown2 = 0;
   int countDown3 = 0;
-  //int countDown4 = 0;
 
   int levelPoints = 0;
   int levelPointTop = 0;
@@ -239,13 +233,12 @@ bool _bannerAdIsLoaded = false;
   int? challengeLevels = 0;
   int challengeLevelsPerGame = 0;
 
+  int? totalStarsPoints;
+  int  currentGameLevelStarsPoints = 0;
+
   String? starsPerLevelInStringLocal = '';
   List<String?> starsPerLevelInStringListLocal = [];
   List<int?> starsPerLevelInIntListLocal = [];
-
-  //String? starsPerLevelInStringDB = '';
-  //List<String?> starsPerLevelInStringListDB = [];
-  //List<int?> starsPerLevelInIntListDB = [];
 
   int starPoints = 0;
 
@@ -270,36 +263,21 @@ bool _bannerAdIsLoaded = false;
  String? userSignedInProvider;
  String? loggedIn;
 
- //int? publicTopTotalPoints = 0;
- //int? publicTotalStars = 0;
+String? syncErrorMessage;
 
- String? syncErrorMessage;
+String? searchedFriend = '';
+Map? profileOfSearchedFriend;
 
- String? searchedFriend = '';
- Map? profileOfSearchedFriend;
+late bool isSignIn = false;
+late String playerName = '';
 
-
- //late FirebaseAuth _auth;
- //final GoogleSignIn _googleSignIn = GoogleSignIn();
- //final DbTools dbTools = DbTools();
-
- //bool loggedInWithEmail = false;
-
-  Vector2 ballPosition = Vector2(18, 60);
-  Vector2 position = Vector2(0, 0);
-  MouseJoint? mouseJoint;
+Vector2 ballPosition = Vector2(18, 60);
+Vector2 position = Vector2(0, 0);
+MouseJoint? mouseJoint;
 
 final random = Random();
+final googlePlayGameServices = GooglePlayGameServices();
 final Tween<double> noise = Tween(begin: -1, end: 1);
-
-void signIn() async {
-  try {
-    await GamesServices.signIn();
-  } catch (e) {
-    print("Sign-in failed: $e");
-  }
-}
-
 
 
 @override
@@ -307,9 +285,9 @@ void signIn() async {
 
     super.onLoad();
 
-    //signIn();
+    googlePlayGameServices.signIn();
 
-    await FlameAudio.audioCache.loadAll(['plop1.mp3','collectCoin1.mp3','plop2.mp3','plop3.mp3','brick1.mp3','brick2.mp3','brick3.mp3','brickNoBreak.mp3','levelUp1.mp3','gameOver.mp3', 'lostBall1.mp3', 'gameOver.mp3','button3.mp3','levelSelection.mp3','bottomTap.mp3','wrong1.mp3','cannon.mp3','bullet.mp3','bonus.mp3','positiveNumber.mp3','negativeNumber.mp3']);
+   await FlameAudio.audioCache.loadAll(['plop1.mp3','collectCoin1.mp3','plop2.mp3','plop3.mp3','brick1.mp3','brick2.mp3','brick3.mp3','brickNoBreak.mp3','levelUp1.mp3','gameOver.mp3', 'lostBall1.mp3', 'gameOver.mp3','button3.mp3','levelSelection.mp3','bottomTap.mp3','wrong1.mp3','cannon.mp3','bullet.mp3','bonus.mp3','positiveNumber.mp3','negativeNumber.mp3']);
 
     prefs = await SharedPreferences.getInstance();
 
@@ -318,20 +296,15 @@ void signIn() async {
     await Flame.device.fullScreen();
     await Flame.device.setPortrait();
 
-    //localUserProfileName = prefs.getString('customUserProfileName' ?? '');
-    //if(localUserProfileName == '') {prefs.setString('customUserProfileName', 'user name not set');}
     localLastFinishedLevel = prefs.getInt('lastFinishedLevel') ?? 0;
     totalGamePoints = prefs.getInt('totalGamePoints') ?? 0;
     totalStars = prefs.getInt('totalStars') ?? 0;
-    //starsPerLevelInStringLocal = prefs.getString('starsPerLevelInString') ?? '';
+    totalStarsPoints = prefs.getInt('totalStarsPoints') ?? 0;
 
     fiveStarsLevels = prefs.getInt('fiveStarsLevels') ?? 0;
     challengeLevels = prefs.getInt('challengeLevels') ?? 0;
 
-    //await loadLevelDataForLocalUse();
-
-    //await getUserData();
-    await _initializeGame();
+       await _initializeGame();
     }
 
    List particleLife = [0.04,0.08 ,0.1, 0.12, 0.18, 0.22, 0.26,0.3];
@@ -456,6 +429,9 @@ void signIn() async {
     if (numberOfLevels > 0) {
       for (var i = 1; i < numberOfLevels + 1; i++ ){
         await prefs.remove('numberOfStars$i');
+        await prefs.remove('starsPoints$i');
+        await prefs.remove('totalStarsPoints$i');
+
       }
     }
 
@@ -463,8 +439,10 @@ void signIn() async {
     await prefs.remove('lastFinishedLevel');
     await prefs.remove('totalGamePoints');
     await prefs.remove('totalStars');
+    await prefs.remove('totalStarsPoints');
     await prefs.remove('currentPlayedLevelNumber');
     await prefs.remove('levelInProgress');
+    await prefs.remove('totalStarsPoints');
 
     levelPoints = 0;
     levelPointTop = 0;
@@ -473,10 +451,9 @@ void signIn() async {
 
     levelStars = 0;
     currentGameLevelStars = 0;
+    currentGameLevelStarsPoints = 0;
     totalStars;
-
-    //publicTopTotalPoints = 0;
-    //publicTotalStars = 0;
+    totalStarsPoints;
 
     starsPerLevelInStringLocal = '';
     starsPerLevelInStringListLocal = [];
@@ -489,83 +466,6 @@ void signIn() async {
 
   }
 
-// Future<void> resetGameData() async {
-//
-//     int? numberOfLevels = prefs.getInt('lastFinishedLevel') ?? 0;
-//
-//     if (numberOfLevels > 0) {
-//       for (var i = 1; i < numberOfLevels + 1; i++ ) {
-//         await prefs.remove('numberOfStars$i');
-//     }
-//    }
-//
-//     await prefs.remove('starsPerLevelInString');
-//     await prefs.remove('lastFinishedLevel');
-//     await prefs.remove('totalGamePoints');
-//     await prefs.remove('totalStars');
-//     await prefs.remove('currentPlayedLevelNumber');
-//     await prefs.remove('levelInProgress');
-//
-//     levelPoints = 0;
-//     levelPointTop = 0;
-//     totalPointsInCurrentGame = 0;
-//     totalGamePoints = 0;
-//
-//     levelStars = 0;
-//     currentGameLevelStars = 0;
-//     totalStars;
-//
-//     //publicTopTotalPoints = 0;
-//     //publicTotalStars = 0;
-//
-//     starsPerLevelInStringLocal = '';
-//     starsPerLevelInStringListLocal = [];
-//     starsPerLevelInIntListLocal = [];
-//
-//     life = 3;
-//     localLastFinishedLevel;
-//     lastFinishedLevelDb;
-//     currentPlayedLevelNumber = 1;
-//
-// }
-
-  ///Set the list of stars amount pre each level if user is logged in
-
-  // Future<void> setLevelDataWhileOnline() async {
-  //
-  //   if(starsPerLevelInStringDB != 'error'){
-  //     starsPerLevelInStringListLocal = starsPerLevelInStringDB!.split(',');
-  //
-  //     print('++++++starsPerLevelInStringDB+++++${starsPerLevelInStringDB}');
-  //     print('${starsPerLevelInStringListLocal}');
-  //     int counter = 0;
-  //     int numberOfAllStars = 0;
-  //
-  //     for (var i in starsPerLevelInStringListLocal) {
-  //
-  //       print('++++++++++ i ++++++++++ ${i}');
-  //       int? value = int.tryParse(i!) ?? 0;
-  //
-  //       print('++++++++++ value ++++++++++ ${value}');
-  //
-  //       starsPerLevelInIntListLocal.add(value);
-  //       prefs.setInt('numberOfStars${counter + 1}', value);
-  //       if (value != 0){counter = counter + 1;};
-  //       numberOfAllStars = numberOfAllStars + value;
-  //
-  //     }
-  //
-  //     print('=================== ${counter} ===================');
-  //     syncStatus = SyncStatus.ok;
-  //     prefs.setInt('lastFinishedLevel', counter);
-  //     localLastFinishedLevel = counter;
-  //     totalStars = numberOfAllStars;
-  //
-  //   } else  {
-  //     print('ERROR in STARTS DB');
-  //     starsPerLevelInIntListLocal = [];}
-  // }
-
   ///Set user data if user is not logged
 
   Future<void> setLevelDataWhileOffline() async {
@@ -574,6 +474,7 @@ void signIn() async {
     localUserProfileName = prefs.getString('customUserProfileName' ?? '');
     publicUserProfileName = prefs.getString('customUserProfileName' ?? '');
     totalStars = prefs.getInt('totalStars') ?? 0;
+    totalStars = prefs.getInt('totalStarsPoints') ?? 0;
     totalGamePoints = prefs.getInt('totalGamePoints') ?? 0;
     localLastFinishedLevel = prefs.getInt('lastFinishedLevel') ?? 0;
     starsPerLevelInStringLocal = prefs.getString('starsPerLevelInString') ?? '';
@@ -594,109 +495,6 @@ void signIn() async {
     } else {
       starsPerLevelInIntListLocal = [];}
    }
-
-  ///Check if user is logged, which provider is used and update user data accordingly
-
-
-
-  ///Get user data if user has changed the account in phone
-
- //  Future<void> getUserData() async {
- //
- //   await prefs.clear();
- //
- //   starsPerLevelInStringListLocal = [];
- //   starsPerLevelInIntListLocal = [];
- //
- //
- //   prefs.setString('customUserProfileName', publicUserProfileName ?? '');
- //
- //   await prefs.setInt('totalGamePoints', publicTopTotalPoints!);
- //
- //
- //   await prefs.setInt('totalStars', publicTotalStars!);
- //   totalStars = publicTotalStars;
- //
- //     await prefs.setString( 'starsPerLevelInString','');
- //     starsPerLevelInStringLocal = '';
- //
- //   await prefs.setInt('lastFinishedLevel', localLastFinishedLevel ?? 0);
- //
- // }
-
-  ///Update user data if user has logged in with the same account as was set in SharedPreferences
-
-  // Future<void> updateUserData() async {
-  //
-  //
-  //   localLastFinishedLevel = prefs.getInt('lastFinishedLevel') ?? 0;
-  //
-  //   if (lastFinishedLevelDb! < localLastFinishedLevel!){
-  //
-  //
-  //
-  //     }
-  //   if (lastFinishedLevelDb! < localLastFinishedLevel!){
-  //     prefs.setInt('lastFinishedLevel', lastFinishedLevelDb!);
-  //   }
-  //
-  //   if (lastFinishedLevelDb! == localLastFinishedLevel!){
-  //     prefs.setInt('lastFinishedLevel', lastFinishedLevelDb!);
-  //   }
-  //
-  //
-  //
-  //   publicTopTotalPoints ??= totalGamePoints;
-  //
-  //   if (publicTopTotalPoints != null && publicTopTotalPoints! > totalGamePoints) {
-  //     totalGamePoints = publicTopTotalPoints!;
-  //     await prefs.setInt('totalGamePoints', publicTopTotalPoints!);
-  //   }
-  //
-  //   if (publicTopTotalPoints != null &&
-  //       publicTopTotalPoints! < totalGamePoints) {
-  //     publicTopTotalPoints = totalGamePoints;
-  //
-  //
-  //   }
-  //
-  //
-  //   totalStars = prefs.getInt('totalStars') ?? 0;
-  //
-  //   starsPerLevelInStringLocal = prefs.getString('starsPerLevelInString');
-  //
-  //   publicTotalStars ??= totalStars;
-  //
-  //   if (publicTotalStars != null && publicTotalStars! > totalStars!) {
-  //     totalStars = publicTotalStars!;
-  //
-  //     await prefs.setInt('totalStars', publicTotalStars!);
-  //
-  //       await prefs.setString('starsPerLevelInString', '');
-  //       starsPerLevelInStringLocal = '';
-  //
-  //   }
-  //
-  //   if (publicTotalStars != null && publicTotalStars! == totalStars!) {
-  //     if (lastFinishedLevelDb! < localLastFinishedLevel!) {
-  //       starsPerLevelInStringDB = starsPerLevelInStringLocal;
-  //     } else {
-  //       starsPerLevelInStringLocal = starsPerLevelInStringDB;
-  //     }
-  //
-  //     if (lastFinishedLevelDb! > localLastFinishedLevel!) {
-  //       localLastFinishedLevel = lastFinishedLevelDb;
-  //     }
-  //     await prefs.setInt('lastFinishedLevel', lastFinishedLevelDb ?? 0);
-  //     if (lastFinishedLevelDb! < localLastFinishedLevel!) {
-  //       lastFinishedLevelDb = localLastFinishedLevel;
-  //     }
-  //
-  //
-  //     print('IN UPDATE USER DATA');
-  //     await setLevelDataWhileOnline();
-  //   }
-  // }
 
   Future<void> getCustomUserName(String? keyID) async {
 
@@ -834,10 +632,12 @@ void signIn() async {
     levelPointTop = prefs.getInt('topLevelPoints1') ?? 0;
     totalGamePoints = prefs.getInt('totalGamePoints') ?? 0;
     totalStars = prefs.getInt('totalStars') ?? 0;
+    totalStarsPoints = prefs.getInt('totalStarsPoints') ?? 0;
     levelStars = prefs.getInt('numberOfStars$currentPlayedLevelNumber') ?? 0;
     localLastFinishedLevel = prefs.getInt('lastFinishedLevel') ?? 0;
 
     currentGameLevelStars = 0;
+    currentGameLevelStarsPoints = 0;
     totalPointsInCurrentGame = 0;
     levelPoints = 0;
 
@@ -1042,6 +842,7 @@ void signIn() async {
   bool? starsLevelTotalMounted = totalStarsCounter?.isMounted;
 
   currentGameLevelStars = 0;
+  currentGameLevelStarsPoints = 0;
   totalPointsInCurrentGame = 0;
   levelPoints = 0;
   challengeLevelsPerGame = 0;
@@ -1050,6 +851,7 @@ void signIn() async {
   levelPointTop = prefs.getInt('topLevelPoints$level') ?? 0;
   totalGamePoints = prefs.getInt('totalGamePoints') ?? 0;
   totalStars = prefs.getInt('totalStars') ?? 0;
+  totalStarsPoints = prefs.getInt('totalStarsPoints') ?? 0;
   levelStars = prefs.getInt('numberOfStars$level') ?? 0;
   localLastFinishedLevel = prefs.getInt('lastFinishedLevel') ?? 0;
 
@@ -1305,6 +1107,7 @@ void signIn() async {
     currentPlayedLevelNumber = prefs.getInt('currentPlayedLevelNumber') ?? 0;
     totalGamePoints = prefs.getInt('totalGamePoints') ?? 0;
     totalStars = prefs.getInt('totalStars') ?? 0;
+    totalStarsPoints = prefs.getInt('totalStarsPoints') ?? 0;
     levelPointTop = prefs.getInt('topLevelPoints$level') ?? 0;
     levelStars = prefs.getInt('numberOfStars$level') ?? 0;
     await prefs.setInt('currentPlayedLevelNumber', currentPlayedLevelNumber + 1);
@@ -1313,6 +1116,7 @@ void signIn() async {
     print('$currentPlayedLevelNumber');
 
     currentGameLevelStars = 0;
+    currentGameLevelStarsPoints = 0;
     levelPoints = 0;
 
     if(ball2On == 1){

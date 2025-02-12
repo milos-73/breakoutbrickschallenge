@@ -9,6 +9,7 @@ import 'package:flame/components.dart';
 //import 'package:google_sign_in/google_sign_in.dart';
 import 'package:brickbreaker/components/walls_1.dart';
 import 'package:brickbreaker/components/walls_2.dart';
+import 'package:games_services/games_services.dart';
 import '../forge2d_game_world.dart';
 import '../services/saved_values.dart';
 import 'brick.dart';
@@ -16,6 +17,7 @@ import 'brick2.dart';
 import 'brick3.dart';
 import 'brick_crack_1.dart';
 import 'brick_crack_2.dart';
+import 'google_play_game_services.dart';
 
 // 1
 class BrickWall extends Component with HasGameRef<BrickBreakGame> {
@@ -28,9 +30,12 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
   BrickWall({Vector2? position, this.size, required this.levelNumber}) : position = position ?? Vector2.zero();
 
   SavedValues savedValues = SavedValues();
+  final googlePlayGameServices = GooglePlayGameServices();
+
   Size brickSize = const Size(3.09,1.6);
   int levelPointsTop = 0;
   int numberOfStarsPerLevel = 0;
+  int numberOfStarsPointsPerLevel = 0;
   int? currentLevelNumber;
   int? challengeLevelNumber;
   int? currentChallengeLevelPoints;
@@ -60,6 +65,7 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
     var numberOfBrickCracked1 = children.query<BrickCracked1>();
     var numberOfBrickCracked2 = children.query<BrickCracked2>();
 
+    bool signInStatus = await googlePlayGameServices.getSignInStatus();
 
     gameRef.numberOfBrickHits = numberOfBrick.length + numberOfBrick3.length + numberOfBrickCracked1.length + numberOfBrickCracked2.length;
     //var starInterval = (numberOfBrick.length+numberOfBrick3.length+numberOfBrickCracked1.length+numberOfBrickCracked2.length)~/5;
@@ -85,9 +91,9 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
 
         ///COMPARING Total Points In Current Game with Total Points and WRITING the Current Game Points to Total Game Points if larger
         if(gameRef.totalPointsInCurrentGame > gameRef.totalGamePoints){
-
-         await gameRef.prefs.setInt('totalGamePoints', gameRef.totalPointsInCurrentGame);
-        }
+        await gameRef.prefs.setInt('totalGamePoints', gameRef.totalPointsInCurrentGame);
+        if (signInStatus == true){await Leaderboards.submitScore(score: Score(androidLeaderboardID:'CgkIq5OYv8wYEAIQAQ', value:  gameRef.totalPointsInCurrentGame ));}
+          }
 
         ///GETTING Total Level Points from Shared Preferences
         levelPointsTop = gameRef.prefs.getInt('topLevelPoints$levelNumber') ?? 0;
@@ -112,6 +118,7 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
         if (currentLevelNumber! <= lastFinishedLevel){
 
           numberOfStarsPerLevel = gameRef.prefs.getInt('numberOfStars$currentLevelNumber') ?? 0;
+          numberOfStarsPointsPerLevel = gameRef.prefs.getInt('starsPoints$currentLevelNumber') ?? 0;
 
           if (numberOfStarsPerLevel < gameRef.currentGameLevelStars){
 
@@ -119,12 +126,27 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
             //gameRef.starsPerLevelInStringLocal = gameRef.starsPerLevelInIntListLocal.join(',');
 
             int totalStars = gameRef.totalStars! + (gameRef.currentGameLevelStars - numberOfStarsPerLevel);
+            int totalStarsPoints = gameRef.totalStarsPoints! + (gameRef.currentGameLevelStarsPoints - numberOfStarsPointsPerLevel);
+            //int percentage = ((totalStars/(lastFinishedLevel*5)*100)*100).toInt();
 
-            await gameRef.prefs.setString('starsPerLevelInString', gameRef.starsPerLevelInStringLocal!);
+            //await gameRef.prefs.setString('starsPerLevelInString', gameRef.starsPerLevelInStringLocal!);
             await gameRef.prefs.setInt('numberOfStars$currentLevelNumber', gameRef.currentGameLevelStars);
             await gameRef.prefs.setInt('totalStars', totalStars);
+            await gameRef.prefs.setInt('starsPoints$currentLevelNumber', gameRef.currentGameLevelStarsPoints);
+            await gameRef.prefs.setInt('totalStarsPoints', totalStarsPoints);
+
+            if (signInStatus == true){
+              await Leaderboards.submitScore(score: Score(androidLeaderboardID:'CgkIq5OYv8wYEAIQAQ', value:  totalStars ));
+              await Leaderboards.submitScore(score: Score(androidLeaderboardID:'CgkIq5OYv8wYEAIQCg', value:  totalStarsPoints ));
+            }
+
+            print('numberOfStarsPointsPerLevel: ${numberOfStarsPointsPerLevel}');
+            print('gameRef.currentGameLevelStarsPoints: ${gameRef.currentGameLevelStarsPoints}');
+            print('gameRef.totalStarsPoints: ${gameRef.totalStarsPoints}');
+            print('totalStarsPoints: ${totalStarsPoints}');
 
             gameRef.totalStars = totalStars;
+            gameRef.totalStarsPoints = totalStarsPoints;
             //if (gameRef.currentGameLevelStars == 5) {await gameRef.prefs.setInt('fiveStarsLevels', gameRef.fiveStarsLevels! + 1);}
 
             }
@@ -132,23 +154,37 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
         }
 
         if (currentLevelNumber == lastFinishedLevel + 1) {
+
           await gameRef.prefs.setInt('lastFinishedLevel', currentLevelNumber!);
           gameRef.localLastFinishedLevel = currentLevelNumber;
 
           int totalStars = gameRef.totalStars! + gameRef.currentGameLevelStars;
+          int totalStarsPoints = gameRef.totalStarsPoints! + gameRef.currentGameLevelStarsPoints;
+          //int percentage = ((totalStars/(currentLevelNumber!*5)*100)*100).toInt();
 
           await gameRef.prefs.setInt('numberOfStars$currentLevelNumber', gameRef.currentGameLevelStars);
           await gameRef.prefs.setString('starsPerLevelInString', gameRef.starsPerLevelInStringLocal!);
           await gameRef.prefs.setInt('totalStars', gameRef.totalStars! + gameRef.currentGameLevelStars);
+          await gameRef.prefs.setInt('starsPoints$currentLevelNumber', gameRef.currentGameLevelStarsPoints);
+          await gameRef.prefs.setInt('totalStarsPoints', gameRef.currentGameLevelStarsPoints + gameRef.totalStarsPoints!);
+
+
+          if (signInStatus == true){
+            await Leaderboards.submitScore(score: Score(androidLeaderboardID:'CgkIq5OYv8wYEAIQAQ', value:  totalStars ));
+            await Leaderboards.submitScore(score: Score(androidLeaderboardID:'CgkIq5OYv8wYEAIQCg', value:  totalStarsPoints ));
+          }
 
           gameRef.totalStars = totalStars;
+          gameRef.totalStarsPoints = totalStarsPoints;
+
+          // print('totalStars: ${totalStars}');
+          // print('totalStarsPoints: ${totalStarsPoints}');
+          // print(' gameRef.currentGameLevelStarsPoints: ${ gameRef.currentGameLevelStarsPoints}');
           //if (gameRef.currentGameLevelStars == 5) {await gameRef.prefs.setInt('fiveStarsLevels', gameRef.fiveStarsLevels! + 1);}
         }
         gameRef.gameState = GameState.won;
       }
-
     }
-
 
     for (final child in [... children]){
       if (child is Brick && child.destroy){
@@ -161,6 +197,9 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
           print('BRICK SOUND');
           FlameAudio.play('brick3.mp3');}
         remove(child);
+        await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQBg', steps: 1));
+
+
       }
 
       if (child is Brick3 && child.crack1){

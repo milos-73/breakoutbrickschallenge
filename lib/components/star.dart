@@ -37,6 +37,10 @@ class Star extends BodyComponent<BrickBreakGame> with ContactCallbacks{
     if (other is Paddle){
       destroy = true;
       gameRef.currentGameLevelStars = gameRef.currentGameLevelStars + 1;
+      if (gameRef.currentGameLevelStars < 5) {gameRef.currentGameLevelStarsPoints = gameRef.currentGameLevelStarsPoints + 10;}
+      else if (gameRef.currentGameLevelStars == 5) {
+        gameRef.currentGameLevelStarsPoints = gameRef.currentGameLevelStarsPoints + 50;
+      }
     }
     if(other is DeadZone){
       print('STAR IN DEATH ZONE');

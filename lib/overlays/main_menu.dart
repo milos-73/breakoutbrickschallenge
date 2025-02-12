@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:games_services/games_services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+import '../components/google_play_game_services.dart';
 import '../forge2d_game_world.dart';
 import '../services/ad_helper.dart';
 import '../services/hex_color.dart';
@@ -26,8 +27,10 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
 
   BannerAd? _bannerAd;
   Random random = new Random();
+  final googlePlayGameServices = GooglePlayGameServices();
 
-
+  String? playerName = '';
+  bool signInStatus = false;
 
   late AnimationController _animationController;
   late Animation<Offset> _animation;
@@ -62,6 +65,11 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
     print('WIN GAME OVERLAY: ${widget.game.gameState}');
 
     super.initState();
+
+    getSignInStatus();
+    fetchPlayerName();
+    //getPlayerName().then((value) => setState(() {playerName = value;}));
+
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
@@ -118,14 +126,21 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
     });
   }
 
-  void signIn() async {
-    try {
-     //await GameAuth.signIn();
-     await GameAuth.signIn();
-     print('SIGNED IN');
-     } catch (e) {
-      print("Sign-in failed: $e");
-    }
+  Future<String> getPlayerName() async {
+    String? name = await Player.getPlayerName() ?? 'Not signed in';
+   return name;
+  }
+
+  Future<void> getSignInStatus() async {
+    signInStatus = await GameAuth.isSignedIn;
+  }
+
+  Future<void> fetchPlayerName() async {
+    String name = await getPlayerName();
+    setState(() {
+      signInStatus = true;
+      playerName = name;
+     });
   }
 
   @override
@@ -184,23 +199,24 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
                            ),
                            Padding(padding: const EdgeInsets.only(bottom: 40),)
                          ], )], ), ),
-                   // Padding(
-                   //   padding: const EdgeInsets.only(top: 20),
-                   //   child: Center(
-                   //     child: Container(width: 1080,height: 40,decoration: BoxDecoration(color: Colors.black.withOpacity(0.7)),
-                   //         child: Padding(
-                   //           padding: const EdgeInsets.only(left: 15,right: 15),
-                   //           child: FittedBox(fit: BoxFit.scaleDown,
-                   //             child: Row(mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center, children: [
-                   //               widget.game.loggedInName == '' ? const Text('Please sign in to save your best score to leader board.',style: TextStyle(color: Colors.white),) :
-                   //               Text('You are signed in as ${widget.game.publicUserProfileName}',style: const TextStyle(color: Colors.white),),
-                   //             ],),
-                   //           ),
-                   //         )
-                   //
-                   //     ),
-                   //   ),
-                   // )
+                   Padding(
+                     padding: const EdgeInsets.only(top: 20),
+                     child: Center(
+                       child: Container(width: 1080,height: 40,decoration: BoxDecoration(color: Colors.black.withOpacity(0.7)),
+                           child: Padding(
+                             padding: const EdgeInsets.only(left: 15,right: 15),
+                             child: FittedBox(fit: BoxFit.scaleDown,
+                               child: Row(mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center, children: [
+                                 signInStatus == false ? const Text('Please sign in to save your best score to leader board.',style: TextStyle(color: Colors.white),) :
+                                 Text('You are signed in as ${playerName}',style: const TextStyle(color: Colors.white),),
+                                 //Text('You are signed in as ${playerName}',style: const TextStyle(color: Colors.white),),
+                               ],),
+                             ),
+                           )
+
+                       ),
+                     ),
+                   )
                  ],  ),
              ),
            ],),
@@ -349,27 +365,13 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
         if (game.audioSettings == AudioSettings.on) {
           await FlameAudio.play('button3.mp3');
         }
-
-        //game.gameMode = GameMode.challenge;
-        print('1 ---- GAME MODE FROM CHALLENGE BUTTON: ${game.gameMode}');
-        signIn();
-        //Leaderb  oards.showLeaderboards(androidLeaderboardID: 'CgkIq5OYv8wYEAIQAg');
-        //Achievements.showAchievements();
-       final result = await GameAuth.isSignedIn;
-        print('SIGNED???: ${result}');
-        //Leaderboards.submitScore(score: Score(androidLeaderboardID: 'CgkIq5OYv8wYEAIQAQ', value: 5300));
-       final result2 = await Player.getPlayerName();
-        //final result2 = await Player.getPlayerName();
-        await Leaderboards.showLeaderboards(androidLeaderboardID: 'CgkIq5OYv8wYEAIQAQ');
-
-        //final result3 = await Leaderboards.showLeaderboards(androidLeaderboardID: 'CgkIq5OYv8wYEAIQAQ');
-
-        print('Player???: ${result2}');
-        //print('SIGNED??? : ${result}');
-        //print('NAME: ${result2}');
-        //print('NAME: ${result3}');
-
-
+        if (signInStatus == false){googlePlayGameServices.signIn(); await fetchPlayerName(); await Leaderboards.showLeaderboards();}
+        else {
+          //final result = await Achievements.loadAchievements();
+          //print('ACHIEVEMENTS: ${result?[0].completedSteps}');
+          await Leaderboards.showLeaderboards();
+          //await Achievements.showAchievements();
+        }
       },
 
       onTapUp: (tap){setState(() {

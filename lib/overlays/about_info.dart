@@ -245,8 +245,8 @@ class _AboutInfoState extends State<AboutInfo> {
                                         Text('Challenge Points:',style: TextStyle(fontSize: 15,color: Colors.amber),),
                                         Text('Challenge Levels:',style: TextStyle(fontSize: 15,color: Colors.amber),),
                                         Text('Levels finished:',style: TextStyle(fontSize: 15,color: Colors.amber),),
-                                        Text('Collected stars:',style: TextStyle(fontSize: 15,color: Colors.amber),),
                                         Text('Collected stars %:',style: TextStyle(fontSize: 15,color: Colors.amber),),
+                                        Text('Collected stars:',style: TextStyle(fontSize: 15,color: Colors.amber),),
                                         Text('5* Levels:',style: TextStyle(fontSize: 15,color: Colors.amber),),
                                         //Text('${widget.gameRef.totalGamePoints}',style: TextStyle(fontSize: 20,color: Colors.amber),),
 
