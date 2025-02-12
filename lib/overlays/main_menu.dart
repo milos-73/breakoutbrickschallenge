@@ -60,6 +60,10 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
   String about1 = 'assets/images/buttons/infoButton.png';
   String about2 = 'assets/images/buttons/infoButton_hover.png';
 
+  late String achievements;
+  String achievements1 = 'assets/images/buttons/achievementsButton.png';
+  String achievements2 = 'assets/images/buttons/achievementsButton_hover.png';
+
   @override
   void initState() {
     print('WIN GAME OVERLAY: ${widget.game.gameState}');
@@ -86,6 +90,7 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
     levels = levels1;
     board = board1;
     logIn = logIn1;
+    achievements = achievements1;
     //settings = settings1;
     about = about1;
 
@@ -191,6 +196,7 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
                            _challengeButton(context, widget.game),
                            _levelsButton(context, widget.game),
                            _boardButton(context, widget.game),
+                           _achievements(context, widget.game),
                            //_myAccount(context, widget.game),
                            Padding(
                              padding: const EdgeInsets.only(top: 10),
@@ -398,6 +404,52 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
       },
 
       child: Image.asset(board, height: (widget.game.camera.viewport.canvasSize?.y)!/14.5,),
+    );
+  }
+
+  Widget _achievements(BuildContext context, BrickBreakGame game) {
+    return GestureDetector(
+
+      onTapDown: (tap) async {
+        setState(() {
+          achievements = achievements2;
+        });
+        if (game.audioSettings == AudioSettings.on) {
+          await FlameAudio.play('button3.mp3');
+        }
+        if (signInStatus == false){googlePlayGameServices.signIn(); await fetchPlayerName(); await Leaderboards.showLeaderboards();}
+        else {
+          //final result = await Achievements.loadAchievements();
+          //print('ACHIEVEMENTS: ${result?[0].completedSteps}');
+          await Achievements.showAchievements();
+          //await Achievements.showAchievements();
+        }
+      },
+
+      onTapUp: (tap){setState(() {
+        achievements = achievements1;
+      });},
+
+      onLongPress: () {
+        setState(() {
+          print('LONG PRESS');
+          achievements = achievements2;
+        });
+      },
+      onLongPressEnd: (tap) {
+        setState(() {
+          print('onLongPressStart');
+          achievements = achievements1;
+        });
+      },
+      onLongPressDown: (tap) {
+        setState(() {
+          print('onLongPressDown');
+          achievements = achievements2;
+        });
+      },
+
+      child: Image.asset(achievements, height: (widget.game.camera.viewport.canvasSize?.y)!/14.5,),
     );
   }
 

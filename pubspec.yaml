@@ -170,6 +170,8 @@ flutter:
     - assets/images/buttons/myAccountButton_hover.png
     - assets/images/buttons/resumeButton_hover.png
     - assets/images/buttons/resumeButton.png
+    - assets/images/buttons/achievementsButton_hover.png
+    - assets/images/buttons/achievementsButton.png
     - assets/images/buttons/home_button.png
     - assets/images/buttons/home_button2.png
     - assets/images/buttons/pause_button.png
