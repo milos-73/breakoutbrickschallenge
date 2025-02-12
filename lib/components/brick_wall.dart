@@ -43,6 +43,9 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
   int challengeLevels = 0;
   late int lastFinishedLevel;
 
+  int _counterTotal = 0;
+
+
   List brickSound = ['brick1.mp3','brick2.mp3',];
 
   // 3
@@ -50,6 +53,7 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
   Future<void> onLoad() async {
     super.onLoad();
 
+    _counterTotal = await gameRef.prefs.getInt('counter') ?? 0;
     await buildWall(levelNumber);
     children.register<Brick>();
     children.register<Brick3>();
@@ -73,6 +77,8 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
     if (numberOfBrick.isEmpty && numberOfBrick3.isEmpty && numberOfBrickCracked1.isEmpty && numberOfBrickCracked2.isEmpty && gameRef.gameState == GameState.running){
       if (game.audioSettings == AudioSettings.on)  {
         FlameAudio.play('levelUp1.mp3');}
+
+      gameRef.updateBrickBreakeAchievemnts();
 
       gameRef.particleState = ParticleState.off;
       gameRef.cannonBall?.resetCannonBall();
@@ -140,10 +146,10 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
               await Leaderboards.submitScore(score: Score(androidLeaderboardID:'CgkIq5OYv8wYEAIQCg', value:  totalStarsPoints ));
             }
 
-            print('numberOfStarsPointsPerLevel: ${numberOfStarsPointsPerLevel}');
-            print('gameRef.currentGameLevelStarsPoints: ${gameRef.currentGameLevelStarsPoints}');
-            print('gameRef.totalStarsPoints: ${gameRef.totalStarsPoints}');
-            print('totalStarsPoints: ${totalStarsPoints}');
+            // print('numberOfStarsPointsPerLevel: ${numberOfStarsPointsPerLevel}');
+            // print('gameRef.currentGameLevelStarsPoints: ${gameRef.currentGameLevelStarsPoints}');
+            // print('gameRef.totalStarsPoints: ${gameRef.totalStarsPoints}');
+            // print('totalStarsPoints: ${totalStarsPoints}');
 
             gameRef.totalStars = totalStars;
             gameRef.totalStarsPoints = totalStarsPoints;
@@ -177,10 +183,6 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
           gameRef.totalStars = totalStars;
           gameRef.totalStarsPoints = totalStarsPoints;
 
-          // print('totalStars: ${totalStars}');
-          // print('totalStarsPoints: ${totalStarsPoints}');
-          // print(' gameRef.currentGameLevelStarsPoints: ${ gameRef.currentGameLevelStarsPoints}');
-          //if (gameRef.currentGameLevelStars == 5) {await gameRef.prefs.setInt('fiveStarsLevels', gameRef.fiveStarsLevels! + 1);}
         }
         gameRef.gameState = GameState.won;
       }
@@ -197,9 +199,10 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
           print('BRICK SOUND');
           FlameAudio.play('brick3.mp3');}
         remove(child);
-        await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQBg', steps: 1));
-
-
+        updateBrickBreakeAchievemnts();
+        // await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEQ', steps: 1));
+        // await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEg', steps: 1));
+        // await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEw', steps: 1));
       }
 
       if (child is Brick3 && child.crack1){
@@ -232,6 +235,9 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
         }
         gameRef.world.destroyBody(child.body);
         remove(child);
+        // await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEQ', steps: 1));
+        // await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEg', steps: 1));
+        // await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEw', steps: 1));
       }
     }
     super.update(dt);
@@ -344,5 +350,16 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
 
     await buildWall(i);
 
+  }
+
+  Future <void> updateBrickBreakeAchievemnts() async {
+
+    _counterTotal++;
+    gameRef.counterGame++;
+    if (_counterTotal == 40) {print('COUNTER 40 Bricks');}
+    await gameRef.prefs.setInt('counter', _counterTotal);
+    //await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEQ', steps: _counterGame));
+    // await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEg', steps: 1));
+    // await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEw', steps: 1));
   }
 }

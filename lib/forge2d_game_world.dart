@@ -279,6 +279,8 @@ final random = Random();
 final googlePlayGameServices = GooglePlayGameServices();
 final Tween<double> noise = Tween(begin: -1, end: 1);
 
+int counterGame = 0;
+
 
 @override
   Future<void> onLoad() async {
@@ -312,6 +314,8 @@ final Tween<double> noise = Tween(begin: -1, end: 1);
   @override
   void update(double dt) {
     super.update(dt);
+
+   // print('counterGame: ${counterGame}');
 
     if (particleState == ParticleState.on && stickyBallState == StickyBallState.off){
     add(ParticleSystemComponent(
@@ -430,7 +434,6 @@ final Tween<double> noise = Tween(begin: -1, end: 1);
       for (var i = 1; i < numberOfLevels + 1; i++ ){
         await prefs.remove('numberOfStars$i');
         await prefs.remove('starsPoints$i');
-        await prefs.remove('totalStarsPoints$i');
 
       }
     }
@@ -443,6 +446,7 @@ final Tween<double> noise = Tween(begin: -1, end: 1);
     await prefs.remove('currentPlayedLevelNumber');
     await prefs.remove('levelInProgress');
     await prefs.remove('totalStarsPoints');
+    await prefs.remove('counter');
 
     levelPoints = 0;
     levelPointTop = 0;
@@ -635,6 +639,8 @@ final Tween<double> noise = Tween(begin: -1, end: 1);
     totalStarsPoints = prefs.getInt('totalStarsPoints') ?? 0;
     levelStars = prefs.getInt('numberOfStars$currentPlayedLevelNumber') ?? 0;
     localLastFinishedLevel = prefs.getInt('lastFinishedLevel') ?? 0;
+
+    updateBrickBreakeAchievemnts();
 
     currentGameLevelStars = 0;
     currentGameLevelStarsPoints = 0;
@@ -854,6 +860,8 @@ final Tween<double> noise = Tween(begin: -1, end: 1);
   totalStarsPoints = prefs.getInt('totalStarsPoints') ?? 0;
   levelStars = prefs.getInt('numberOfStars$level') ?? 0;
   localLastFinishedLevel = prefs.getInt('lastFinishedLevel') ?? 0;
+
+ updateBrickBreakeAchievemnts();
 
   print('levelStars $level ${levelStars}');
   await prefs.setInt('currentPlayedLevelNumber', level);
@@ -1113,7 +1121,7 @@ final Tween<double> noise = Tween(begin: -1, end: 1);
     await prefs.setInt('currentPlayedLevelNumber', currentPlayedLevelNumber + 1);
     localLastFinishedLevel = prefs.getInt('lastFinishedLevel') ?? 0;
 
-    print('$currentPlayedLevelNumber');
+    //print('$currentPlayedLevelNumber');
 
     currentGameLevelStars = 0;
     currentGameLevelStarsPoints = 0;
@@ -1383,6 +1391,14 @@ Future<void> lostBallReset() async {
   if(overlays.isActive('LostLife')){overlays.remove('LostLife');}
   gameState = GameState.restart;
 
+}
+
+Future <void> updateBrickBreakeAchievemnts() async {
+
+  await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEQ', steps: counterGame));
+  await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEg', steps: counterGame));
+  await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEw', steps: counterGame));
+  counterGame = 0;
 }
 
 }

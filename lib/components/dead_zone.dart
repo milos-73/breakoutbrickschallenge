@@ -5,6 +5,7 @@ import 'package:flame/events.dart';
 import 'package:flame/extensions.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
+import 'package:games_services/games_services.dart';
 
 import '../forge2d_game_world.dart';
 import 'ball.dart';
@@ -87,7 +88,7 @@ class DeadZone extends BodyComponent<BrickBreakGame> with ContactCallbacks, Tapp
 
       if (game.audioSettings == AudioSettings.on)  {
        FlameAudio.play('gameOver.mp3');}
-      gameRef.life = 3;
+     gameRef.life = 3;
 
       if(gameRef.gameMode == GameMode.challenge){
         levelPointsTop = gameRef.prefs.getInt('topLevelPoints$currentLevelNumber') ?? 0;
@@ -102,6 +103,7 @@ class DeadZone extends BodyComponent<BrickBreakGame> with ContactCallbacks, Tapp
         gameRef.currentGameLevelStars = 0;
         gameRef.gameState = GameState.lost;
       }
+      gameRef.updateBrickBreakeAchievemnts();
     }
 
     if(other is Ball2 && gameRef.life >= 0){
@@ -135,9 +137,9 @@ class DeadZone extends BodyComponent<BrickBreakGame> with ContactCallbacks, Tapp
       }
       if(gameRef.gameMode == GameMode.levels){
         gameRef.currentGameLevelStars = 0;
-        gameRef.gameState = GameState.lost;
+       gameRef.gameState = GameState.lost;
       }
-
+      gameRef.updateBrickBreakeAchievemnts();
     }
   }
 
@@ -209,6 +211,14 @@ class DeadZone extends BodyComponent<BrickBreakGame> with ContactCallbacks, Tapp
     //print("tap cancel");
    return false;
   }
+
+  // Future <void> updateBrickBreakeAchievemnts() async {
+  //
+  //   await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQFQ', steps: gameRef.counterGame));
+  //   gameRef.counterGame = 0;
+  //   // await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEg', steps: 1));
+  //   // await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEw', steps: 1));
+  // }
 
 
 }

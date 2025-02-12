@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flame/components.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:brickbreaker/components/paddle.dart';
+import 'package:games_services/games_services.dart';
 import '../forge2d_game_world.dart';
 import 'dead_zone.dart';
 
@@ -36,6 +37,7 @@ class Star extends BodyComponent<BrickBreakGame> with ContactCallbacks{
 
     if (other is Paddle){
       destroy = true;
+      updateAchievements();
       gameRef.currentGameLevelStars = gameRef.currentGameLevelStars + 1;
       if (gameRef.currentGameLevelStars < 5) {gameRef.currentGameLevelStarsPoints = gameRef.currentGameLevelStarsPoints + 10;}
       else if (gameRef.currentGameLevelStars == 5) {
@@ -89,4 +91,12 @@ class Star extends BodyComponent<BrickBreakGame> with ContactCallbacks{
       removeFromParent();
     }
 
+    Future<void> updateAchievements() async {
+      await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQCw', steps: 1));
+      await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQDA', steps: 1));
+      await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQDQ', steps: 1));
+      await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQDg', steps: 1));
+      await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQDw', steps: 1));
+      await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEA', steps: 1));
+  }
 }
