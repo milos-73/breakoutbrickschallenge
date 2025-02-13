@@ -165,122 +165,106 @@ bool _bannerAdIsLoaded = false;
   Ball2? ball2;
   StickyBall? stickyBall;
 
-  late final Background background;
-  late final Arena arena;
-  late final Paddle paddle;
-  late final DeadZone deadZone;
-  late final BrickWall brickWall;
-  late final HudBar hudBar;
-  HudBar? hudBarLevels;
-  HudBar? hudBarChallenge;
-  late final Obstacles obstacles;
-  late final FallingBonus fallingBonus;
-  FallingStars? fallingStars;
-  FallingPoints? fallingPoints;
-  Bullets? bullets;
-  CannonBall? cannonBall;
-  late TimerComponent interval;
-  TimerComponent? bullet;
-  TimerComponent? gun;
-  TotalPointCounter? totalPointCounter;
-  TotalStarsCounter? totalStarsCounter;
+  late final Background background; //Game component
+  late final Arena arena; //Game component
+  late final Paddle paddle; //Game component
+  late final DeadZone deadZone; //Game component
+  late final BrickWall brickWall; //Game component
+  late final HudBar hudBar; //Game component
+  HudBar? hudBarLevels; //Game component
+  HudBar? hudBarChallenge; //Game component
+  late final Obstacles obstacles; //Game component
+  late final FallingBonus fallingBonus; //Game component
+  FallingStars? fallingStars; //Game component
+  FallingPoints? fallingPoints; //Game component
+  Bullets? bullets; //Game component
+  CannonBall? cannonBall; //Game component
+  late TimerComponent interval; //Time component
+  TimerComponent? bullet; //Time component
+  TimerComponent? gun; //Time component
 
-  late final SharedPreferences prefs;
+  TotalPointCounter? totalPointCounter; //Game component
+  TotalStarsCounter? totalStarsCounter; //Game component
 
-  GameState gameState = GameState.initializing;
-  StickyBallState stickyBallState = StickyBallState.off;
-  BallStatus ballStatus = BallStatus.alreadyCreated;
-  SavedValues savedValues = SavedValues();
-  StarState starState = StarState.normal;
-  GameMode gameMode = GameMode.initializing;
-  ParticleState particleState = ParticleState.off;
-  AudioSettings audioSettings = AudioSettings.on;
-  SyncStatus syncStatus = SyncStatus.off;
-  BallState ballState = BallState.inGame;
-  PauseButtonState pauseButtonState = PauseButtonState.off;
+  late final SharedPreferences prefs; // system
 
-  int life = 3;
-  int? localLastFinishedLevel;
-  int? lastFinishedLevelDb;
-  int  currentPlayedLevelNumber = 1;
+  GameState gameState = GameState.initializing; //component state
+  StickyBallState stickyBallState = StickyBallState.off; //component state
+  BallStatus ballStatus = BallStatus.alreadyCreated; //component state
 
-  int numberOfObstacles = 0;
+  StarState starState = StarState.normal; //component state
+  GameMode gameMode = GameMode.initializing; //component state
+  ParticleState particleState = ParticleState.off; //component state
+  AudioSettings audioSettings = AudioSettings.on; //component state
+  SyncStatus syncStatus = SyncStatus.off; //component state
+  BallState ballState = BallState.inGame; //component state
+  PauseButtonState pauseButtonState = PauseButtonState.off; //component state
 
-  int numberOfBrickHits = 0;
-  int starInterval = 0;
-  int numberOfBrickHitsLeft = 0;
+  int life = 3; //initial lives per game for LIFE COUNTER
 
-  int fastBonus = 0;
-  int slowBonus = 0;
-  int cannonBallStatus = 0;
-  int powerBallBonus = 0;
-  GunState gunState = GunState.off;
-  int ticks = 1;
-  int countDown = 0;
-  int countDown2 = 0;
-  int countDown3 = 0;
+  int? lastFinishedLevel; //number of LAST FINISHED level | Levels mode
+  int  currentPlayedLevelNumber = 1; //number of CURRENTLY PLAYED Level
 
-  int levelPoints = 0;
-  int levelPointTop = 0;
-  int totalPointsInCurrentGame = 0;
-  int totalGamePoints = 0;
+  int numberOfObstacles = 0; //initial number of OBSTACLES | obstacles.dart TIMER
+  int numberOfBrickHits = 0; //initial value used to count number of BRICKS in the played WALL
+  int starInterval = 0; // initial value used to count interval time of stars based on number of BRICKS in the WALL
+  int numberOfBrickHitsLeft = 0; //initial value used to count number of BRICKS in the played WALL left for plaing
 
-  int levelStars = 0;
-  int currentGameLevelStars = 0;
-  int? totalStars;
+  int fastBonus = 0; //initial vale used for visibility of the BONUS
+  int slowBonus = 0; //initial vale used for visibility of the BONUS
+  int cannonBallStatus = 0; //initial vale used for visibility of the BONUS
+  int powerBallBonus = 0; //initial vale used for visibility of the BONUS
+  int stickyBallBonus = 0; //initial vale used for visibility of the BONUS
+  GunState gunState = GunState.off; //component state
+  int ticks = 1; //used in TIMER fow FALLING BONUS
+  int countDown = 0; //used in TIMER fow FALLING BONUS | initial value
+  int countDown2 = 0; //used in TIMER fow FALLING BONUS | initial value
+  int countDown3 = 0; //used in TIMER fow FALLING BONUS | initial value
 
-  int? fiveStarsLevels = 0;
-  int? challengeLevels = 0;
-  int challengeLevelsPerGame = 0;
+  int levelPoints = 0; //initial value for points in finished level of CHALLENGE MODE game used for comparing and counting FINAL game POINTS
+  int levelPointTop = 0; //holds the previous TOP POINTS for currently played CHALLENGE MODE level
+  int totalGamePoints = 0; //holds the previous TOP POINTS for CHALLENGE MODE game | all finished levels in one row
+  int totalPointsInCurrentGame = 0; //holds the FINAL POINTS for currently played CHALLENGE MODE game | all finished levels in one row
 
-  int? totalStarsPoints;
-  int  currentGameLevelStarsPoints = 0;
+  int levelStars = 0; //initial value for number of previously collected STARS in currently played LEVEL
+  int currentGameLevelStars = 0; //initial value for number of collected STARS in currently played LEVEL
+  int? totalStars; //hold the number of all collected STARS
 
-  String? starsPerLevelInStringLocal = '';
-  List<String?> starsPerLevelInStringListLocal = [];
-  List<int?> starsPerLevelInIntListLocal = [];
+  int? fiveStarsLevels = 0; //holds the value for number of 5* LEVELS
+  int challengeLevelsPerGame = 0; //holds the TOP number of CHALLENGE MODE game LEVELS played in one row
 
-  int starPoints = 0;
+  int? totalStarsPoints; //holds the TOTAL points for collected STARS
+  int  currentGameLevelStarsPoints = 0; //holds points for collected STARS in currently played LEVEL
 
-  int challengeCurrentLevel = 1;
-  int challengeFinishedLevel = 0;
+  int challengeCurrentLevel = 1; //initial value for number of RANDOM CHALLENGE MODE wall
 
-  int stickyBallBonus = 0;
-  Vector2 stickyBallPosition = Vector2(0, 0);
-  Vector2 stickyBallEndPosition = Vector2(0, 0);
-  Vector2 ball2Position = Vector2(0, 0);
-  Vector2 ball2Velocity = Vector2(0, 0);
-  int stickyBallOn = 0;
-  int ball2On = 0;
-
- String? loggedInName = '';
- String? localUserProfileName = '';
- String? publicUserProfileName = '';
-
- String? loggedInEmail = '';
- String? keyID;
-
- String? userSignedInProvider;
- String? loggedIn;
-
-String? syncErrorMessage;
-
-String? searchedFriend = '';
-Map? profileOfSearchedFriend;
-
-late bool isSignIn = false;
-late String playerName = '';
+  Vector2 stickyBallPosition = Vector2(0, 0); //used for STICKY BALL component
+  Vector2 stickyBallEndPosition = Vector2(0, 0); //used for STICKY BALL component
+  Vector2 ball2Position = Vector2(0, 0); //used for STICKY BALL component
+  Vector2 ball2Velocity = Vector2(0, 0); //used for STICKY BALL component
+  int stickyBallOn = 0; //used for STICKY BALL component
+  int ball2On = 0; //used for STICKY BALL component
 
 Vector2 ballPosition = Vector2(18, 60);
 Vector2 position = Vector2(0, 0);
 MouseJoint? mouseJoint;
 
-final random = Random();
-final googlePlayGameServices = GooglePlayGameServices();
+Random random = Random();
+GooglePlayGameServices googlePlayGameServices = GooglePlayGameServices();
+SavedValues savedValues = SavedValues();
+
 final Tween<double> noise = Tween(begin: -1, end: 1);
 
-int counterGame = 0;
+int breakedBricksCounter = 0; //initial value for counting BREAKED BRICKS in current LEVEL or CHALLENGE mode game
+int pointsCounter = 0; //initial value for ALL TIME POINTS counter
 
+//*** ********** ************************ ************ ***
+//                        TO-DO
+// *** ********** ************************ ************ ***
+int gamesInRowCounter = 0;
+//int challengeFinishedLevel = 0;
+//int starPoints = 0; //initial value for ALL TIME STARS points
+// int? challengeLevels = 0; //?????
 
 @override
   Future<void> onLoad() async {
@@ -298,13 +282,13 @@ int counterGame = 0;
     await Flame.device.fullScreen();
     await Flame.device.setPortrait();
 
-    localLastFinishedLevel = prefs.getInt('lastFinishedLevel') ?? 0;
+    lastFinishedLevel = prefs.getInt('lastFinishedLevel') ?? 0;
     totalGamePoints = prefs.getInt('totalGamePoints') ?? 0;
     totalStars = prefs.getInt('totalStars') ?? 0;
     totalStarsPoints = prefs.getInt('totalStarsPoints') ?? 0;
 
     fiveStarsLevels = prefs.getInt('fiveStarsLevels') ?? 0;
-    challengeLevels = prefs.getInt('challengeLevels') ?? 0;
+    //challengeLevels = prefs.getInt('challengeLevels') ?? 0;
 
        await _initializeGame();
     }
@@ -316,6 +300,9 @@ int counterGame = 0;
     super.update(dt);
 
    // print('counterGame: ${counterGame}');
+    print('totalPointsInCurrentGame: ${totalPointsInCurrentGame}');
+    print('pointsCounter: ${pointsCounter}');
+    print('currentPlayedLevelNumber: ${currentPlayedLevelNumber}');
 
     if (particleState == ParticleState.on && stickyBallState == StickyBallState.off){
     add(ParticleSystemComponent(
@@ -459,55 +446,10 @@ int counterGame = 0;
     totalStars;
     totalStarsPoints;
 
-    starsPerLevelInStringLocal = '';
-    starsPerLevelInStringListLocal = [];
-    starsPerLevelInIntListLocal = [];
-
     life = 3;
-    localLastFinishedLevel;
-    lastFinishedLevelDb;
+    lastFinishedLevel;
+    //lastFinishedLevelDb;
     currentPlayedLevelNumber = 1;
-
-  }
-
-  ///Set user data if user is not logged
-
-  Future<void> setLevelDataWhileOffline() async {
-
-    loggedInName = '';
-    localUserProfileName = prefs.getString('customUserProfileName' ?? '');
-    publicUserProfileName = prefs.getString('customUserProfileName' ?? '');
-    totalStars = prefs.getInt('totalStars') ?? 0;
-    totalStars = prefs.getInt('totalStarsPoints') ?? 0;
-    totalGamePoints = prefs.getInt('totalGamePoints') ?? 0;
-    localLastFinishedLevel = prefs.getInt('lastFinishedLevel') ?? 0;
-    starsPerLevelInStringLocal = prefs.getString('starsPerLevelInString') ?? '';
-
-    ///Set the list of stars amount pre each level if user is NOT logged in
-
-    if(starsPerLevelInStringLocal != ''){
-
-      starsPerLevelInStringListLocal = starsPerLevelInStringLocal!.split(',');
-
-      int counter = 0;
-      for (var i in starsPerLevelInStringListLocal) {
-
-        int? value = int.tryParse(i!);
-        starsPerLevelInIntListLocal.add(value);
-        counter = counter + 1;
-      }
-    } else {
-      starsPerLevelInIntListLocal = [];}
-   }
-
-  Future<void> getCustomUserName(String? keyID) async {
-
-    localUserProfileName = UsernameGen().generate();
-    prefs.setString('customUserProfileName', localUserProfileName ?? '');
-
-    publicUserProfileName = localUserProfileName;
-
-
 
   }
 
@@ -633,12 +575,12 @@ int counterGame = 0;
     bool? starsLevelTotalMounted = totalStarsCounter?.isMounted;
     challengeLevelsPerGame = 0;
     currentPlayedLevelNumber = prefs.getInt('currentPlayedLevelNumber') ?? 0;
-    levelPointTop = prefs.getInt('topLevelPoints1') ?? 0;
+    levelPointTop = prefs.getInt('topLevelPoints') ?? 0;
     totalGamePoints = prefs.getInt('totalGamePoints') ?? 0;
     totalStars = prefs.getInt('totalStars') ?? 0;
     totalStarsPoints = prefs.getInt('totalStarsPoints') ?? 0;
     levelStars = prefs.getInt('numberOfStars$currentPlayedLevelNumber') ?? 0;
-    localLastFinishedLevel = prefs.getInt('lastFinishedLevel') ?? 0;
+    lastFinishedLevel = prefs.getInt('lastFinishedLevel') ?? 0;
 
     updateBrickBreakeAchievemnts();
 
@@ -835,8 +777,6 @@ int counterGame = 0;
   ///PICK LEVEL
   Future<void> pickLevel(int level) async {
 
-    print('starsPerLevelInIntListLocal***FROM PICK LEVEL***: ${starsPerLevelInIntListLocal}');
-
   gameState = GameState.initializing;
   particleState = ParticleState.off;
   bool? hudBarLevelsMounted = hudBarLevels?.isMounted;
@@ -859,7 +799,7 @@ int counterGame = 0;
   totalStars = prefs.getInt('totalStars') ?? 0;
   totalStarsPoints = prefs.getInt('totalStarsPoints') ?? 0;
   levelStars = prefs.getInt('numberOfStars$level') ?? 0;
-  localLastFinishedLevel = prefs.getInt('lastFinishedLevel') ?? 0;
+  lastFinishedLevel = prefs.getInt('lastFinishedLevel') ?? 0;
 
  updateBrickBreakeAchievemnts();
 
@@ -1119,7 +1059,7 @@ int counterGame = 0;
     levelPointTop = prefs.getInt('topLevelPoints$level') ?? 0;
     levelStars = prefs.getInt('numberOfStars$level') ?? 0;
     await prefs.setInt('currentPlayedLevelNumber', currentPlayedLevelNumber + 1);
-    localLastFinishedLevel = prefs.getInt('lastFinishedLevel') ?? 0;
+    lastFinishedLevel = prefs.getInt('lastFinishedLevel') ?? 0;
 
     //print('$currentPlayedLevelNumber');
 
@@ -1393,12 +1333,26 @@ Future<void> lostBallReset() async {
 
 }
 
-Future <void> updateBrickBreakeAchievemnts() async {
+Future<void> updateAllTimeBreakedBricks() async {
+  int? breakedBricks = await prefs.getInt('counter') ?? 0;
+  await prefs.setInt('counter', breakedBricksCounter + breakedBricks);
+  updateBrickBreakeAchievemnts();
+  breakedBricksCounter = 0;
+  }
 
-  await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEQ', steps: counterGame));
-  await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEg', steps: counterGame));
-  await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEw', steps: counterGame));
-  counterGame = 0;
+Future <void> updateBrickBreakeAchievemnts() async {
+  int? breakedBricks = await prefs.getInt('counter') ?? 0;
+  print('breakedBricks:${breakedBricks}');
+  await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEQ', steps: breakedBricks));
+  await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEg', steps: breakedBricks));
+  await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEw', steps: breakedBricks));
+  //counterGame = 0;
+}
+
+Future <void> updatePointsCounter() async {
+  pointsCounter = pointsCounter + totalPointsInCurrentGame;
+  print('POINTS COUNTER FROM MAIN FUNCTION${pointsCounter}');
+  await prefs.setInt('pointsCounter', pointsCounter);
 }
 
 }

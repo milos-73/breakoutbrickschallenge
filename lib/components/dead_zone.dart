@@ -68,12 +68,15 @@ class DeadZone extends BodyComponent<BrickBreakGame> with ContactCallbacks, Tapp
 
     if(other is Ball && gameRef.life >= 0){
       gameRef.particleState = ParticleState.off;
-      //print('LOST LIVE');
+      gameRef.updateAllTimeBreakedBricks();
       if (gameRef.life > 0) {
         if (game.audioSettings == AudioSettings.on) {
         FlameAudio.play('lostBall1.mp3');}
       }
       gameRef.life = gameRef.life - 1;
+      if (gameRef.gameMode == GameMode.challenge){
+        //gameRef.updateAllTimeBreakedBricks();
+      }
 
       //gameRef.obstacles.resetObstacle();
       gameRef.particleState = ParticleState.off;
@@ -84,6 +87,7 @@ class DeadZone extends BodyComponent<BrickBreakGame> with ContactCallbacks, Tapp
 
     if (other is Ball && gameRef.life < 0) {
       //print('LOST GAME');
+      gameRef.updateAllTimeBreakedBricks();
       gameRef.particleState = ParticleState.off;
 
       if (game.audioSettings == AudioSettings.on)  {
@@ -97,17 +101,20 @@ class DeadZone extends BodyComponent<BrickBreakGame> with ContactCallbacks, Tapp
         }
         gameRef.totalPointsInCurrentGame = 0;
         gameRef.levelPoints = 0;
+        print('*****GOING TO UPDATE POINTS*****');
+        gameRef.updatePointsCounter();
         gameRef.gameState = GameState.challengeLost;
+
       }
       if(gameRef.gameMode == GameMode.levels){
         gameRef.currentGameLevelStars = 0;
         gameRef.gameState = GameState.lost;
       }
-      gameRef.updateBrickBreakeAchievemnts();
     }
 
     if(other is Ball2 && gameRef.life >= 0){
       //print('LOST LIVE');
+      gameRef.updateAllTimeBreakedBricks();
       if (gameRef.life > 0) {
         if (game.audioSettings == AudioSettings.on)  {
         FlameAudio.play('lostBall1.mp3');}
@@ -122,6 +129,7 @@ class DeadZone extends BodyComponent<BrickBreakGame> with ContactCallbacks, Tapp
 
     if (other is Ball2 && gameRef.life < 0) {
       //print('LOST GAME');
+      gameRef.updateAllTimeBreakedBricks();
       if (game.audioSettings == AudioSettings.on)  {
       FlameAudio.play('gameOver.mp3');}
       gameRef.life = 3;
@@ -133,13 +141,13 @@ class DeadZone extends BodyComponent<BrickBreakGame> with ContactCallbacks, Tapp
         }
         gameRef.totalPointsInCurrentGame = 0;
         gameRef.levelPoints = 0;
+        gameRef.updatePointsCounter();
         gameRef.gameState = GameState.challengeLost;
       }
       if(gameRef.gameMode == GameMode.levels){
         gameRef.currentGameLevelStars = 0;
-       gameRef.gameState = GameState.lost;
+        gameRef.gameState = GameState.lost;
       }
-      gameRef.updateBrickBreakeAchievemnts();
     }
   }
 
