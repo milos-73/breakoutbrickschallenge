@@ -16,7 +16,6 @@ class BackToMenuButton extends SpriteComponent with Tappable, HasGameRef<BrickBr
  InterstitialAd? _interstitialAd;
  int _interstitialLoadAttempts = 1;
 
-
  void _createInterstitialAd() {
   InterstitialAd.load(
    adUnitId: AdHelper.interstitialAdUnitId,
@@ -101,6 +100,7 @@ class BackToMenuButton extends SpriteComponent with Tappable, HasGameRef<BrickBr
 
   _showInterstitialAd();
   gameRef.updateCounters();
+  gameRef.updatePointsCounter();
   info.handled = true;
   return true;
  }
@@ -110,9 +110,6 @@ class BackToMenuButton extends SpriteComponent with Tappable, HasGameRef<BrickBr
   print("tap cancel");
   return false;
  }
-
-
-
 }
 
 

@@ -50,6 +50,7 @@ class PointNumber extends BodyComponent<BrickBreakGame> with ContactCallbacks{
 
       gameRef.levelPoints = gameRef.levelPoints + finalPoint;
       gameRef.totalPointsInCurrentGame = gameRef.totalPointsInCurrentGame + finalPoint;
+      gameRef.allTimePointsCounter = gameRef.allTimePointsCounter + finalPoint;
 
     }
     if(other is DeadZone){

@@ -69,6 +69,7 @@ class DeadZone extends BodyComponent<BrickBreakGame> with ContactCallbacks, Tapp
     if(other is Ball && gameRef.life >= 0){
       gameRef.particleState = ParticleState.off;
       gameRef.updateCounters();
+      gameRef.updatePointsCounter();
       if (gameRef.life > 0) {
         if (game.audioSettings == AudioSettings.on) {
         FlameAudio.play('lostBall1.mp3');}
@@ -88,6 +89,7 @@ class DeadZone extends BodyComponent<BrickBreakGame> with ContactCallbacks, Tapp
     if (other is Ball && gameRef.life < 0) {
       //print('LOST GAME');
       gameRef.updateCounters();
+      gameRef.updatePointsCounter();
       gameRef.particleState = ParticleState.off;
 
       if (game.audioSettings == AudioSettings.on)  {
@@ -103,6 +105,7 @@ class DeadZone extends BodyComponent<BrickBreakGame> with ContactCallbacks, Tapp
         gameRef.levelPoints = 0;
         print('*****GOING TO UPDATE POINTS*****');
         gameRef.updateCounters();
+        gameRef.updatePointsCounter();
         gameRef.gameState = GameState.challengeLost;
 
       }
@@ -115,6 +118,7 @@ class DeadZone extends BodyComponent<BrickBreakGame> with ContactCallbacks, Tapp
     if(other is Ball2 && gameRef.life >= 0){
       //print('LOST LIVE');
       gameRef.updateCounters();
+      gameRef.updatePointsCounter();
       if (gameRef.life > 0) {
         if (game.audioSettings == AudioSettings.on)  {
         FlameAudio.play('lostBall1.mp3');}
@@ -130,6 +134,7 @@ class DeadZone extends BodyComponent<BrickBreakGame> with ContactCallbacks, Tapp
     if (other is Ball2 && gameRef.life < 0) {
       //print('LOST GAME');
       gameRef.updateCounters();
+      gameRef.updatePointsCounter();
       if (game.audioSettings == AudioSettings.on)  {
       FlameAudio.play('gameOver.mp3');}
       gameRef.life = 3;
@@ -142,6 +147,7 @@ class DeadZone extends BodyComponent<BrickBreakGame> with ContactCallbacks, Tapp
         gameRef.totalPointsInCurrentGame = 0;
         gameRef.levelPoints = 0;
         gameRef.updateCounters();
+        gameRef.updatePointsCounter();
         gameRef.gameState = GameState.challengeLost;
       }
       if(gameRef.gameMode == GameMode.levels){

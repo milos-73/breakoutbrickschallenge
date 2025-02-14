@@ -30,9 +30,11 @@ class PauseButton extends SpriteComponent with Tappable, HasGameRef<BrickBreakGa
   bool onTapDown(TapDownInfo info) {
 
     gameRef.updateCounters();
-       if(gameRef.gameState == GameState.lost || gameRef.gameState == GameState.challengeLost){return true;}
-       else{
-       if(gameRef.gameState == GameState.ready){gameRef.pauseButtonState = PauseButtonState.startGame;}
+    gameRef.updatePointsCounter();
+
+      if(gameRef.gameState == GameState.lost || gameRef.gameState == GameState.challengeLost){return true;}
+      else{
+      if(gameRef.gameState == GameState.ready){gameRef.pauseButtonState = PauseButtonState.startGame;}
       if(gameRef.gameState == GameState.restart){gameRef.pauseButtonState = PauseButtonState.ballLost;}
 
       if (game.audioSettings == AudioSettings.on)  {
