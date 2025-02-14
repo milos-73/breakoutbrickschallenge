@@ -37,7 +37,7 @@ class Star extends BodyComponent<BrickBreakGame> with ContactCallbacks{
 
     if (other is Paddle){
       destroy = true;
-      updateAchievements();
+      gameRef.allTimeStarsCollected++;
       gameRef.currentGameLevelStars = gameRef.currentGameLevelStars + 1;
       if (gameRef.currentGameLevelStars < 5) {gameRef.currentGameLevelStarsPoints = gameRef.currentGameLevelStarsPoints + 10;}
       else if (gameRef.currentGameLevelStars == 5) {
@@ -90,13 +90,4 @@ class Star extends BodyComponent<BrickBreakGame> with ContactCallbacks{
       print('STAR RESET');
       removeFromParent();
     }
-
-    Future<void> updateAchievements() async {
-      await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQCw', steps: 1));
-      await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQDA', steps: 1));
-      await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQDQ', steps: 1));
-      await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQDg', steps: 1));
-      await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQDw', steps: 1));
-      await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEA', steps: 1));
-  }
 }

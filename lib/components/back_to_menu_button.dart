@@ -100,7 +100,7 @@ class BackToMenuButton extends SpriteComponent with Tappable, HasGameRef<BrickBr
    FlameAudio.play('button3.mp3');}
 
   _showInterstitialAd();
-  gameRef.updateAllTimeBreakedBricks();
+  gameRef.updateCounters();
   info.handled = true;
   return true;
  }
@@ -110,6 +110,8 @@ class BackToMenuButton extends SpriteComponent with Tappable, HasGameRef<BrickBr
   print("tap cancel");
   return false;
  }
+
+
 
 }
 

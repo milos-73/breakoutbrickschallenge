@@ -77,9 +77,6 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
       if (game.audioSettings == AudioSettings.on)  {
         FlameAudio.play('levelUp1.mp3');}
 
-      await gameRef.updateAllTimeBreakedBricks();
-      await gameRef.updateBrickBreakeAchievemnts();
-
       gameRef.particleState = ParticleState.off;
       gameRef.cannonBall?.resetCannonBall();
       gameRef.bullets?.resetAllBullets();
@@ -177,6 +174,7 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
 
         }
         gameRef.gameState = GameState.won;
+        await gameRef.updateCounters();
       }
     }
 
@@ -191,7 +189,7 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
           print('BRICK SOUND');
           FlameAudio.play('brick3.mp3');}
         remove(child);
-        updateCounterBrickBreakeAchievemnts();
+        gameRef.breakedBricksCounter++;
       }
 
       if (child is Brick3 && child.crack1){
@@ -224,7 +222,7 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
         }
         gameRef.world.destroyBody(child.body);
         remove(child);
-        updateCounterBrickBreakeAchievemnts();
+        gameRef.breakedBricksCounter++;
       }
     }
     super.update(dt);
@@ -242,9 +240,10 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
 
   Future<void> buildWall(int levelNumber) async {
 
-    int challengeLevelNumber = await randomChallengeLevelNumber();
+    //int challengeLevelNumber = await randomChallengeLevelNumber();
 
     if(gameRef.gameMode == GameMode.levels){
+      gameRef.currentPlayedLevelNumber = levelNumber;
       List brickList = brickList_1[levelNumber - 1];
 
       var i = 0;
@@ -265,7 +264,11 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
       gameRef.starInterval = (i - (i~/5))~/5;
       gameRef.numberOfBrickHitsLeft =  i - (i~/5);
     }
-    else{ List brickList = brickList_2[challengeLevelNumber];
+
+    else{
+      int challengeLevelNumber = await randomChallengeLevelNumber();
+
+      List brickList = brickList_2[challengeLevelNumber];
 
     for (var r = 0; r < brickList.length; r++){
       if (brickList == []){continue;}
@@ -338,8 +341,8 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
     await buildWall(i);
   }
 
-  Future <void> updateCounterBrickBreakeAchievemnts() async {
-    gameRef.breakedBricksCounter++;
-    if (_counterTotal == 40) {print('COUNTER 40 Bricks');}
-     }
+  // Future <void> updateCounterBrickBreakeAchievemnts() async {
+  //   gameRef.breakedBricksCounter++;
+  //   if (_counterTotal == 40) {print('COUNTER 40 Bricks');}
+  //    }
 }

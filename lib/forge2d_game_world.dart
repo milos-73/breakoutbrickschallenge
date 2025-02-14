@@ -256,6 +256,7 @@ SavedValues savedValues = SavedValues();
 final Tween<double> noise = Tween(begin: -1, end: 1);
 
 int breakedBricksCounter = 0; //initial value for counting BREAKED BRICKS in current LEVEL or CHALLENGE mode game
+int allTimeStarsCollected = 0; //initial value for counting Collected STARS in current LEVEL or CHALLENGE mode game
 int pointsCounter = 0; //initial value for ALL TIME POINTS counter
 
 //*** ********** ************************ ************ ***
@@ -300,9 +301,9 @@ int gamesInRowCounter = 0;
     super.update(dt);
 
    // print('counterGame: ${counterGame}');
-    print('totalPointsInCurrentGame: ${totalPointsInCurrentGame}');
-    print('pointsCounter: ${pointsCounter}');
-    print('currentPlayedLevelNumber: ${currentPlayedLevelNumber}');
+    //print('totalPointsInCurrentGame: ${totalPointsInCurrentGame}');
+    //print('pointsCounter: ${pointsCounter}');
+    //print('currentPlayedLevelNumber: ${currentPlayedLevelNumber}');
 
     if (particleState == ParticleState.on && stickyBallState == StickyBallState.off){
     add(ParticleSystemComponent(
@@ -1334,25 +1335,51 @@ Future<void> lostBallReset() async {
 }
 
 Future<void> updateAllTimeBreakedBricks() async {
-  int? breakedBricks = await prefs.getInt('counter') ?? 0;
-  await prefs.setInt('counter', breakedBricksCounter + breakedBricks);
-  updateBrickBreakeAchievemnts();
-  breakedBricksCounter = 0;
+  int? breakedBricks = await prefs.getInt('allTimeBricksCounter') ?? 0;
+  await prefs.setInt('allTimeBricksCounter', breakedBricksCounter + breakedBricks);
+  print('breakedBricks FROM UPADATE:${breakedBricks}');
+  print('breakedBricksCounter: ${breakedBricksCounter}');
+  await updateBrickBreakeAchievemnts();
+  //breakedBricksCounter = 0;
   }
 
 Future <void> updateBrickBreakeAchievemnts() async {
-  int? breakedBricks = await prefs.getInt('counter') ?? 0;
-  print('breakedBricks:${breakedBricks}');
+  int? breakedBricks = await prefs.getInt('allTimeBricksCounter') ?? 0;
+  print('allTimeBricksCounter:${breakedBricks}');
   await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEQ', steps: breakedBricks));
   await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEg', steps: breakedBricks));
   await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEw', steps: breakedBricks));
-  //counterGame = 0;
+  breakedBricksCounter = 0;
 }
+
+  Future<void> updateAllTimeCollectedStars() async {
+    int? collectedStars = await prefs.getInt('allTimeCollectedStars') ?? 0;
+    await prefs.setInt('allTimeCollectedStars', allTimeStarsCollected + collectedStars);
+    await updateALltimeCollectedStarsAchievemnts();
+    //allTimeStarsCollected = 0;
+  }
+
+  Future <void> updateALltimeCollectedStarsAchievemnts() async {
+    int? breakedBricks = await prefs.getInt('allTimeCollectedStars') ?? 0;
+    print('all time stars:${breakedBricks}');
+    await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQCw', steps: 1));
+    await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQDA', steps: 1));
+    await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQDQ', steps: 1));
+    await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQDg', steps: 1));
+    await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQDw', steps: 1));
+    await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEA', steps: 1));
+    allTimeStarsCollected = 0;
+  }
 
 Future <void> updatePointsCounter() async {
   pointsCounter = pointsCounter + totalPointsInCurrentGame;
   print('POINTS COUNTER FROM MAIN FUNCTION${pointsCounter}');
   await prefs.setInt('pointsCounter', pointsCounter);
+}
+
+  Future<void> updateCounters()  async {
+  await updateAllTimeBreakedBricks();
+  await updateAllTimeCollectedStars();
 }
 
 }
