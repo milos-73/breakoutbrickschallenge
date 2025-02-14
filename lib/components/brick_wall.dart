@@ -101,11 +101,11 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
         gameRef.updatePointsCounter();
 
         ///GETTING Total Level Points from Shared Preferences
-        levelPointsTop = gameRef.prefs.getInt('topLevelPoints$levelNumber') ?? 0;
+        levelPointsTop = gameRef.prefs.getInt('topLevelPoints$challengeLevelNumber') ?? 0;
 
         ///COMPARING Level Points with Total Level Points and writes Level Points to Total Level Points if larger
         if (levelPointsTop < gameRef.levelPoints) {
-          await gameRef.prefs.setInt('topLevelPoints$levelNumber', gameRef.levelPoints);
+          await gameRef.prefs.setInt('topLevelPoints$challengeLevelNumber', gameRef.levelPoints);
 
         } else {
           //gameRef.levelPoints = 0;
