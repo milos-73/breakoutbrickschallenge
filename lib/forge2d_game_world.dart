@@ -1382,35 +1382,28 @@ Future <void> updateBrickBreakedAchievements() async {
 
  Future<void> updatePointsCounter() async {
     int? collectedPoints = await prefs.getInt('allTimePoints') ?? 0;
-
-    //print('collectedPoints: ${collectedPoints}');
-    //print('allTimePointsCounter: ${allTimePointsCounter}');
-
     await prefs.setInt('allTimePoints', allTimePointsCounter + collectedPoints);
     allTimePointsCounter = 0;
-    //await updateALlTimePointsAchievements();
-    //allTimeStarsCollected = 0;
-
   }
 
   Future<void> updateALlTimePointsAchievements() async {
     int? collectedPoints = await prefs.getInt('allTimePoints') ?? 0;
     print('all time Points:${collectedPoints}');
-    //if (collectedPoints > 0)
-    await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQCw', steps: 1));
-    await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQDA', steps: 1));
-    await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQDQ', steps: 1));
-    await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQDg', steps: 1));
-    await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQDw', steps: 1));
-    await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEA', steps: 1));
-    //allTimePointsCounter = 0;
+    if (collectedPoints >= 5000 && collectedPoints < 10000){
+    await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQGw'));}
+    if (collectedPoints >= 10000 && collectedPoints < 20000){
+    await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQHA'));}
+    if (collectedPoints >= 20000 && collectedPoints < 50000){
+    await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQHQ'));}
+    if (collectedPoints >= 50000 && collectedPoints < 100000){
+    await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQHg'));}
+    if (collectedPoints >= 100000 && collectedPoints < 200000){
+    await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQHw'));}
+    if (collectedPoints >= 200000 && collectedPoints < 500000){
+    await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQIA'));}
+    if (collectedPoints >= 500000 && collectedPoints < 1000000){
+    await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQIQ'));}
   }
-
-//   Future <void> updatePointsCounter() async {
-//   pointsCounter = pointsCounter + totalPointsInCurrentGame;
-//   print('POINTS COUNTER FROM MAIN FUNCTION${pointsCounter}');
-//   await prefs.setInt('pointsCounter', pointsCounter);
-// }
 
   Future<void> updateCounters()  async {
   await updateAllTimeBreakedBricks();
