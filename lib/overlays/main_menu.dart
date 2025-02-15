@@ -8,6 +8,7 @@ import 'package:games_services/games_services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import '../components/google_play_game_services.dart';
+import '../components/walls_2.dart';
 import '../forge2d_game_world.dart';
 import '../services/ad_helper.dart';
 import '../services/hex_color.dart';
@@ -233,8 +234,6 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
   Widget _challengeButton(BuildContext context, BrickBreakGame game) {
     return GestureDetector(
 
-
-
       onTapDown: (tap) async {
                setState(() {
         challenge = challenge2;
@@ -246,8 +245,12 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
         game.gameMode = GameMode.challenge;
         print('1 ---- GAME MODE FROM CHALLENGE BUTTON: ${game.gameMode}');
         //await widget.game.pickLevel(1);
-               await widget.game.pickLevel(random.nextInt(5) + 1);
+               int level = await widget.game.randomChallengeWallNumber();
+               await widget.game.prefs.setInt('challengeLevel', level);
+               widget.game.challengeCurrentLevel = level;
+               await widget.game.pickLevel(level);
 
+               print('LEVEL:${level}');
       },
 
       onTapUp: (tap){setState(() {
@@ -482,6 +485,16 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
     );
   }
 
+
+  // Future<int> randomChallengeLevelNumberInitialization() async {
+  //   final _random = Random();
+  //   int countLevels = brickList_2.length;
+  //   int challengeLevel = _random.nextInt(countLevels);
+  //   await widget.game.prefs.setInt('challengeLevel', challengeLevel+1);
+  //   widget.game.currentPlayedLevelNumber = challengeLevel +1;
+  //
+  //   return challengeLevel;
+  // }
 }
 
 

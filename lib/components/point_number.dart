@@ -47,7 +47,7 @@ class PointNumber extends BodyComponent<BrickBreakGame> with ContactCallbacks{
       if (game.audioSettings == AudioSettings.on && finalPoint < 0 )  {
         FlameAudio.play('negativeNumber.mp3');
       }
-
+print('finalPoint: ${finalPoint}');
       gameRef.levelPoints = gameRef.levelPoints + finalPoint;
       gameRef.totalPointsInCurrentGame = gameRef.totalPointsInCurrentGame + finalPoint;
       gameRef.allTimePointsCounter = gameRef.allTimePointsCounter + finalPoint;

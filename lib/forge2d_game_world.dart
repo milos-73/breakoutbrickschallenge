@@ -53,6 +53,8 @@ import 'components/stars_level_total.dart';
 
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
+import 'components/walls_2.dart';
+
 
 enum PauseButtonState {
   on,
@@ -165,85 +167,85 @@ bool _bannerAdIsLoaded = false;
   Ball2? ball2;
   StickyBall? stickyBall;
 
-  late final Background background; //Game component
-  late final Arena arena; //Game component
-  late final Paddle paddle; //Game component
-  late final DeadZone deadZone; //Game component
+  late final Background background; ///Game component
+  late final Arena arena; ///Game component
+  late final Paddle paddle; ///Game component
+  late final DeadZone deadZone; ///Game component
   late final BrickWall brickWall; //Game component
-  late final HudBar hudBar; //Game component
-  HudBar? hudBarLevels; //Game component
+  late final HudBar hudBar; ///Game component
+  HudBar? hudBarLevels; ///Game component
   HudBar? hudBarChallenge; //Game component
-  late final Obstacles obstacles; //Game component
-  late final FallingBonus fallingBonus; //Game component
-  FallingStars? fallingStars; //Game component
-  FallingPoints? fallingPoints; //Game component
-  Bullets? bullets; //Game component
-  CannonBall? cannonBall; //Game component
-  late TimerComponent interval; //Time component
-  TimerComponent? bullet; //Time component
-  TimerComponent? gun; //Time component
+  late final Obstacles obstacles; ///Game component
+  late final FallingBonus fallingBonus; ///Game component
+  FallingStars? fallingStars; ///Game component
+  FallingPoints? fallingPoints; ///Game component
+  Bullets? bullets; ///Game component
+  CannonBall? cannonBall; ///Game component
+  late TimerComponent interval; ///Time component
+  TimerComponent? bullet; ///Time component
+  TimerComponent? gun; ///Time component
 
-  TotalPointCounter? totalPointCounter; //Game component
-  TotalStarsCounter? totalStarsCounter; //Game component
+  TotalPointCounter? totalPointCounter; ///Game component
+  TotalStarsCounter? totalStarsCounter; ///Game component
 
-  late final SharedPreferences prefs; // system
+  late final SharedPreferences prefs; /// system
 
-  GameState gameState = GameState.initializing; //component state
-  StickyBallState stickyBallState = StickyBallState.off; //component state
-  BallStatus ballStatus = BallStatus.alreadyCreated; //component state
+  GameState gameState = GameState.initializing; ///component state
+  StickyBallState stickyBallState = StickyBallState.off; ///component state
+  BallStatus ballStatus = BallStatus.alreadyCreated; ///component state
 
-  StarState starState = StarState.normal; //component state
-  GameMode gameMode = GameMode.initializing; //component state
-  ParticleState particleState = ParticleState.off; //component state
-  AudioSettings audioSettings = AudioSettings.on; //component state
-  SyncStatus syncStatus = SyncStatus.off; //component state
+  StarState starState = StarState.normal; ///component state
+  GameMode gameMode = GameMode.initializing; ///component state
+  ParticleState particleState = ParticleState.off; ///component state
+  AudioSettings audioSettings = AudioSettings.on; ///component state
+  SyncStatus syncStatus = SyncStatus.off; ///component state
   BallState ballState = BallState.inGame; //component state
-  PauseButtonState pauseButtonState = PauseButtonState.off; //component state
+  PauseButtonState pauseButtonState = PauseButtonState.off; ///component state
 
-  int life = 3; //initial lives per game for LIFE COUNTER
+  int life = 3; ///initial lives per game for LIFE COUNTER
 
-  int? lastFinishedLevel; //number of LAST FINISHED level | Levels mode
-  int  currentPlayedLevelNumber = 1; //number of CURRENTLY PLAYED Level
+  int? lastFinishedLevel; ///number of LAST FINISHED level | Levels mode
+  int  currentPlayedLevelNumber = 1; ///number of CURRENTLY PLAYED Level
 
-  int numberOfObstacles = 0; //initial number of OBSTACLES | obstacles.dart TIMER
-  int numberOfBrickHits = 0; //initial value used to count number of BRICKS in the played WALL
-  int starInterval = 0; // initial value used to count interval time of stars based on number of BRICKS in the WALL
-  int numberOfBrickHitsLeft = 0; //initial value used to count number of BRICKS in the played WALL left for plaing
+  int numberOfObstacles = 0; ///initial number of OBSTACLES | obstacles.dart TIMER
+  int numberOfBrickHits = 0; ///initial value used to count number of BRICKS in the played WALL
+  int starInterval = 0; /// initial value used to count interval time of stars based on number of BRICKS in the WALL
+  int numberOfBrickHitsLeft = 0; ///initial value used to count number of BRICKS in the played WALL left for plaing
 
-  int fastBonus = 0; //initial vale used for visibility of the BONUS
-  int slowBonus = 0; //initial vale used for visibility of the BONUS
-  int cannonBallStatus = 0; //initial vale used for visibility of the BONUS
-  int powerBallBonus = 0; //initial vale used for visibility of the BONUS
-  int stickyBallBonus = 0; //initial vale used for visibility of the BONUS
-  GunState gunState = GunState.off; //component state
-  int ticks = 1; //used in TIMER fow FALLING BONUS
-  int countDown = 0; //used in TIMER fow FALLING BONUS | initial value
-  int countDown2 = 0; //used in TIMER fow FALLING BONUS | initial value
-  int countDown3 = 0; //used in TIMER fow FALLING BONUS | initial value
+  int fastBonus = 0; ///initial vale used for visibility of the BONUS
+  int slowBonus = 0; ///initial vale used for visibility of the BONUS
+  int cannonBallStatus = 0; ///initial vale used for visibility of the BONUS
+  int powerBallBonus = 0; ///initial vale used for visibility of the BONUS
+  int stickyBallBonus = 0; ///initial vale used for visibility of the BONUS
+  GunState gunState = GunState.off; ///component state
+  int ticks = 1; ///used in TIMER fow FALLING BONUS
+  int countDown = 0; ///used in TIMER fow FALLING BONUS | initial value
+  int countDown2 = 0; ///used in TIMER fow FALLING BONUS | initial value
+  int countDown3 = 0; ///used in TIMER fow FALLING BONUS | initial value
 
-  int levelPoints = 0; //initial value for points in finished level of CHALLENGE MODE game used for comparing and counting FINAL game POINTS
-  int levelPointTop = 0; //holds the previous TOP POINTS for currently played CHALLENGE MODE level
-  int totalGamePoints = 0; //holds the previous TOP POINTS for CHALLENGE MODE game | all finished levels in one row
-  int totalPointsInCurrentGame = 0; //holds the FINAL POINTS for currently played CHALLENGE MODE game | all finished levels in one row
+  int levelPoints = 0; ///initial value for points in finished level of CHALLENGE MODE game used for comparing and counting FINAL game POINTS
+  int levelPointTop = 0; ///holds the previous TOP POINTS for currently played CHALLENGE MODE level
+  int totalGamePoints = 0; ///holds the previous TOP POINTS for CHALLENGE MODE game | all finished levels in one row
+  int totalPointsInCurrentGame = 0; ///holds the FINAL POINTS for currently played CHALLENGE MODE game | all finished levels in one row
 
-  int levelStars = 0; //initial value for number of previously collected STARS in currently played LEVEL
-  int currentGameLevelStars = 0; //initial value for number of collected STARS in currently played LEVEL
-  int? totalStars; //hold the number of all collected STARS
+  int levelStars = 0; ///initial value for number of previously collected STARS in currently played LEVEL
+  int currentGameLevelStars = 0; ///initial value for number of collected STARS in currently played LEVEL
+  int? totalStars; ///hold the number of all collected STARS
 
-  int? fiveStarsLevels = 0; //holds the value for number of 5* LEVELS
-  int challengeLevelsPerGame = 0; //holds the TOP number of CHALLENGE MODE game LEVELS played in one row
+  int? fiveStarsLevels = 0; ///holds the value for number of 5* LEVELS
+  int challengeLevelsPerGame = 0; ///holds the TOP number of CHALLENGE MODE game LEVELS played in one row
 
-  int? totalStarsPoints; //holds the TOTAL points for collected STARS
-  int  currentGameLevelStarsPoints = 0; //holds points for collected STARS in currently played LEVEL
+  int? totalStarsPoints; ///holds the TOTAL points for collected STARS
+  int  currentGameLevelStarsPoints = 0; ///holds points for collected STARS in currently played LEVEL
 
-  int challengeCurrentLevel = 1; //initial value for number of RANDOM CHALLENGE MODE wall
+  int challengeCurrentLevel = 1; ///initial value for number of RANDOM CHALLENGE MODE wall
 
-  Vector2 stickyBallPosition = Vector2(0, 0); //used for STICKY BALL component
-  Vector2 stickyBallEndPosition = Vector2(0, 0); //used for STICKY BALL component
-  Vector2 ball2Position = Vector2(0, 0); //used for STICKY BALL component
-  Vector2 ball2Velocity = Vector2(0, 0); //used for STICKY BALL component
-  int stickyBallOn = 0; //used for STICKY BALL component
-  int ball2On = 0; //used for STICKY BALL component
+  Vector2 stickyBallPosition = Vector2(0, 0); ///used for STICKY BALL component
+  Vector2 stickyBallEndPosition = Vector2(0, 0); ///used for STICKY BALL component
+  Vector2 ball2Position = Vector2(0, 0); ///used for STICKY BALL component
+  Vector2 ball2Velocity = Vector2(0, 0); ///used for STICKY BALL component
+  int stickyBallOn = 0; ///used for STICKY BALL component
+  int ball2On = 0; ///used for STICKY BALL component
 
 Vector2 ballPosition = Vector2(18, 60);
 Vector2 position = Vector2(0, 0);
@@ -299,6 +301,10 @@ int gamesInRowCounter = 0;
   @override
   void update(double dt) {
     super.update(dt);
+
+    //print('allTimePointsCounter: ${allTimePointsCounter}');
+    //print('totalPointsInCurrentGame: ${totalPointsInCurrentGame}');
+    //print('levelPoints: ${levelPoints}');
 
    // print('counterGame: ${counterGame}');
     //print('totalPointsInCurrentGame: ${totalPointsInCurrentGame}');
@@ -369,6 +375,8 @@ int gamesInRowCounter = 0;
     }
     if (gameState == GameState.challengeNextLevel) {
       pauseEngine();
+      randomChallengeWallNumber();
+      updatePointsCounter();
       overlays.add('NextLevelChallengeModeOverlay');
     }
     if (gameState == GameState.challengeLost) {
@@ -583,7 +591,7 @@ int gamesInRowCounter = 0;
     levelStars = prefs.getInt('numberOfStars$currentPlayedLevelNumber') ?? 0;
     lastFinishedLevel = prefs.getInt('lastFinishedLevel') ?? 0;
 
-    updateBrickBreakeAchievemnts();
+    updateBrickBreakedAchievements();
 
     currentGameLevelStars = 0;
     currentGameLevelStarsPoints = 0;
@@ -802,7 +810,7 @@ int gamesInRowCounter = 0;
   levelStars = prefs.getInt('numberOfStars$level') ?? 0;
   lastFinishedLevel = prefs.getInt('lastFinishedLevel') ?? 0;
 
- updateBrickBreakeAchievemnts();
+  updateBrickBreakedAchievements();
 
   print('levelStars $level ${levelStars}');
   await prefs.setInt('currentPlayedLevelNumber', level);
@@ -1339,27 +1347,28 @@ Future<void> updateAllTimeBreakedBricks() async {
   await prefs.setInt('allTimeBricksCounter', breakedBricksCounter + breakedBricks);
   print('breakedBricks FROM UPADATE:${breakedBricks}');
   print('breakedBricksCounter: ${breakedBricksCounter}');
-  await updateBrickBreakeAchievemnts();
+  await updateBrickBreakedAchievements();
   //breakedBricksCounter = 0;
   }
 
-Future <void> updateBrickBreakeAchievemnts() async {
+Future <void> updateBrickBreakedAchievements() async {
   int? breakedBricks = await prefs.getInt('allTimeBricksCounter') ?? 0;
   print('allTimeBricksCounter:${breakedBricks}');
+  if(breakedBricks > 0){
   await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEQ', steps: breakedBricks));
   await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEg', steps: breakedBricks));
   await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEw', steps: breakedBricks));
-  breakedBricksCounter = 0;
+  breakedBricksCounter = 0;}
 }
 
   Future<void> updateAllTimeCollectedStars() async {
     int? collectedStars = await prefs.getInt('allTimeCollectedStars') ?? 0;
     await prefs.setInt('allTimeCollectedStars', allTimeStarsCollected + collectedStars);
-    await updateALltimeCollectedStarsAchievemnts();
+    await updateAllTimeCollectedStarsAchievements();
     //allTimeStarsCollected = 0;
   }
 
-  Future <void> updateALltimeCollectedStarsAchievemnts() async {
+  Future <void> updateAllTimeCollectedStarsAchievements() async {
     int? collectedStars = await prefs.getInt('allTimeCollectedStars') ?? 0;
     print('all time stars:${collectedStars}');
     await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQCw', steps: 1));
@@ -1373,21 +1382,28 @@ Future <void> updateBrickBreakeAchievemnts() async {
 
  Future<void> updatePointsCounter() async {
     int? collectedPoints = await prefs.getInt('allTimePoints') ?? 0;
+
+    //print('collectedPoints: ${collectedPoints}');
+    //print('allTimePointsCounter: ${allTimePointsCounter}');
+
     await prefs.setInt('allTimePoints', allTimePointsCounter + collectedPoints);
-    await updateALlTimePointsAchievements();
+    allTimePointsCounter = 0;
+    //await updateALlTimePointsAchievements();
     //allTimeStarsCollected = 0;
+
   }
 
-  Future <void> updateALlTimePointsAchievements() async {
-    int? collectedPoints = await prefs.getInt('allTimeCollectedStars') ?? 0;
+  Future<void> updateALlTimePointsAchievements() async {
+    int? collectedPoints = await prefs.getInt('allTimePoints') ?? 0;
     print('all time Points:${collectedPoints}');
+    //if (collectedPoints > 0)
     await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQCw', steps: 1));
     await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQDA', steps: 1));
     await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQDQ', steps: 1));
     await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQDg', steps: 1));
     await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQDw', steps: 1));
     await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEA', steps: 1));
-    allTimePointsCounter = 0;
+    //allTimePointsCounter = 0;
   }
 
 //   Future <void> updatePointsCounter() async {
@@ -1400,5 +1416,15 @@ Future <void> updateBrickBreakeAchievemnts() async {
   await updateAllTimeBreakedBricks();
   await updateAllTimeCollectedStars();
 }
+
+  Future<int> randomChallengeWallNumber() async {
+    final _random = Random();
+    int countLevels = brickList_2.length;
+    int challengeLevel = _random.nextInt(countLevels);
+    await prefs.setInt('challengeLevel', challengeLevel+1);
+    currentPlayedLevelNumber = challengeLevel +1;
+
+    return challengeLevel;
+  }
 
 }

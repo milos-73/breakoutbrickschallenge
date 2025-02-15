@@ -60,13 +60,14 @@ class DeadZone extends BodyComponent<BrickBreakGame> with ContactCallbacks, Tapp
 
   // 3
   @override
-  void beginContact(Object other, Contact contact) {
+  Future<void> beginContact(Object other, Contact contact) async {
 
     //print('GAMErEF LIVE: ${gameRef.life}');
     //print('LIVE: ${gameRef.life}');
     //print(gameRef.life);
 
     if(other is Ball && gameRef.life >= 0){
+
       gameRef.particleState = ParticleState.off;
       gameRef.updateCounters();
       gameRef.updatePointsCounter();
@@ -97,9 +98,11 @@ class DeadZone extends BodyComponent<BrickBreakGame> with ContactCallbacks, Tapp
      gameRef.life = 3;
 
       if(gameRef.gameMode == GameMode.challenge){
-        levelPointsTop = gameRef.prefs.getInt('topLevelPoints$currentLevelNumber') ?? 0;
+
+        print('currentLevelNumber:${gameRef.challengeCurrentLevel}');
+        levelPointsTop = gameRef.prefs.getInt('topLevelPoints${gameRef.challengeCurrentLevel}') ?? 0;
         if (levelPointsTop < gameRef.levelPoints) {
-          gameRef.prefs.setInt('topLevelPoints$currentLevelNumber', gameRef.levelPoints);
+          gameRef.prefs.setInt('topLevelPoints${gameRef.challengeCurrentLevel}', gameRef.levelPoints);
         }
         gameRef.totalPointsInCurrentGame = 0;
         gameRef.levelPoints = 0;
@@ -140,9 +143,10 @@ class DeadZone extends BodyComponent<BrickBreakGame> with ContactCallbacks, Tapp
       gameRef.life = 3;
       gameRef.particleState = ParticleState.off;
       if(gameRef.gameMode == GameMode.challenge){
-        levelPointsTop = gameRef.prefs.getInt('topLevelPoints$currentLevelNumber') ?? 0;
+        print('currentLevelNumber2:${gameRef.currentPlayedLevelNumber}');
+        levelPointsTop = gameRef.prefs.getInt('topLevelPoints${gameRef.challengeCurrentLevel}') ?? 0;
         if (levelPointsTop < gameRef.levelPoints) {
-          gameRef.prefs.setInt('topLevelPoints$currentLevelNumber', gameRef.levelPoints);
+          gameRef.prefs.setInt('topLevelPoints${gameRef.challengeCurrentLevel}', gameRef.levelPoints);
         }
         gameRef.totalPointsInCurrentGame = 0;
         gameRef.levelPoints = 0;

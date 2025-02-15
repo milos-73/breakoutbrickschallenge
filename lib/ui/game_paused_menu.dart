@@ -286,7 +286,11 @@ class _GamePausedMenuOverlayState extends State<GamePausedMenuOverlay> with Sing
       currentGameLevel = game.prefs.getInt('currentPlayedLevelNumber') ?? 1;
       if(widget.game.overlays.isActive('GamePausedMenuOverlay')){widget.game.overlays.remove('GamePausedMenuOverlay');}
       if (game.gameMode == GameMode.levels){await widget.game.pickLevel(currentGameLevel);}
-      if (game.gameMode == GameMode.challenge){await widget.game.pickLevel(random.nextInt(5) + 1);}
+      if (game.gameMode == GameMode.challenge){
+        int level = await widget.game.randomChallengeWallNumber();
+        await widget.game.prefs.setInt('challengeLevel', level);
+        widget.game.challengeCurrentLevel = level;
+        await widget.game.pickLevel(level);}
 
     },
       onTapUp: (tap) {

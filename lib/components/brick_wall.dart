@@ -83,10 +83,12 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
 
       if (gameRef.gameMode == GameMode.challenge) {
 
+        print('========1========');
+
         challengeLevelNumber = await gameRef.prefs.getInt('challengeLevel') ?? 0;
         currentChallengeLevelPoints = await gameRef.prefs.getInt('challengeLevelPoints$challengeLevelNumber') ?? 0;
 
-        if (gameRef.levelPoints > currentChallengeLevelPoints! ) {await gameRef.prefs.setInt('challengeLevelPoints$challengeLevelNumber', currentChallengeLevelPoints!);}
+        if (gameRef.levelPoints > currentChallengeLevelPoints! ) {await gameRef.prefs.setInt('challengeLevelPoints$challengeLevelNumber', currentChallengeLevelPoints!); print('========2========');}
 
         ///Writes TOTAL CURRENT GAME POINTS to existing TOTAL POINTS IN CURRENT GAME.
         //gameRef.totalPointsInCurrentGame = gameRef.totalPointsInCurrentGame + gameRef.levelPoints;
@@ -94,32 +96,38 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
 
         ///COMPARING Total Points In Current Game with Total Points and WRITING the Current Game Points to Total Game Points if larger
         if(gameRef.totalPointsInCurrentGame > gameRef.totalGamePoints){
+          print('========3========');
         await gameRef.prefs.setInt('totalGamePoints', gameRef.totalPointsInCurrentGame);
         if (signInStatus == true){await Leaderboards.submitScore(score: Score(androidLeaderboardID:'CgkIq5OYv8wYEAIQAQ', value:  gameRef.totalPointsInCurrentGame ));}
           }
-
-        gameRef.updatePointsCounter();
 
         ///GETTING Total Level Points from Shared Preferences
         levelPointsTop = gameRef.prefs.getInt('topLevelPoints$challengeLevelNumber') ?? 0;
 
         ///COMPARING Level Points with Total Level Points and writes Level Points to Total Level Points if larger
         if (levelPointsTop < gameRef.levelPoints) {
+          print('========4========');
+
+          print('*********challengeLevelNumber**********: ${challengeLevelNumber}');
+
           await gameRef.prefs.setInt('topLevelPoints$challengeLevelNumber', gameRef.levelPoints);
 
         } else {
           //gameRef.levelPoints = 0;
+          print('========5========');
           print('GAME STATUS: ${gameRef.gameState}');
         }
         ///SET Game Status to ChallengeNextLevel
-        gameRef.challengeCurrentLevel = await randomChallengeLevelNumber();
+
         gameRef.gameState = GameState.challengeNextLevel;
+        //gameRef.challengeCurrentLevel = await randomChallengeLevelNumber();
+        //challengeLevelgameRef.updatePointsCounter();
       }
 
       if (gameRef.gameMode == GameMode.levels){
 
        lastFinishedLevel = await savedValues.getLastFinishedLevel();
-       gameRef.updateBrickBreakeAchievemnts();
+       gameRef.updateBrickBreakedAchievements();
 
         if (currentLevelNumber! <= lastFinishedLevel){
 
@@ -230,12 +238,12 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
 
   Future<int> randomChallengeLevelNumber() async {
   final _random = Random();
-    int countLevels = brickList_2.length;
-    int challengeLevel = _random.nextInt(countLevels);
-    await gameRef.prefs.setInt('challengeLevel', challengeLevel+1);
-   gameRef.currentPlayedLevelNumber = challengeLevel +1;
+  int countLevels = brickList_2.length;
+  int challengeLevel = _random.nextInt(countLevels);
+  await gameRef.prefs.setInt('challengeLevel', challengeLevel+1);
+  gameRef.currentPlayedLevelNumber = challengeLevel +1;
 
-    return challengeLevel;
+  return challengeLevel;
 }
 
   Future<void> buildWall(int levelNumber) async {
@@ -266,9 +274,9 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
     }
 
     else{
-      int challengeLevelNumber = await randomChallengeLevelNumber();
+      //int challengeLevelNumber = await randomChallengeLevelNumber();
 
-      List brickList = brickList_2[challengeLevelNumber];
+      List brickList = brickList_2[levelNumber];
 
     for (var r = 0; r < brickList.length; r++){
       if (brickList == []){continue;}

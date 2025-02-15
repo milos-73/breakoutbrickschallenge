@@ -96,7 +96,12 @@ class _ChallengeGameOverOverlayState extends State<ChallengeGameOverOverlay> wit
 
   Future<void> _replyOverlays() async {
     if(widget.game.overlays.isActive('ChallengeGameOverOverlay')){widget.game.overlays.remove('ChallengeGameOverOverlay');}
-    await widget.game.pickLevel(random.nextInt(12));
+
+    int level = await widget.game.randomChallengeWallNumber();
+    await widget.game.prefs.setInt('challengeLevel', level);
+    widget.game.challengeCurrentLevel = level;
+    await widget.game.pickLevel(level);
+    //await widget.game.pickLevel(random.nextInt(12));
 
     }
 
