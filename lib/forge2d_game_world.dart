@@ -55,6 +55,10 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 import 'components/walls_2.dart';
 
+enum WallStatus {
+  inBuild,
+  ready
+}
 
 enum PauseButtonState {
   on,
@@ -193,6 +197,7 @@ bool _bannerAdIsLoaded = false;
   GameState gameState = GameState.initializing; ///component state
   StickyBallState stickyBallState = StickyBallState.off; ///component state
   BallStatus ballStatus = BallStatus.alreadyCreated; ///component state
+  WallStatus wallStatus = WallStatus.inBuild;
 
   StarState starState = StarState.normal; ///component state
   GameMode gameMode = GameMode.initializing; ///component state
@@ -301,6 +306,10 @@ int gamesInRowCounter = 0;
   @override
   void update(double dt) {
     super.update(dt);
+    print('${wallStatus}');
+
+    //print('NUMBER OF BRICK HITS: ${numberOfBrickHits}');
+   //print('NUMBER OF BRICK HITS LEFT:${numberOfBrickHitsLeft}');
 
     //print('allTimePointsCounter: ${allTimePointsCounter}');
     //print('totalPointsInCurrentGame: ${totalPointsInCurrentGame}');
@@ -329,25 +338,32 @@ int gamesInRowCounter = 0;
         )
     ));}
 
-    if(gameMode == GameMode.levels){
+    if((gameMode == GameMode.levels) && (wallStatus == WallStatus.ready)){
      // print('+++++++++numberOfBrickHits+++++++++++: ${numberOfBrickHits}');
       //print('+++++++++numberOfBrickHitsLeft+++++++++: ${numberOfBrickHitsLeft}');
 
     if ((numberOfBrickHits == numberOfBrickHitsLeft) && (numberOfBrickHits > starInterval-1)){
 
-        //print('EQUAL NUMBERS for STAR to be ADDED ');
+      //print('****numberOfBrickHits***: ${numberOfBrickHits}');
+      //print('****numberOfBrickHitsLeft****:${numberOfBrickHitsLeft}');
+      //print('starInterval:${starInterval}');
+      //print('EQUAL NUMBERS for STAR to be ADDED ');
         fallingStars?.getStar();
         numberOfBrickHitsLeft = numberOfBrickHitsLeft - starInterval;
-      }}
+      }
 
     if(numberOfBrickHits < numberOfBrickHitsLeft){
-
-      //print('******************PROBLEM WITH BRICKS NUMBER*******************');
+      print('******************numberOfBrickHits******************${numberOfBrickHits}');
+      print('******************numberOfBrickHitsLeft******************${numberOfBrickHitsLeft}');
+      print('******************PROBLEM WITH BRICKS NUMBER*******************');
       if ((numberOfBrickHitsLeft - starInterval) > 0) {
+        //print('>0');
         fallingStars?.getStar();
         numberOfBrickHitsLeft = numberOfBrickHitsLeft - starInterval;
-      }else{numberOfBrickHitsLeft = numberOfBrickHitsLeft;}
-    }
+      }else{numberOfBrickHitsLeft = numberOfBrickHitsLeft;
+        //print('EQUAL');
+      }
+    }}
 
 
     if(stickyBallState == StickyBallState.start){addStickyBall(); stickyBallState = StickyBallState.inProgress;}
@@ -574,6 +590,9 @@ int gamesInRowCounter = 0;
   ///RESET LEVEL
   Future<void> resetGame() async {
     gameState = GameState.initializing;
+    wallStatus = WallStatus.inBuild;
+    numberOfBrickHitsLeft = 0;
+    numberOfBrickHits = 0;
     particleState = ParticleState.off;
     bool? hudBarLevelsMounted = hudBarLevels?.isMounted;
     bool? hudBarChallengeMounted = hudBarChallenge?.isMounted;
@@ -787,6 +806,9 @@ int gamesInRowCounter = 0;
   Future<void> pickLevel(int level) async {
 
   gameState = GameState.initializing;
+  wallStatus = WallStatus.inBuild;
+  numberOfBrickHitsLeft = 0;
+  numberOfBrickHits = 0;
   particleState = ParticleState.off;
   bool? hudBarLevelsMounted = hudBarLevels?.isMounted;
   bool? hudBarChallengeMounted = hudBarChallenge?.isMounted;
@@ -1345,39 +1367,47 @@ Future<void> lostBallReset() async {
 Future<void> updateAllTimeBreakedBricks() async {
   int? breakedBricks = await prefs.getInt('allTimeBricksCounter') ?? 0;
   await prefs.setInt('allTimeBricksCounter', breakedBricksCounter + breakedBricks);
-  print('breakedBricks FROM UPADATE:${breakedBricks}');
-  print('breakedBricksCounter: ${breakedBricksCounter}');
+  // print('breakedBricks FROM UPADATE:${breakedBricks}');
+  // print('breakedBricksCounter: ${breakedBricksCounter}');
   await updateBrickBreakedAchievements();
-  //breakedBricksCounter = 0;
+  breakedBricksCounter = 0;
   }
 
 Future <void> updateBrickBreakedAchievements() async {
   int? breakedBricks = await prefs.getInt('allTimeBricksCounter') ?? 0;
   print('allTimeBricksCounter:${breakedBricks}');
-  if(breakedBricks > 0){
-  await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEQ', steps: breakedBricks));
-  await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEg', steps: breakedBricks));
-  await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEw', steps: breakedBricks));
-  breakedBricksCounter = 0;}
+    if (breakedBricks >= 1000 && breakedBricks < 5000){
+      await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQEQ'));}
+    if (breakedBricks >= 5000 && breakedBricks < 10000){
+      await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQEg'));}
+    if (breakedBricks >= 10000 && breakedBricks < 20000){
+      await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQEw'));}
+    if (breakedBricks >= 20000 && breakedBricks < 50000){
+      await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQIg'));}
+    if (breakedBricks >= 50000 && breakedBricks < 100000){
+      await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQIw'));}
+    if (breakedBricks >= 100000 && breakedBricks < 200000){
+      await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQJA'));}
+      //breakedBricksCounter = 0;}
 }
 
   Future<void> updateAllTimeCollectedStars() async {
     int? collectedStars = await prefs.getInt('allTimeCollectedStars') ?? 0;
     await prefs.setInt('allTimeCollectedStars', allTimeStarsCollected + collectedStars);
     await updateAllTimeCollectedStarsAchievements();
-    //allTimeStarsCollected = 0;
+    allTimeStarsCollected = 0;
   }
 
   Future <void> updateAllTimeCollectedStarsAchievements() async {
     int? collectedStars = await prefs.getInt('allTimeCollectedStars') ?? 0;
     print('all time stars:${collectedStars}');
-    await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQCw', steps: 1));
-    await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQDA', steps: 1));
-    await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQDQ', steps: 1));
-    await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQDg', steps: 1));
-    await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQDw', steps: 1));
-    await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEA', steps: 1));
-    allTimeStarsCollected = 0;
+    await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQCw', steps: collectedStars));
+    await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQDA', steps: collectedStars));
+    await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQDQ', steps: collectedStars));
+    await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQDg', steps: collectedStars));
+    await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQDw', steps: collectedStars));
+    await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEA', steps: collectedStars));
+    //allTimeStarsCollected = 0;
   }
 
  Future<void> updatePointsCounter() async {

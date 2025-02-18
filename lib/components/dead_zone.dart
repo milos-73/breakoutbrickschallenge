@@ -109,6 +109,9 @@ class DeadZone extends BodyComponent<BrickBreakGame> with ContactCallbacks, Tapp
         print('*****GOING TO UPDATE POINTS*****');
         gameRef.updateCounters();
         gameRef.updatePointsCounter();
+        gameRef.wallStatus = WallStatus.inBuild;
+        gameRef.numberOfBrickHits = 0;
+        gameRef.numberOfBrickHitsLeft = 0;
         gameRef.gameState = GameState.challengeLost;
 
       }
@@ -152,10 +155,16 @@ class DeadZone extends BodyComponent<BrickBreakGame> with ContactCallbacks, Tapp
         gameRef.levelPoints = 0;
         gameRef.updateCounters();
         gameRef.updatePointsCounter();
+        gameRef.wallStatus = WallStatus.inBuild;
+        gameRef.numberOfBrickHits = 0;
+        gameRef.numberOfBrickHitsLeft = 0;
         gameRef.gameState = GameState.challengeLost;
       }
       if(gameRef.gameMode == GameMode.levels){
         gameRef.currentGameLevelStars = 0;
+        gameRef.wallStatus = WallStatus.inBuild;
+        gameRef.numberOfBrickHits = 0;
+        gameRef.numberOfBrickHitsLeft = 0;
         gameRef.gameState = GameState.lost;
       }
     }

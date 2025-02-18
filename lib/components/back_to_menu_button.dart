@@ -71,6 +71,9 @@ class BackToMenuButton extends SpriteComponent with Tappable, HasGameRef<BrickBr
   if(gameRef.gameMode == GameMode.levels){gameRef.fallingStars?.resetFallingStars();}
 
   gameRef.pauseEngine();
+  gameRef.updateCounters();
+  gameRef.updatePointsCounter();
+  gameRef.wallStatus = WallStatus.inBuild;
   gameRef.gameState = GameState.paused;
 
   gameRef.overlays.add('MainMenu');
@@ -99,8 +102,7 @@ class BackToMenuButton extends SpriteComponent with Tappable, HasGameRef<BrickBr
    FlameAudio.play('button3.mp3');}
 
   _showInterstitialAd();
-  gameRef.updateCounters();
-  gameRef.updatePointsCounter();
+
   info.handled = true;
   return true;
  }

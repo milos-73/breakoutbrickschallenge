@@ -30,8 +30,10 @@ class FallingStars extends Component with HasGameRef<BrickBreakGame> {
 
   Future<void> getStar() async {
 
-    double vectorX = (Random().nextInt(30)+5).toDouble();
-    double vectorY = (Random().nextInt(30)+10).toDouble();
+   double vectorX = (Random().nextInt(30)+5).toDouble();
+   double vectorY = (Random().nextInt(30)+10).toDouble();
+    //double vectorX = 30;
+    //double vectorY = 30;
 
     print('gameRef.gameState: ${gameRef.gameState}');
     print('vectorX: ${vectorX}');
