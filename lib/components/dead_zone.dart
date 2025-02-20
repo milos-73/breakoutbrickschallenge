@@ -77,7 +77,7 @@ class DeadZone extends BodyComponent<BrickBreakGame> with ContactCallbacks, Tapp
       }
       gameRef.life = gameRef.life - 1;
       if (gameRef.gameMode == GameMode.challenge){
-        //gameRef.updateAllTimeBreakedBricks();
+        gameRef.updateAllTimeBreakedBricks();
       }
 
       //gameRef.obstacles.resetObstacle();
@@ -232,20 +232,10 @@ class DeadZone extends BodyComponent<BrickBreakGame> with ContactCallbacks, Tapp
 
   @override
   bool onTapCancel() {
-
-
-
-    //print("tap cancel");
+   //print("tap cancel");
    return false;
   }
 
-  // Future <void> updateBrickBreakeAchievemnts() async {
-  //
-  //   await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQFQ', steps: gameRef.counterGame));
-  //   gameRef.counterGame = 0;
-  //   // await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEg', steps: 1));
-  //   // await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEw', steps: 1));
-  // }
 
 
 }

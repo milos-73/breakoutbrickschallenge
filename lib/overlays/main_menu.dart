@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:games_services/games_services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 import '../components/google_play_game_services.dart';
 import '../components/walls_2.dart';
@@ -46,8 +47,10 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
   String challenge2 = 'assets/images/buttons/challengeButton_hover.png';
 
   late String board;
-  String board1 = 'assets/images/buttons/boardButton.png';
-  String board2 = 'assets/images/buttons/boardButton_hover.png';
+  // String board1 = 'assets/images/buttons/boardButton.png';
+  // String board2 = 'assets/images/buttons/boardButton_hover.png';
+  String board1 = 'assets/images/buttons/boardButtonPlay.png';
+  String board2 = 'assets/images/buttons/boardButton_hover_play.png';
 
   late String logIn;
   String logIn1 = 'assets/images/buttons/myAccountButton.png';
@@ -61,9 +64,14 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
   String about1 = 'assets/images/buttons/infoButton.png';
   String about2 = 'assets/images/buttons/infoButton_hover.png';
 
+  // late String gameServices;
+  // String gameServices1 = 'assets/images/buttons/google play_button.png';
+
   late String achievements;
-  String achievements1 = 'assets/images/buttons/achievementsButton.png';
-  String achievements2 = 'assets/images/buttons/achievementsButton_hover.png';
+  // String achievements1 = 'assets/images/buttons/achievementsButton.png';
+  // String achievements2 = 'assets/images/buttons/achievementsButton_hover.png';
+  String achievements1 = 'assets/images/buttons/achievementsButtonPlay.png';
+  String achievements2 = 'assets/images/buttons/achievementsButton_hover_play.png';
 
   @override
   void initState() {
@@ -142,11 +150,13 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
   }
 
   Future<void> fetchPlayerName() async {
-    String name = await getPlayerName();
-    setState(() {
-      signInStatus = true;
-      playerName = name;
-     });
+    if (await InternetConnection().hasInternetAccess == true) {
+      String name = await getPlayerName();
+      setState(() {
+        signInStatus = true;
+        playerName = name;
+       });
+    }else {}
   }
 
   @override
@@ -374,12 +384,18 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
         if (game.audioSettings == AudioSettings.on) {
           await FlameAudio.play('button3.mp3');
         }
-        if (signInStatus == false){googlePlayGameServices.signIn(); await fetchPlayerName(); await Leaderboards.showLeaderboards();}
-        else {
-          //final result = await Achievements.loadAchievements();
-          //print('ACHIEVEMENTS: ${result?[0].completedSteps}');
-          await Leaderboards.showLeaderboards();
-          //await Achievements.showAchievements();
+        if (await InternetConnection().hasInternetAccess == true) {
+          if (signInStatus == false){
+            print('game.connectionStatus: ${game.connectionStatus}');
+            _pleaseLogInMessageLeaderBoard();
+            //await Leaderboards.showLeaderboards();
+            }
+          else {
+            await Leaderboards.showLeaderboards();
+          }
+        }else{
+          print('*******OFFLINE********');
+          _offlineMessageLeaderBoard();
         }
       },
 
@@ -420,12 +436,16 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
         if (game.audioSettings == AudioSettings.on) {
           await FlameAudio.play('button3.mp3');
         }
-        if (signInStatus == false){googlePlayGameServices.signIn(); await fetchPlayerName(); await Leaderboards.showLeaderboards();}
-        else {
-          //final result = await Achievements.loadAchievements();
-          //print('ACHIEVEMENTS: ${result?[0].completedSteps}');
-          await Achievements.showAchievements();
-          //await Achievements.showAchievements();
+        if (await InternetConnection().hasInternetAccess == true) {
+          if (signInStatus == false){
+            _pleaseLogInMessageAchievements();
+          }
+          else {
+            await Achievements.showAchievements();
+          }
+        }else{
+          print('*******OFFLINE********');
+          _offlineMessageAchievements();
         }
       },
 
@@ -457,27 +477,192 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
   }
 
 
-   Future<void> _pleaseLogInMessage() async {
+   Future<void> _pleaseLogInMessageLeaderBoard() async {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: HexColor('#ffdfab').withOpacity(0.7),
-          title: const Text('Leader Board', style: TextStyle(fontWeight: FontWeight.w700),),
+          title: Column(mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset('assets/images/buttons/google play_button.png', height: (widget.game.camera.viewport.canvasSize?.y)!/14.5,),
+              const Text('Leader Board', style: TextStyle(fontWeight: FontWeight.w700),),
+            ],
+          ),
           content: Column(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text('Please log in to use this feature',textAlign: TextAlign.center, style: TextStyle(fontSize: 17),),
+              Text('Please log in to Google play game services to use this feature',textAlign: TextAlign.center, style: TextStyle(fontSize: 17),),
             ],
           ),
           actions: <Widget>[
-            ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: HexColor('#8bf5aa')),
-              child: Text('OK',style: TextStyle(color: HexColor('#1c2b31'),fontWeight: FontWeight.w800),),
-              onPressed: () {
-                setState(() {
-                  board = board1;
-                });
-              Navigator.of(context).pop();
-              },
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: HexColor('#8bf5aa')),
+                  child: Text('LogIn',style: TextStyle(color: HexColor('#1c2b31'),fontWeight: FontWeight.w800),),
+                  onPressed: () async {
+                    setState(() {
+                      board = board1;
+                    });
+                    Navigator.of(context).pop();
+                    googlePlayGameServices.signIn();
+                    await fetchPlayerName();
+                    await Leaderboards.showLeaderboards();
+
+                  },
+                ),
+                ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: HexColor('#f60c0d')),
+                  child: Text('Cancel',style: TextStyle(color: HexColor('#1c2b31'),fontWeight: FontWeight.w800),),
+                  onPressed: () {
+                    setState(() {
+                      board = board1;
+                    });
+                  Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _offlineMessageLeaderBoard() async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: HexColor('#ffdfab').withOpacity(0.7),
+          title: Column(mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset('assets/images/buttons/google play_button.png', height: (widget.game.camera.viewport.canvasSize?.y)!/14.5,),
+              const Text('Leader Board', style: TextStyle(fontWeight: FontWeight.w700),),
+            ],
+          ),
+          content: Column(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text('Your phone appears to be offline. Please check your internet connection and try again to log in to Google play game services to use this feature',textAlign: TextAlign.center, style: TextStyle(fontSize: 17),),
+            ],
+          ),
+          actions: <Widget>[
+            Row(mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: HexColor('#8bf5aa')),
+                  child: Text('OK',style: TextStyle(color: HexColor('#1c2b31'),fontWeight: FontWeight.w800),),
+                  onPressed: () {
+                    // googlePlayGameServices.signIn();
+                    // setState(() {
+                    //   board = board1;
+                    // });
+                    Navigator.of(context).pop();
+                  },
+                ),
+                // ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: HexColor('#f60c0d')),
+                //   child: Text('Cancel',style: TextStyle(color: HexColor('#1c2b31'),fontWeight: FontWeight.w800),),
+                //   onPressed: () {
+                //     setState(() {
+                //       board = board1;
+                //     });
+                //     Navigator.of(context).pop();
+                //   },
+                // ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _pleaseLogInMessageAchievements() async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: HexColor('#ffdfab').withOpacity(0.7),
+          title: Column(mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset('assets/images/buttons/google play_button.png', height: (widget.game.camera.viewport.canvasSize?.y)!/14.5,),
+              const Text('Leader Board', style: TextStyle(fontWeight: FontWeight.w700),),
+            ],
+          ),
+          content: Column(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text('Please log in to Google play game services to use this feature',textAlign: TextAlign.center, style: TextStyle(fontSize: 17),),
+            ],
+          ),
+          actions: <Widget>[
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: HexColor('#8bf5aa')),
+                  child: Text('LogIn',style: TextStyle(color: HexColor('#1c2b31'),fontWeight: FontWeight.w800),),
+                  onPressed: () async {
+                    setState(() {
+                      board = board1;
+                    });
+                    Navigator.of(context).pop();
+                    googlePlayGameServices.signIn();
+                    await fetchPlayerName();
+                    await Leaderboards.showLeaderboards();
+                  },
+                ),
+                ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: HexColor('#f60c0d')),
+                  child: Text('Cancel',style: TextStyle(color: HexColor('#1c2b31'),fontWeight: FontWeight.w800),),
+                  onPressed: () {
+                    setState(() {
+                      board = board1;
+                    });
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _offlineMessageAchievements() async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: HexColor('#ffdfab').withOpacity(0.7),
+          title: Column(mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset('assets/images/buttons/google play_button.png', height: (widget.game.camera.viewport.canvasSize?.y)!/14.5,),
+              const Text('Leader Board', style: TextStyle(fontWeight: FontWeight.w700),),
+            ],
+          ),
+          content: Column(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text('Your phone appears to be offline. Please check your internet connection and try again to log in to Google play game services to use this feature',textAlign: TextAlign.center, style: TextStyle(fontSize: 17),),
+            ],
+          ),
+          actions: <Widget>[
+            Row(mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: HexColor('#8bf5aa')),
+                  child: Text('OK',style: TextStyle(color: HexColor('#1c2b31'),fontWeight: FontWeight.w800),),
+                  onPressed: () {
+                    // googlePlayGameServices.signIn();
+                    // setState(() {
+                    //   board = board1;
+                    // });
+                    Navigator.of(context).pop();
+                  },
+                ),
+                // ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: HexColor('#f60c0d')),
+                //   child: Text('Cancel',style: TextStyle(color: HexColor('#1c2b31'),fontWeight: FontWeight.w800),),
+                //   onPressed: () {
+                //     setState(() {
+                //       board = board1;
+                //     });
+                //     Navigator.of(context).pop();
+                //   },
+                // ),
+              ],
             ),
           ],
         );

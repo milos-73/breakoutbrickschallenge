@@ -3,6 +3,7 @@ import 'dart:math';
 //import 'package:firebase_auth/firebase_auth.dart';
 //import 'package:firebase_core/firebase_core.dart';
 //import 'package:firebase_database/firebase_database.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flame/camera.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
@@ -23,6 +24,7 @@ import 'package:brickbreaker/components/paralax_background.dart';
 import 'package:brickbreaker/components/stars_status.dart';
 import 'package:brickbreaker/components/total_stars_hud.dart';
 import 'package:brickbreaker/services/saved_values.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:username_gen/username_gen.dart';
@@ -54,6 +56,13 @@ import 'components/stars_level_total.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 import 'components/walls_2.dart';
+
+
+enum ConnectionStatus {
+  offline,
+  online,
+  singInError
+}
 
 enum WallStatus {
   inBuild,
@@ -198,6 +207,7 @@ bool _bannerAdIsLoaded = false;
   StickyBallState stickyBallState = StickyBallState.off; ///component state
   BallStatus ballStatus = BallStatus.alreadyCreated; ///component state
   WallStatus wallStatus = WallStatus.inBuild;
+  ConnectionStatus connectionStatus = ConnectionStatus.offline;
 
   StarState starState = StarState.normal; ///component state
   GameMode gameMode = GameMode.initializing; ///component state
@@ -280,6 +290,7 @@ int gamesInRowCounter = 0;
     super.onLoad();
 
     googlePlayGameServices.signIn();
+    //await googlePlayGameServices.signInMain();
 
    await FlameAudio.audioCache.loadAll(['plop1.mp3','collectCoin1.mp3','plop2.mp3','plop3.mp3','brick1.mp3','brick2.mp3','brick3.mp3','brickNoBreak.mp3','levelUp1.mp3','gameOver.mp3', 'lostBall1.mp3', 'gameOver.mp3','button3.mp3','levelSelection.mp3','bottomTap.mp3','wrong1.mp3','cannon.mp3','bullet.mp3','bonus.mp3','positiveNumber.mp3','negativeNumber.mp3']);
 
@@ -306,7 +317,7 @@ int gamesInRowCounter = 0;
   @override
   void update(double dt) {
     super.update(dt);
-    print('${wallStatus}');
+    //print('${wallStatus}');
 
     //print('NUMBER OF BRICK HITS: ${numberOfBrickHits}');
    //print('NUMBER OF BRICK HITS LEFT:${numberOfBrickHitsLeft}');
@@ -353,9 +364,9 @@ int gamesInRowCounter = 0;
       }
 
     if(numberOfBrickHits < numberOfBrickHitsLeft){
-      print('******************numberOfBrickHits******************${numberOfBrickHits}');
-      print('******************numberOfBrickHitsLeft******************${numberOfBrickHitsLeft}');
-      print('******************PROBLEM WITH BRICKS NUMBER*******************');
+      // print('******************numberOfBrickHits******************${numberOfBrickHits}');
+      // print('******************numberOfBrickHitsLeft******************${numberOfBrickHitsLeft}');
+      // print('******************PROBLEM WITH BRICKS NUMBER*******************');
       if ((numberOfBrickHitsLeft - starInterval) > 0) {
         //print('>0');
         fallingStars?.getStar();
@@ -610,7 +621,7 @@ int gamesInRowCounter = 0;
     levelStars = prefs.getInt('numberOfStars$currentPlayedLevelNumber') ?? 0;
     lastFinishedLevel = prefs.getInt('lastFinishedLevel') ?? 0;
 
-    updateBrickBreakedAchievements();
+    //updateBrickBreakedAchievements();
 
     currentGameLevelStars = 0;
     currentGameLevelStarsPoints = 0;
@@ -832,7 +843,7 @@ int gamesInRowCounter = 0;
   levelStars = prefs.getInt('numberOfStars$level') ?? 0;
   lastFinishedLevel = prefs.getInt('lastFinishedLevel') ?? 0;
 
-  updateBrickBreakedAchievements();
+  //updateBrickBreakedAchievements();
 
   print('levelStars $level ${levelStars}');
   await prefs.setInt('currentPlayedLevelNumber', level);
@@ -1376,6 +1387,8 @@ Future<void> updateAllTimeBreakedBricks() async {
 Future <void> updateBrickBreakedAchievements() async {
   int? breakedBricks = await prefs.getInt('allTimeBricksCounter') ?? 0;
   print('allTimeBricksCounter:${breakedBricks}');
+  if (breakedBricks >= 50 && breakedBricks < 1000){
+    await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQJg'));}
     if (breakedBricks >= 1000 && breakedBricks < 5000){
       await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQEQ'));}
     if (breakedBricks >= 5000 && breakedBricks < 10000){
@@ -1394,32 +1407,43 @@ Future <void> updateBrickBreakedAchievements() async {
   Future<void> updateAllTimeCollectedStars() async {
     int? collectedStars = await prefs.getInt('allTimeCollectedStars') ?? 0;
     await prefs.setInt('allTimeCollectedStars', allTimeStarsCollected + collectedStars);
-    await updateAllTimeCollectedStarsAchievements();
+    print('***allTimeStarsCollected***:${allTimeStarsCollected}');
     allTimeStarsCollected = 0;
+    await updateAllTimeCollectedStarsAchievements();
+
   }
 
   Future <void> updateAllTimeCollectedStarsAchievements() async {
     int? collectedStars = await prefs.getInt('allTimeCollectedStars') ?? 0;
     print('all time stars:${collectedStars}');
-    await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQCw', steps: collectedStars));
-    await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQDA', steps: collectedStars));
-    await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQDQ', steps: collectedStars));
-    await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQDg', steps: collectedStars));
-    await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQDw', steps: collectedStars));
-    await Achievements.increment(achievement: Achievement(androidID: 'CgkIq5OYv8wYEAIQEA', steps: collectedStars));
-    //allTimeStarsCollected = 0;
-  }
+    if (collectedStars >= 10 && collectedStars < 100){
+      await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQJQ'));}
+    if (collectedStars >= 100 && collectedStars < 500){
+      await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQCw'));}
+    if (collectedStars >= 500 && collectedStars < 1000){
+      await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQDA'));}
+    if (collectedStars >= 1000 && collectedStars < 2000){
+      await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQDQ'));}
+    if (collectedStars >= 2000 && collectedStars < 5000){
+      await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQDg'));}
+    if (collectedStars >= 5000 && collectedStars < 10000){
+      await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQDw'));}
+     }
 
  Future<void> updatePointsCounter() async {
+   bool signInStatus = await googlePlayGameServices.getSignInStatus();
     int? collectedPoints = await prefs.getInt('allTimePoints') ?? 0;
     await prefs.setInt('allTimePoints', allTimePointsCounter + collectedPoints);
     allTimePointsCounter = 0;
+    if (signInStatus == true && await InternetConnection().hasInternetAccess == true) {
+      updateALlTimePointsAchievements();
+    }
   }
 
   Future<void> updateALlTimePointsAchievements() async {
     int? collectedPoints = await prefs.getInt('allTimePoints') ?? 0;
     print('all time Points:${collectedPoints}');
-    if (collectedPoints >= 5000 && collectedPoints < 10000){
+    if (collectedPoints >= 65000 && collectedPoints < 10000){
     await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQGw'));}
     if (collectedPoints >= 10000 && collectedPoints < 20000){
     await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQHA'));}
@@ -1436,8 +1460,11 @@ Future <void> updateBrickBreakedAchievements() async {
   }
 
   Future<void> updateCounters()  async {
-  await updateAllTimeBreakedBricks();
-  await updateAllTimeCollectedStars();
+    bool signInStatus = await googlePlayGameServices.getSignInStatus();
+    if (signInStatus == true && await InternetConnection().hasInternetAccess == true) {
+      await updateAllTimeBreakedBricks();
+      await updateAllTimeCollectedStars();
+    }
 }
 
   Future<int> randomChallengeWallNumber() async {
@@ -1449,5 +1476,8 @@ Future <void> updateBrickBreakedAchievements() async {
 
     return challengeLevel;
   }
+
+
+
 
 }

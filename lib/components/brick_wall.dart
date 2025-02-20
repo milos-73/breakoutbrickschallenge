@@ -10,6 +10,7 @@ import 'package:flame/components.dart';
 import 'package:brickbreaker/components/walls_1.dart';
 import 'package:brickbreaker/components/walls_2.dart';
 import 'package:games_services/games_services.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import '../forge2d_game_world.dart';
 import '../services/saved_values.dart';
 import 'brick.dart';
@@ -78,9 +79,9 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
 if(gameRef.wallStatus == WallStatus.ready){
     gameRef.numberOfBrickHits = numberOfBrick.length + numberOfBrick3.length + numberOfBrickCracked1.length + numberOfBrickCracked2.length;}
 
-    print('gameRef.wallStatus FROM WALL UPDATE: ${gameRef.wallStatus}');
-    print('gameRef.numberOfBrickHits FROM WALL UPDATE: ${gameRef.numberOfBrickHits}');
-    print('numberOfBrickHitsLeft FROM WALL UPDATE: ${gameRef.numberOfBrickHitsLeft}');
+    // print('gameRef.wallStatus FROM WALL UPDATE: ${gameRef.wallStatus}');
+    // print('gameRef.numberOfBrickHits FROM WALL UPDATE: ${gameRef.numberOfBrickHits}');
+    // print('numberOfBrickHitsLeft FROM WALL UPDATE: ${gameRef.numberOfBrickHitsLeft}');
 
     if (numberOfBrick.isEmpty && numberOfBrick3.isEmpty && numberOfBrickCracked1.isEmpty && numberOfBrickCracked2.isEmpty && gameRef.gameState == GameState.running){
       if (game.audioSettings == AudioSettings.on)  {
@@ -107,8 +108,9 @@ if(gameRef.wallStatus == WallStatus.ready){
         if(gameRef.totalPointsInCurrentGame > gameRef.totalGamePoints){
           print('========3========');
         await gameRef.prefs.setInt('totalGamePoints', gameRef.totalPointsInCurrentGame);
-        if (signInStatus == true){await Leaderboards.submitScore(score: Score(androidLeaderboardID:'CgkIq5OYv8wYEAIQAQ', value:  gameRef.totalPointsInCurrentGame ));}
-          }
+        if (signInStatus == true && await InternetConnection().hasInternetAccess == true){
+          await Leaderboards.submitScore(score: Score(androidLeaderboardID:'CgkIq5OYv8wYEAIQAQ', value:  gameRef.totalPointsInCurrentGame ));}
+         }
 
         ///GETTING Total Level Points from Shared Preferences
         levelPointsTop = gameRef.prefs.getInt('topLevelPoints$challengeLevelNumber') ?? 0;
@@ -153,7 +155,7 @@ if(gameRef.wallStatus == WallStatus.ready){
             await gameRef.prefs.setInt('starsPoints$currentLevelNumber', gameRef.currentGameLevelStarsPoints);
             await gameRef.prefs.setInt('totalStarsPoints', totalStarsPoints);
 
-            if (signInStatus == true){
+            if (signInStatus == true && await InternetConnection().hasInternetAccess == true){
               await Leaderboards.submitScore(score: Score(androidLeaderboardID:'CgkIq5OYv8wYEAIQAQ', value:  totalStars ));
               await Leaderboards.submitScore(score: Score(androidLeaderboardID:'CgkIq5OYv8wYEAIQCg', value:  totalStarsPoints ));
             }
@@ -184,7 +186,7 @@ if(gameRef.wallStatus == WallStatus.ready){
           await gameRef.prefs.setInt('totalStarsPoints', gameRef.currentGameLevelStarsPoints + gameRef.totalStarsPoints!);
 
 
-          if (signInStatus == true){
+          if (signInStatus == true && await InternetConnection().hasInternetAccess == true){
             await Leaderboards.submitScore(score: Score(androidLeaderboardID:'CgkIq5OYv8wYEAIQAQ', value:  totalStars ));
             await Leaderboards.submitScore(score: Score(androidLeaderboardID:'CgkIq5OYv8wYEAIQCg', value:  totalStarsPoints ));
           }
@@ -209,7 +211,7 @@ if(gameRef.wallStatus == WallStatus.ready){
         gameRef.world.destroyBody(child.body);
         // FlameAudio.play(brickSound[Random().nextInt(2)]);
         if (game.audioSettings == AudioSettings.on)  {
-          print('BRICK SOUND');
+          //print('BRICK SOUND');
           FlameAudio.play('brick3.mp3');}
         remove(child);
         gameRef.breakedBricksCounter++;
@@ -291,11 +293,11 @@ if(gameRef.wallStatus == WallStatus.ready){
       gameRef.starInterval = (i - (i~/5))~/5;
       gameRef.numberOfBrickHitsLeft =  i - (i~/5);
       gameRef.wallStatus = WallStatus.ready;
-      print('BRICKS i:${i}');
-      print('MODULO (i~/5): ${(i~/5)}');
-      print('gameRef.starInterval${gameRef.starInterval}');
-      print('Lef BRICKS? ${i}-${i~/5}');
-      print('gameRef.numberOfBrickHitsLeftStart${gameRef.numberOfBrickHitsLeft}');
+      // print('BRICKS i:${i}');
+      // print('MODULO (i~/5): ${(i~/5)}');
+      // print('gameRef.starInterval${gameRef.starInterval}');
+      // print('Lef BRICKS? ${i}-${i~/5}');
+      // print('gameRef.numberOfBrickHitsLeftStart${gameRef.numberOfBrickHitsLeft}');
 
 
     }

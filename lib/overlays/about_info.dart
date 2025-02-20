@@ -302,7 +302,7 @@ class _AboutInfoState extends State<AboutInfo> {
                                   Text('Fun Challenge'.toUpperCase(), style: TextStyle(fontSize: 17,fontWeight: FontWeight.w400, color: Colors.limeAccent),),
                                   //Text('my current location', style: TextStyle(fontSize: 17,fontWeight: FontWeight.w400),),
                                   SizedBox(height: 5,),
-                                  Text('version 0.9.5', style: TextStyle(fontSize: 15,fontWeight: FontWeight.w300, color: Colors.white),),
+                                  Text('version 1.1.5', style: TextStyle(fontSize: 15,fontWeight: FontWeight.w300, color: Colors.white),),
                                   SizedBox(height: 20,),
                                   //TextButton(onPressed: () => setState(() {_launched = _launchInBrowser(_url);}), child: const Text('mylocationnow.app'),style: TextButton.styleFrom(minimumSize: Size.zero, padding: EdgeInsets.zero,tapTargetSize: MaterialTapTargetSize.shrinkWrap ),),
                                   Text('support@mylocationnow.app', style: TextStyle(fontSize: 15,fontWeight: FontWeight.w300),),
