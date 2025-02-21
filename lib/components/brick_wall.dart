@@ -43,7 +43,8 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
   int starsNumber = 0;
   int challengeLevels = 0;
   late int lastFinishedLevel;
-  //int i = 0;
+  //int challengeLevelsInRowCounter = 0;
+  //int challengeGameCounterHelper = 0;
 
   int _counterTotal = 0;
 
@@ -93,7 +94,7 @@ if(gameRef.wallStatus == WallStatus.ready){
 
       if (gameRef.gameMode == GameMode.challenge) {
 
-        print('========1========');
+        //print('========1========');
 
         challengeLevelNumber = await gameRef.prefs.getInt('challengeLevel') ?? 0;
         currentChallengeLevelPoints = await gameRef.prefs.getInt('challengeLevelPoints$challengeLevelNumber') ?? 0;
@@ -106,8 +107,9 @@ if(gameRef.wallStatus == WallStatus.ready){
 
         ///COMPARING Total Points In Current Game with Total Points and WRITING the Current Game Points to Total Game Points if larger
         if(gameRef.totalPointsInCurrentGame > gameRef.totalGamePoints){
-          print('========3========');
+          //print('========3========');
         await gameRef.prefs.setInt('totalGamePoints', gameRef.totalPointsInCurrentGame);
+
         if (signInStatus == true && await InternetConnection().hasInternetAccess == true){
           await Leaderboards.submitScore(score: Score(androidLeaderboardID:'CgkIq5OYv8wYEAIQAQ', value:  gameRef.totalPointsInCurrentGame ));}
          }
@@ -117,19 +119,27 @@ if(gameRef.wallStatus == WallStatus.ready){
 
         ///COMPARING Level Points with Total Level Points and writes Level Points to Total Level Points if larger
         if (levelPointsTop < gameRef.levelPoints) {
-          print('========4========');
-
-          print('*********challengeLevelNumber**********: ${challengeLevelNumber}');
-
+          //print('========4========');
           await gameRef.prefs.setInt('topLevelPoints$challengeLevelNumber', gameRef.levelPoints);
+          //print('*********challengeLevelNumber**********: ${challengeLevelNumber}');
 
         } else {
+
           //gameRef.levelPoints = 0;
-          print('========5========');
-          print('GAME STATUS: ${gameRef.gameState}');
+          //print('========5========');
+          //print('GAME STATUS: ${gameRef.gameState}');
         }
         ///SET Game Status to ChallengeNextLevel
+        // if(gameRef.challengeGameCounterHelper == 0) {
+        //   gameRef.challengeGameCounterHelper = 1;
+        //   //gameRef.challengeLevelsPerGame++;
+        //   //await gameRef.prefs.setInt('challengeLevelsPerGame', gameRef.challengeLevelsPerGame);
+        // print('***gameRef.challengeGameCounterHelper*** ${gameRef.challengeGameCounterHelper}');
+        // print('***gameRef.challengeLevelsPerGame*** ${gameRef.challengeLevelsPerGame}');
+        // }
         gameRef.wallStatus = WallStatus.inBuild;
+
+        //print('++++gameRef.challengeLevelsPerGame++++ ${gameRef.challengeLevelsPerGame}');
         gameRef.gameState = GameState.challengeNextLevel;
         //gameRef.challengeCurrentLevel = await randomChallengeLevelNumber();
         //challengeLevelgameRef.updatePointsCounter();

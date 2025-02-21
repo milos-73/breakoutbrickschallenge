@@ -72,6 +72,7 @@ class BackToMenuButton extends SpriteComponent with Tappable, HasGameRef<BrickBr
 
   gameRef.pauseEngine();
   gameRef.updateCounters();
+  gameRef.updateChallengeCounters();
   gameRef.updatePointsCounter();
   gameRef.wallStatus = WallStatus.inBuild;
   gameRef.gameState = GameState.paused;

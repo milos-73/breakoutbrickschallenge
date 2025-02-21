@@ -54,7 +54,7 @@ class _NextLevelChallengeModeOverlayState extends State<NextLevelChallengeModeOv
 
 
     super.initState();
-    updateChallengeLevelCount();
+    //updateChallengeLevelCount();
     _createInterstitialAd();
 
     _animationController = AnimationController(

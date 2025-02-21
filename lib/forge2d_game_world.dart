@@ -249,6 +249,7 @@ bool _bannerAdIsLoaded = false;
 
   int? fiveStarsLevels = 0; ///holds the value for number of 5* LEVELS
   int challengeLevelsPerGame = 0; ///holds the TOP number of CHALLENGE MODE game LEVELS played in one row
+  int challengeGameCounterHelper = 0;
 
   int? totalStarsPoints; ///holds the TOTAL points for collected STARS
   int  currentGameLevelStarsPoints = 0; ///holds points for collected STARS in currently played LEVEL
@@ -291,7 +292,8 @@ int gamesInRowCounter = 0;
 
     googlePlayGameServices.signIn();
     //await googlePlayGameServices.signInMain();
-
+//print('challengeGameCounterHelper:${challengeGameCounterHelper}');
+//print('challengeLevelsPerGame: ${challengeLevelsPerGame}');
    await FlameAudio.audioCache.loadAll(['plop1.mp3','collectCoin1.mp3','plop2.mp3','plop3.mp3','brick1.mp3','brick2.mp3','brick3.mp3','brickNoBreak.mp3','levelUp1.mp3','gameOver.mp3', 'lostBall1.mp3', 'gameOver.mp3','button3.mp3','levelSelection.mp3','bottomTap.mp3','wrong1.mp3','cannon.mp3','bullet.mp3','bonus.mp3','positiveNumber.mp3','negativeNumber.mp3']);
 
     prefs = await SharedPreferences.getInstance();
@@ -317,6 +319,7 @@ int gamesInRowCounter = 0;
   @override
   void update(double dt) {
     super.update(dt);
+    //print('|||||||| challengeLevelsPerGame |||||||||: ${challengeLevelsPerGame}');
     //print('${wallStatus}');
 
     //print('NUMBER OF BRICK HITS: ${numberOfBrickHits}');
@@ -402,7 +405,11 @@ int gamesInRowCounter = 0;
     }
     if (gameState == GameState.challengeNextLevel) {
       pauseEngine();
+      //challengeGameCounterHelper = 0;
+      //challengeLevelsPerGame = challengeLevelsPerGame + 1;
+      print('IN GAME STATE CHALLENGE NEXT LEVEL');
       randomChallengeWallNumber();
+      updateChallengeGameInRowCounters();
       updatePointsCounter();
       overlays.add('NextLevelChallengeModeOverlay');
     }
@@ -522,7 +529,7 @@ int gamesInRowCounter = 0;
 
     ///BONUS
     fallingBonus = FallingBonus();
-    print('FALLING BONUS to be added');
+    //print('FALLING BONUS to be added');
     await add(fallingBonus);
 
     ///POINTS
@@ -845,7 +852,7 @@ int gamesInRowCounter = 0;
 
   //updateBrickBreakedAchievements();
 
-  print('levelStars $level ${levelStars}');
+  //print('levelStars $level ${levelStars}');
   await prefs.setInt('currentPlayedLevelNumber', level);
 
   if (ball2On == 1) {
@@ -1386,9 +1393,9 @@ Future<void> updateAllTimeBreakedBricks() async {
 
 Future <void> updateBrickBreakedAchievements() async {
   int? breakedBricks = await prefs.getInt('allTimeBricksCounter') ?? 0;
-  print('allTimeBricksCounter:${breakedBricks}');
-  if (breakedBricks >= 50 && breakedBricks < 1000){
-    await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQJg'));}
+  //print('allTimeBricksCounter:${breakedBricks}');
+  // if (breakedBricks >= 50 && breakedBricks < 1000){
+  //   await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQJg'));}
     if (breakedBricks >= 1000 && breakedBricks < 5000){
       await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQEQ'));}
     if (breakedBricks >= 5000 && breakedBricks < 10000){
@@ -1407,7 +1414,7 @@ Future <void> updateBrickBreakedAchievements() async {
   Future<void> updateAllTimeCollectedStars() async {
     int? collectedStars = await prefs.getInt('allTimeCollectedStars') ?? 0;
     await prefs.setInt('allTimeCollectedStars', allTimeStarsCollected + collectedStars);
-    print('***allTimeStarsCollected***:${allTimeStarsCollected}');
+    //print('***allTimeStarsCollected***:${allTimeStarsCollected}');
     allTimeStarsCollected = 0;
     await updateAllTimeCollectedStarsAchievements();
 
@@ -1415,9 +1422,9 @@ Future <void> updateBrickBreakedAchievements() async {
 
   Future <void> updateAllTimeCollectedStarsAchievements() async {
     int? collectedStars = await prefs.getInt('allTimeCollectedStars') ?? 0;
-    print('all time stars:${collectedStars}');
-    if (collectedStars >= 10 && collectedStars < 100){
-      await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQJQ'));}
+    //print('all time stars:${collectedStars}');
+    // if (collectedStars >= 10 && collectedStars < 100){
+    //   await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQJQ'));}
     if (collectedStars >= 100 && collectedStars < 500){
       await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQCw'));}
     if (collectedStars >= 500 && collectedStars < 1000){
@@ -1442,9 +1449,9 @@ Future <void> updateBrickBreakedAchievements() async {
 
   Future<void> updateALlTimePointsAchievements() async {
     int? collectedPoints = await prefs.getInt('allTimePoints') ?? 0;
-    print('all time Points:${collectedPoints}');
-    if (collectedPoints >= 65000 && collectedPoints < 10000){
-    await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQGw'));}
+    //print('all time Points:${collectedPoints}');
+    // if (collectedPoints >= 65000 && collectedPoints < 10000){
+    // await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQGw'));}
     if (collectedPoints >= 10000 && collectedPoints < 20000){
     await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQHA'));}
     if (collectedPoints >= 20000 && collectedPoints < 50000){
@@ -1459,24 +1466,82 @@ Future <void> updateBrickBreakedAchievements() async {
     await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQIQ'));}
   }
 
+  Future<void> updateChallengeGamesInRowCounter() async {
+    //print('IN updateChallengeGamesInRowCounter()');
+    //print('challengeLevelsPerGame: ${challengeLevelsPerGame}');
+    bool signInStatus = await googlePlayGameServices.getSignInStatus();
+    int? gamesInRowCount = await prefs.getInt('challengeLevelsPerGame') ?? 0;
+    //print('gamesInRowCount: ${gamesInRowCount}');
+    if (gamesInRowCount < challengeLevelsPerGame) {
+      await prefs.setInt('challengeLevelsPerGame', challengeLevelsPerGame);
+      challengeLevelsPerGame = 0;
+    }
+    challengeLevelsPerGame = 0;
+    //challengeGameCounterHelper = 0;
+    if (signInStatus == true && await InternetConnection().hasInternetAccess == true) {
+      updateChallengeGamesInRow();
+    }
+  }
+
+  Future<void> updateChallengeGamesInRow() async {
+    print('IN CHALLENGES UPDATE');
+    int? gamesPerRow = await prefs.getInt('challengeLevelsPerGame') ?? 0;
+    //print('challengeLevelsPerGame:${gamesPerRow}');
+    if (gamesPerRow >=3 && gamesPerRow < 5){
+    await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQFg'));}
+    if (gamesPerRow >= 5 && gamesPerRow < 10){
+      await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQFw'));}
+    if (gamesPerRow >= 10 && gamesPerRow < 15){
+      await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQGA'));}
+    if (gamesPerRow >= 15 && gamesPerRow < 20){
+      await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQGQ'));}
+    if (gamesPerRow >= 20 && gamesPerRow < 50){
+    await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQGg'));}
+    // if (collectedPoints >= 200000 && collectedPoints < 500000){
+    //   await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQIA'));}
+    // if (collectedPoints >= 500000 && collectedPoints < 1000000){
+    //   await Achievements.unlock(achievement: Achievement(androidID:'CgkIq5OYv8wYEAIQIQ'));}
+  }
+
   Future<void> updateCounters()  async {
     bool signInStatus = await googlePlayGameServices.getSignInStatus();
-    if (signInStatus == true && await InternetConnection().hasInternetAccess == true) {
+    if (signInStatus == true &&
+        await InternetConnection().hasInternetAccess == true) {
       await updateAllTimeBreakedBricks();
       await updateAllTimeCollectedStars();
+      await updateChallengeGamesInRowCounter();
     }
-}
+  }
+
+  Future<void> updateChallengeCounters()  async {
+    print('IN updateChallengeCounters()');
+    bool signInStatus = await googlePlayGameServices.getSignInStatus();
+    if (signInStatus == true &&
+        await InternetConnection().hasInternetAccess == true) {
+        await updateChallengeGamesInRowCounter();
+    }
+  }
 
   Future<int> randomChallengeWallNumber() async {
     final _random = Random();
     int countLevels = brickList_2.length;
     int challengeLevel = _random.nextInt(countLevels);
+    //int challengeLevel = 0;
     await prefs.setInt('challengeLevel', challengeLevel+1);
     currentPlayedLevelNumber = challengeLevel +1;
 
     return challengeLevel;
   }
 
+  Future<void> updateChallengeGameInRowCounters() async {
+    challengeLevelsPerGame++;
+    //print('IN CHALENGE ROW NUMBER UPDATE: ${challengeLevelsPerGame}');
+    // if (challengeGameCounterHelper == 0) {
+    //   challengeLevelsPerGame++;
+    // }
+    //print('++++challengeLevelsPerGame from updateChallengeGameInRowCounters()++++ ${challengeLevelsPerGame}');
+    //challengeGameCounterHelper = 1;
+  }
 
 
 

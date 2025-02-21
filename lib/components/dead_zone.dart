@@ -146,6 +146,7 @@ class DeadZone extends BodyComponent<BrickBreakGame> with ContactCallbacks, Tapp
       gameRef.life = 3;
       gameRef.particleState = ParticleState.off;
       if(gameRef.gameMode == GameMode.challenge){
+        print('IN DEATH ZONE LOFT ALL LIFES');
         print('currentLevelNumber2:${gameRef.currentPlayedLevelNumber}');
         levelPointsTop = gameRef.prefs.getInt('topLevelPoints${gameRef.challengeCurrentLevel}') ?? 0;
         if (levelPointsTop < gameRef.levelPoints) {
@@ -153,6 +154,7 @@ class DeadZone extends BodyComponent<BrickBreakGame> with ContactCallbacks, Tapp
         }
         gameRef.totalPointsInCurrentGame = 0;
         gameRef.levelPoints = 0;
+        gameRef.updateChallengeCounters();
         gameRef.updateCounters();
         gameRef.updatePointsCounter();
         gameRef.wallStatus = WallStatus.inBuild;
