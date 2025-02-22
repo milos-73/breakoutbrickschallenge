@@ -33,7 +33,6 @@ class BulletRight extends BodyComponent<BrickBreakGame> with ContactCallbacks {
 
   @override
   Future<void> update(double dt) async {
-    //print('BULLET POSITION: ${body.position}');
     if(body.position.y < -60){removeFromParent();}
     if(destroy){removeFromParent();}
     super.update(dt);
@@ -65,11 +64,9 @@ class BulletRight extends BodyComponent<BrickBreakGame> with ContactCallbacks {
     final bodyDef = BodyDef()
       ..allowSleep = true
       ..type = BodyType.dynamic
-    //..userData = this
       ..bullet = true
       ..position = position
       ..linearVelocity = Vector2(0, -40)
-    //..gravityOverride = Vector2(0, 4)
       ..angularVelocity = 4
     ;
 

@@ -38,7 +38,6 @@ class PointNumber extends BodyComponent<BrickBreakGame> with ContactCallbacks{
   @override
   void beginContact(Object other, Contact contact){
     if (other is Paddle){
-     // print('BONUS SLOW TO PADDLE CONTACT');
       destroy = true;
 
       if (game.audioSettings == AudioSettings.on && finalPoint > 0 )  {
@@ -47,7 +46,7 @@ class PointNumber extends BodyComponent<BrickBreakGame> with ContactCallbacks{
       if (game.audioSettings == AudioSettings.on && finalPoint < 0 )  {
         FlameAudio.play('negativeNumber.mp3');
       }
-print('finalPoint: ${finalPoint}');
+//print('finalPoint: ${finalPoint}');
       gameRef.levelPoints = gameRef.levelPoints + finalPoint;
       gameRef.totalPointsInCurrentGame = gameRef.totalPointsInCurrentGame + finalPoint;
       gameRef.allTimePointsCounter = gameRef.allTimePointsCounter + finalPoint;
@@ -65,7 +64,6 @@ print('finalPoint: ${finalPoint}');
       ..type = BodyType.dynamic
       ..position = position
       ..gravityOverride = Vector2(0, 4)
-    //..userData = this
       ..linearDamping = 1.0;
 
     final brickBody = world.createBody(bodyDef);

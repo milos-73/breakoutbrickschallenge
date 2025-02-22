@@ -51,7 +51,6 @@ class HudBarLevels extends BodyComponent<BrickBreakGame> with ContactCallbacks, 
   }
 
   Future<void> resetHudBarStars() async {
-    print('RESET HUD BAR STARS');
     removeFromParent();
     final sprite = await gameRef.loadSprite('bg/topBar.png');
     renderBody = false;

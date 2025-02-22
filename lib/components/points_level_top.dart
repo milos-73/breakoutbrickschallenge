@@ -19,7 +19,6 @@ class LevelPointTopCounter extends TextComponent with HasGameRef<BrickBreakGame>
   Future<void> onLoad() async {
     await super.onLoad();
     await getTopPointsForLevel();
-    //levelPointsTop = gameRef.levelPointTop.toString();
     positionType = PositionType.game;
     text = 'Top Points: $levelPointsTop';
     position = Vector2(12.5,0.4);
@@ -32,7 +31,6 @@ class LevelPointTopCounter extends TextComponent with HasGameRef<BrickBreakGame>
   Future<void> update(double dt) async {
     super.update(dt);
     await getTopPointsForLevel();
-    //levelPointsTop = gameRef.levelPointTop.toString();
     textRenderer = TextPaint(style: GoogleFonts.reemKufiFun (letterSpacing: 1.4,fontSize: 13, color:Colors.yellow.shade900, fontWeight: FontWeight.w600));
     text = 'Top Points: $levelPointsTop' ;
   }

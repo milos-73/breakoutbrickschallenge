@@ -30,7 +30,6 @@ class BulletThrough extends BodyComponent<BrickBreakGame> with ContactCallbacks 
 
   @override
   Future<void> update(double dt) async {
-    //print('BULLET POSITION: ${body.position}');
     if(body.position.y < -60){removeFromParent();}
     if(destroy){removeFromParent();}
     super.update(dt);
@@ -43,10 +42,6 @@ class BulletThrough extends BodyComponent<BrickBreakGame> with ContactCallbacks 
       print('BRICK TO Bullet CONTACT');
       destroy = true;
       }
-    // if (other is Obstacle1){
-    //   print('BRICK TO Bullet CONTACT');
-    //   destroy = true;
-    // }
     if (other is HudBar){
       print('BRICK TO Bullet CONTACT');
       destroy = true;
@@ -58,13 +53,9 @@ class BulletThrough extends BodyComponent<BrickBreakGame> with ContactCallbacks 
     final bodyDef = BodyDef()
       ..allowSleep = true
       ..type = BodyType.dynamic
-    //..userData = this
       ..bullet = true
       ..position = position
-      ..linearVelocity = Vector2(0, -40)
-    //..gravityOverride = Vector2(0, 4)
-      //..angularVelocity = 4
-    ;
+      ..linearVelocity = Vector2(0, -40);
 
     final bulletThrough = world.createBody(bodyDef);
 

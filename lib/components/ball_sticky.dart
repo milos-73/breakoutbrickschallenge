@@ -23,15 +23,10 @@ class StickyBall extends BodyComponent<BrickBreakGame> with ContactCallbacks{
   @override
   Future<void> onLoad() async{
     await super.onLoad();
-    //final sprite = await gameRef.loadSprite('bullets/bulletL1.png');
-    //renderBody = false;
-    //add(SpriteComponent(sprite: sprite, size: Vector2.all(radius), anchor: Anchor.center, position: position));
   }
 
   @override
   Future<void> update(double dt) async {
-
-    //print('BALL 2 VELOCITY: ${body.linearVelocity.length}');if(gameRef.fastBonus == 0 || gameRef.slowBonus == 0){body.linearVelocity.length = 40;}
     super.update(dt);
   }
 
@@ -50,7 +45,6 @@ class StickyBall extends BodyComponent<BrickBreakGame> with ContactCallbacks{
     radius: 0.95,
   );
 
-
   // 3
   @override
   Body createBody() {
@@ -61,7 +55,6 @@ class StickyBall extends BodyComponent<BrickBreakGame> with ContactCallbacks{
       ..userData = this
       ..bullet = true
      ..linearVelocity = Vector2.zero()
-    //..gravityOverride = Vector2(0, 3)
       ..angularVelocity = 4.0
       ..position = position;
 

@@ -27,7 +27,6 @@ class StarsLevelTotal extends TextComponent with HasGameRef<BrickBreakGame> {
         : numberOfTotalStars == '5'
         ? text = '★★★★★'
         : text = '☆☆☆☆☆';
-    //text = '☆ Stars Total: $numberOfTotalStars';
     position = Vector2(3,-2.7);
     scale = Vector2(0.1, 0.1 );
     textRenderer = TextPaint(style: GoogleFonts.reemKufiFun (letterSpacing: 1.4,fontSize: 18, color:Colors.red.shade700, fontWeight: FontWeight.w600));
@@ -52,7 +51,6 @@ class StarsLevelTotal extends TextComponent with HasGameRef<BrickBreakGame> {
         ? text = '★★★★★'
         : text = '☆☆☆☆☆';
 
-    //text = '☆★ Stars Total: $numberOfTotalStars';
     position = Vector2(3,-2.7);
     scale = Vector2(0.1, 0.1 );
     textRenderer = TextPaint(style: GoogleFonts.reemKufiFun (letterSpacing: 1.4,fontSize: 18, color:Colors.red.shade700, fontWeight: FontWeight.w600));

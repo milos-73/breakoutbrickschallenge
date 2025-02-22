@@ -40,17 +40,11 @@ class Paddle extends BodyComponent<BrickBreakGame> with Draggable, ContactCallba
     final sprite = await gameRef.loadSprite('paddles/paddle1_red.png');
     renderBody = false;
     add(SpriteComponent(sprite: sprite, size: Vector2(size.width, size.height), anchor: Anchor.center));
-    //add(Gun(position: Vector2(0,0), size: Vector2(5, 5)));
   }
 
   @override
   void update(double dt) {
     super.update(dt);
-    //if(gameRef.bullet == 1){addGun();}
-    //if(gameRef.bullet == 1){parent?.add(Gun()..priority=4);}
-    //if(gameRef.bullet == 0){parent?.remove(Gun()..priority=4);}
-    // print('BULLET: ${gameRef.bullet}');
-    // print('PADDLE POSITION: ${body.position}');
       }
 
 
@@ -61,8 +55,6 @@ class Paddle extends BodyComponent<BrickBreakGame> with Draggable, ContactCallba
     }
     dragStartPosition = info.eventPosition.game;
     _setupDragControls();
-
-    // Don't continue passing the event.
     return false;
   }
 
@@ -100,16 +92,11 @@ class Paddle extends BodyComponent<BrickBreakGame> with Draggable, ContactCallba
   @override
   void beginContact(Object other, Contact contact){
 
-    //print('PADDLE OTHER: ${other}');
     if (other is Star){
-//print('POSITIONTYPE: ${other.runtimeType}');
       if (game.audioSettings == AudioSettings.on)  {
        FlameAudio.play('collectCoin1.mp3');
       }
       other.removeFromParent();
-
-      //gameRef.levelPoints = gameRef.levelPoints + finalPoint;
-
     }
 
     if(other is DeadZone){ 

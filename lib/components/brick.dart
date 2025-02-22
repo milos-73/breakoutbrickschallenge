@@ -80,18 +80,10 @@ class Brick extends BodyComponent<BrickBreakGame> with ContactCallbacks {
   @override
   void beginContact(Object other, Contact contact){
 
-    // if (other is Ball){
-    //   //body.applyForce(body.linearVelocity*1000);
-    //   print('BRICK TO Ball CONTACT');
-    //   destroy = true;
-    // }
-
     if (other is BulletThrough){
       if(state == ObjectState.normal){state = ObjectState.explode;
 
       gameRef.add(SpriteAnimationComponent(position: body.position, animation: explosion.clone(), anchor: Anchor.center, size: Vector2(size.width+2, size.height+2),removeOnFinish: true));}
-      //body.applyForce(body.linearVelocity*1000);
-      //print('BRICK TO Ball CONTACT');
       destroy = true;
     }
 
@@ -99,8 +91,6 @@ class Brick extends BodyComponent<BrickBreakGame> with ContactCallbacks {
 
       if(state == ObjectState.normal){state = ObjectState.explode;
       gameRef.add(SpriteAnimationComponent(position: body.position, animation: explosion.clone(), anchor: Anchor.center, size: Vector2(size.width+2, size.height+2),removeOnFinish: true));}
-      //body.applyForce(body.linearVelocity*1000);
-      //print('BRICK TO Ball CONTACT');
       destroy = true;
     }
 
@@ -108,8 +98,6 @@ class Brick extends BodyComponent<BrickBreakGame> with ContactCallbacks {
 
       if(state == ObjectState.normal){state = ObjectState.explode;
       gameRef.add(SpriteAnimationComponent(position: body.position, animation: explosion.clone(), anchor: Anchor.center, size: Vector2(size.width+2, size.height+2),removeOnFinish: true));}
-      //body.applyForce(body.linearVelocity*1000);
-      //print('BRICK TO Ball CONTACT');
       destroy = true;
     }
 
@@ -117,18 +105,13 @@ class Brick extends BodyComponent<BrickBreakGame> with ContactCallbacks {
       if(state == ObjectState.normal){state = ObjectState.explode;
 
       gameRef.add(SpriteAnimationComponent(position: body.position, animation: explosion.clone(), anchor: Anchor.center, size: Vector2(size.width+4, size.height+4),removeOnFinish: true));}
-      //body.applyForce(body.linearVelocity*1000);
-      print('BRICK TO BULLET CONTACT');
       destroy = true;
     }
 
     if (other is BulletRight){
-      //body.applyForce(body.linearVelocity*1000);
-      print('BRICK TO BULLET CONTACT');
       destroy = true;
     }
   }
-
 
   /// Create Body
   @override
@@ -169,7 +152,6 @@ class Brick extends BodyComponent<BrickBreakGame> with ContactCallbacks {
     }
 
     final rectangle = body.fixtures.first.shape as PolygonShape;
-
 
     canvas.drawRect(
         Rect.fromCenter(

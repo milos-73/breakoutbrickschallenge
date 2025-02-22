@@ -49,23 +49,6 @@ class HudBar extends BodyComponent<BrickBreakGame> with ContactCallbacks, TapCal
 
     return brickBody;
   }
-  // @override
-  // void render(Canvas canvas) {
-  //   if (body.fixtures.isEmpty) {
-  //     return;
-  //   }
-  //
-  //   final rectangle = body.fixtures.first.shape as PolygonShape;
-  //
-  //
-  //   canvas.drawRect(
-  //       Rect.fromCenter(
-  //         center: rectangle.centroid.toOffset(),
-  //         width: 80,
-  //         height: 7,
-  //       ),
-  //       paint);
-  // }
 
   Future<void> resetHud() async {
     removeFromParent();

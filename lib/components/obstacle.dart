@@ -74,7 +74,6 @@ required this.spriteName
       ..type = BodyType.dynamic
       ..position = position
       ..angularVelocity = 2
-      //..linearVelocity = Vector2((random.nextInt(50+50)-50), (random.nextInt(50+50)-50))
       ..gravityOverride = Vector2(0, 0.02)
 
    ..userData = this;

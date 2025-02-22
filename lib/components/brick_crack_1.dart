@@ -82,12 +82,6 @@ class BrickCracked1 extends BodyComponent<BrickBreakGame> with ContactCallbacks 
   @override
   void beginContact(Object other, Contact contact){
 
-    // if (other is Ball){
-    //   //body.applyForce(body.linearVelocity*1000);
-    //   print('BRICK TO Ball CONTACT');
-    //   destroy = true;
-    // }
-
     if (other is BulletThrough){
       if(state == ObjectState.normal){
         state = ObjectState.explode;
@@ -114,9 +108,7 @@ class BrickCracked1 extends BodyComponent<BrickBreakGame> with ContactCallbacks 
 
   @override
   void endContact(Object other,Contact contact){
-
   }
-
 
   /// Create Body
   @override
@@ -158,7 +150,6 @@ class BrickCracked1 extends BodyComponent<BrickBreakGame> with ContactCallbacks 
 
     final rectangle = body.fixtures.first.shape as PolygonShape;
 
-
     canvas.drawRect(
         Rect.fromCenter(
           center: rectangle.centroid.toOffset(),
@@ -167,5 +158,4 @@ class BrickCracked1 extends BodyComponent<BrickBreakGame> with ContactCallbacks 
         ),
         paint);
   }
-
 }

@@ -50,12 +50,10 @@ class OverlayBuilder {
 
   static Widget levelsMap(BuildContext context, BrickBreakGame game) {
     return Levels(gameRef: game);
-    //return LevelsMap(gameRef: game);
   }
 
   static Widget aboutInfo(BuildContext context, BrickBreakGame game) {
     return AboutInfo(gameRef: game);
-    //return LevelsMap(gameRef: game);
   }
 
   static Widget lostLife(BuildContext context, BrickBreakGame game) {
@@ -63,15 +61,10 @@ class OverlayBuilder {
   }
 
   static Widget postGame(BuildContext context, BrickBreakGame game) {
-    //assert(game.gameState == GameState.lost);
-    // final message = game.gameState == GameState.won ? 'Winner!' : 'Game Over';
      return PostGameOverlay(game: game, );
   }
 
   static Widget winGame(BuildContext context, BrickBreakGame game) {
-    //assert(game.gameState == GameState.won);
-    print('IN WIN GAME OVERLAY');
-    // final message = game.gameState == GameState.won ? 'Winner!' : 'Game Over';
     return WinGameOverlay(game: game, );
   }
   static Widget challengeGameOverOverlay(BuildContext context, BrickBreakGame game) {
@@ -100,7 +93,6 @@ class _PreGameOverlayState extends State<PreGameOverlay> with SingleTickerProvid
 
   @override
   void initState() {
-print('PRE GAME OVERLAY${widget.game.gameState}');
     _controller = AnimationController(
       duration: const Duration(seconds: 1),
       vsync: this,);
@@ -118,9 +110,6 @@ print('PRE GAME OVERLAY${widget.game.gameState}');
   @override
   Widget build(BuildContext context) {
     _controller.forward();
-
-    // print('SIZE WIDTH: ${MediaQuery.of(context).size.width}');
-    // print('GAME SIZE WIDTH: ${widget.game.size.x}');
 
     return Padding(
       padding: const EdgeInsets.only(top: 30),
@@ -193,7 +182,6 @@ class _LostLifeState extends State<LostLife> with SingleTickerProviderStateMixin
                 children: [
                   Container(width: widget.game.camera.viewport.effectiveSize.x, height: 300, color: Colors.black.withOpacity(0.4),),
                      Image.asset('assets/images/bg/lostBall2.png',height: (widget.game.camera.viewport.canvasSize?.y)!/4.5)
-                  //Container(width: widget.game.size.x*15, height: 250, decoration: const BoxDecoration(image:DecorationImage(image: AssetImage('assets/images/bg/lostBall2.png'),fit: BoxFit.cover) ),),
                   ],
               ),
             ),
@@ -304,7 +292,6 @@ class _PostGameOverlayState extends State<PostGameOverlay> with SingleTickerProv
     widget.game.gameState = GameState.paused;
     if(widget.game.overlays.isActive('WinGame')){widget.game.overlays.remove('WinGame');}
     if(widget.game.overlays.isActive('LostLife')){widget.game.overlays.remove('LostLife');}
-    print('--- PICK LEVEL BUTTON ---');
     widget.game.overlays.add('LevelsMap');
   }
 
@@ -393,15 +380,12 @@ class _PostGameOverlayState extends State<PostGameOverlay> with SingleTickerProv
             child: Stack(alignment: Alignment.center,
               children: [
                 Container(width: widget.game.camera.viewport.effectiveSize.x, height: (widget.game.camera.viewport.canvasSize?.y)!/2.3, color: Colors.black.withOpacity(0.4),),
-                //const SizedBox(width: 250, height: 150,
-                //),
                 Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Image.asset('assets/images/bg/lostHeading.png',height: (widget.game.camera.viewport.canvasSize?.y)!/10),
-                      //Container(width: 300, height: 140, decoration: const BoxDecoration(image:DecorationImage(image: AssetImage('assets/images/bg/lostHeading.png'),fit: BoxFit.contain) ),),
                                              _mainMenuButton(context, widget.game),
                                              _resetButton(context, widget.game),
                                              _pickLevelButton(context, widget.game),
@@ -436,19 +420,16 @@ class _PostGameOverlayState extends State<PostGameOverlay> with SingleTickerProv
 
       onLongPress: () {
         setState(() {
-          print('LONG PRESS');
           imgMainMenu = imgMainMenu2;
         });
       },
       onLongPressEnd: (tap) {
         setState(() {
-          print('onLongPressStart');
           imgMainMenu = imgMainMenu1;
         });
       },
       onLongPressDown: (tap) {
         setState(() {
-          print('onLongPressDown');
           imgMainMenu = imgMainMenu2;
         });
       },
@@ -465,9 +446,6 @@ class _PostGameOverlayState extends State<PostGameOverlay> with SingleTickerProv
         await FlameAudio.play('button3.mp3');
       }
       _showInterstitialAdReplay();
-
-      // if(widget.game.overlays.isActive('PostGame')){widget.game.overlays.remove('PostGame');}
-      // game.resetGame();
     },
       onTapUp: (tap) {
         setState(() {
@@ -538,12 +516,10 @@ class _PostGameOverlayState extends State<PostGameOverlay> with SingleTickerProv
 }
 
 class WinGameOverlay extends StatefulWidget {
-  //final String message;
   final BrickBreakGame game;
 
   const WinGameOverlay({
     super.key,
-    //required this.message,
     required this.game,
   });
 
@@ -579,7 +555,6 @@ class _WinGameOverlayState extends State<WinGameOverlay> with SingleTickerProvid
 
   @override
   void initState() {
-    print('WIN GAME OVERLAY: ${widget.game.gameState}');
 
     super.initState();
 
@@ -703,14 +678,12 @@ class _WinGameOverlayState extends State<WinGameOverlay> with SingleTickerProvid
             child: Stack(alignment: Alignment.center,
               children: [
               Container(width: widget.game.camera.viewport.effectiveSize.x, height: (widget.game.camera.viewport.canvasSize?.y)!/2, color: Colors.black.withOpacity(0.4),),
-                 //SizedBox(width: 250, height: 150,
 
                 Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Image.asset('assets/images/bg/winHeading.png',height: (widget.game.camera.viewport.canvasSize?.y)!/11),
-                    //Container(width: 300, height: 110, decoration: const BoxDecoration(image:DecorationImage(image: AssetImage('assets/images/bg/winHeading.png'),fit: BoxFit.contain)),),
                     _mainMenuButton(context, widget.game),
                     _resetButton(context, widget.game),
                     _pickLevelButton(context, widget.game),
@@ -743,19 +716,16 @@ class _WinGameOverlayState extends State<WinGameOverlay> with SingleTickerProvid
 
       onLongPress: () {
         setState(() {
-          print('LONG PRESS');
           imgMainMenu = imgMainMenu2;
         });
       },
       onLongPressEnd: (tap) {
         setState(() {
-          print('onLongPressStart');
           imgMainMenu = imgMainMenu1;
         });
       },
       onLongPressDown: (tap) {
         setState(() {
-          print('onLongPressDown');
           imgMainMenu = imgMainMenu2;
         });
       },
@@ -785,19 +755,16 @@ class _WinGameOverlayState extends State<WinGameOverlay> with SingleTickerProvid
 
       onLongPress: () {
         setState(() {
-          print('LONG PRESS');
           reply = reply2;
         });
       },
       onLongPressEnd: (tap) {
         setState(() {
-          print('onLongPressStart');
           reply = reply1;
         });
       },
       onLongPressDown: (tap) {
         setState(() {
-          print('onLongPressDown');
           reply = reply2;
         });
       },
@@ -812,15 +779,11 @@ class _WinGameOverlayState extends State<WinGameOverlay> with SingleTickerProvid
 
       onTapDown: (tap) async {setState(() {
       nextLevel = nextLevel2;
-
-            //game.overlays.add('LevelsMap');
     });
       if (game.audioSettings == AudioSettings.on) {
         await FlameAudio.play('button3.mp3');
       }
       _showInterstitialAdNextLevel();
-      // game.currentGameLevelStars = 0;
-      // game.nextLevel(level: game.currentPlayedLevelNumber+1);
         },
 
       onTapUp: (tap){setState(() {
@@ -829,19 +792,16 @@ class _WinGameOverlayState extends State<WinGameOverlay> with SingleTickerProvid
 
       onLongPress: () {
         setState(() {
-          print('LONG PRESS');
           nextLevel = nextLevel2;
         });
       },
       onLongPressEnd: (tap) {
         setState(() {
-          print('onLongPressStart');
           nextLevel = nextLevel1;
         });
       },
       onLongPressDown: (tap) {
         setState(() {
-          print('onLongPressDown');
           nextLevel = nextLevel2;
         });
       },
@@ -856,7 +816,6 @@ class _WinGameOverlayState extends State<WinGameOverlay> with SingleTickerProvid
       onTapDown: (tap) async {
       setState(() {
         pickLevel = pickLevel2;
-        //game.nextLevel();
         });
       if (game.audioSettings == AudioSettings.on) {
         await FlameAudio.play('button3.mp3');
@@ -875,19 +834,16 @@ class _WinGameOverlayState extends State<WinGameOverlay> with SingleTickerProvid
 
       onLongPress: () {
         setState(() {
-          print('LONG PRESS');
           pickLevel = pickLevel2;
         });
       },
       onLongPressEnd: (tap) {
         setState(() {
-          print('onLongPressStart');
           pickLevel = pickLevel1;
         });
       },
       onLongPressDown: (tap) {
         setState(() {
-          print('onLongPressDown');
           pickLevel = pickLevel2;
         });
       },

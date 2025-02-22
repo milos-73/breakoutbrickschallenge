@@ -9,7 +9,6 @@ class TotalPointInCurrentGame extends TextComponent with HasGameRef<BrickBreakGa
 
   late String totalPoints;
 
-
   @override
   Future<void> onLoad() async {
     await super.onLoad();

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +6,6 @@ import '../forge2d_game_world.dart';
 import '../services/saved_values.dart';
 
 class LevelsScreenItems extends StatefulWidget {
-  //final String? imageAsset;
   final BrickBreakGame gameRef;
   final int index;
   final int lastFinishedLevel;
@@ -38,7 +35,7 @@ class _LevelsScreenItemsState extends State<LevelsScreenItems>{
   @override
   void initState(){
 
-    savedValues.getNumberOfStars(widget.index).then((value) => setState(() {numberOfStars = value;})).then((value) => print('NUmber of Stars FROM LEVELS INIT STATE: $numberOfStars'));
+    savedValues.getNumberOfStars(widget.index).then((value) => setState(() {numberOfStars = value;}));
     super.initState();
   }
 

@@ -32,34 +32,27 @@ required this.position,
 
   @override
   Future<void> update(double dt) async {
-    //print('BULLET POSITION: ${body.position}');
     if(body.position.y < -60){removeFromParent();}
     if(destroy){removeFromParent();}
         super.update(dt);
   }
 
-
   @override
   void beginContact(Object other, Contact contact){
     if (other is Brick){
-      print('BRICK TO Bullet CONTACT');
       destroy = true;
       }
 
     if (other is Brick2){
-      print('BRICK TO Bullet CONTACT');
       destroy = true;
     }
 
     if (other is Obstacle1){
-      print('BRICK TO Bullet CONTACT');
       destroy = true;
     }
     if (other is HudBar){
-      print('BRICK TO Bullet CONTACT');
       destroy = true;
     }
-
   }
 
   @override
@@ -67,11 +60,9 @@ required this.position,
     final bodyDef = BodyDef()
       ..allowSleep = true
       ..type = BodyType.dynamic
-      //..userData = this
       ..bullet = true
      ..position = position!
       ..linearVelocity = Vector2(0, -45)
-      //..gravityOverride = Vector2(0, 4)
       ..angularVelocity = 4
     ;
 

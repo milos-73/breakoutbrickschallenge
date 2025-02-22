@@ -1,12 +1,8 @@
 
-import 'dart:convert';
 import 'dart:math';
-
-//import 'package:firebase_database/firebase_database.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:flame/components.dart';
-//import 'package:google_sign_in/google_sign_in.dart';
 import 'package:brickbreaker/components/walls_1.dart';
 import 'package:brickbreaker/components/walls_2.dart';
 import 'package:games_services/games_services.dart';
@@ -43,11 +39,6 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
   int starsNumber = 0;
   int challengeLevels = 0;
   late int lastFinishedLevel;
-  //int challengeLevelsInRowCounter = 0;
-  //int challengeGameCounterHelper = 0;
-
-  int _counterTotal = 0;
-
 
   List brickSound = ['brick1.mp3','brick2.mp3',];
 
@@ -56,16 +47,11 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
   Future<void> onLoad() async {
     super.onLoad();
     gameRef.wallStatus = WallStatus.inBuild;
-    //gameRef.counterGame = await gameRef.prefs.getInt('counter') ?? 0;
     await buildWall(levelNumber);
     children.register<Brick>();
     children.register<Brick3>();
     children.register<BrickCracked1>();
     children.register<BrickCracked2>();
-    //print('BRICKS NUMBER FROM onLOAD: ${i}');
-    //await countBricksInCurrentLevel(i);
-    //print('gameRef.numberOfBrickHits FROM WALL ONLOAD${gameRef.numberOfBrickHits}');
-    //print('numberOfBrickHitsLeft FROM WALL ONLOAD:${gameRef.numberOfBrickHitsLeft}');
   }
 
   @override
@@ -80,10 +66,6 @@ class BrickWall extends Component with HasGameRef<BrickBreakGame> {
 if(gameRef.wallStatus == WallStatus.ready){
     gameRef.numberOfBrickHits = numberOfBrick.length + numberOfBrick3.length + numberOfBrickCracked1.length + numberOfBrickCracked2.length;}
 
-    // print('gameRef.wallStatus FROM WALL UPDATE: ${gameRef.wallStatus}');
-    // print('gameRef.numberOfBrickHits FROM WALL UPDATE: ${gameRef.numberOfBrickHits}');
-    // print('numberOfBrickHitsLeft FROM WALL UPDATE: ${gameRef.numberOfBrickHitsLeft}');
-
     if (numberOfBrick.isEmpty && numberOfBrick3.isEmpty && numberOfBrickCracked1.isEmpty && numberOfBrickCracked2.isEmpty && gameRef.gameState == GameState.running){
       if (game.audioSettings == AudioSettings.on)  {
         FlameAudio.play('levelUp1.mp3');}
@@ -94,20 +76,17 @@ if(gameRef.wallStatus == WallStatus.ready){
 
       if (gameRef.gameMode == GameMode.challenge) {
 
-        //print('========1========');
-
         challengeLevelNumber = await gameRef.prefs.getInt('challengeLevel') ?? 0;
         currentChallengeLevelPoints = await gameRef.prefs.getInt('challengeLevelPoints$challengeLevelNumber') ?? 0;
 
-        if (gameRef.levelPoints > currentChallengeLevelPoints! ) {await gameRef.prefs.setInt('challengeLevelPoints$challengeLevelNumber', currentChallengeLevelPoints!); print('========2========');}
+        if (gameRef.levelPoints > currentChallengeLevelPoints! ) {await gameRef.prefs.setInt('challengeLevelPoints$challengeLevelNumber', currentChallengeLevelPoints!);
+        }
 
         ///Writes TOTAL CURRENT GAME POINTS to existing TOTAL POINTS IN CURRENT GAME.
-        //gameRef.totalPointsInCurrentGame = gameRef.totalPointsInCurrentGame + gameRef.levelPoints;
         await gameRef.prefs.setInt('totalPointsInCurrentGame', gameRef.totalPointsInCurrentGame);
 
         ///COMPARING Total Points In Current Game with Total Points and WRITING the Current Game Points to Total Game Points if larger
         if(gameRef.totalPointsInCurrentGame > gameRef.totalGamePoints){
-          //print('========3========');
         await gameRef.prefs.setInt('totalGamePoints', gameRef.totalPointsInCurrentGame);
 
         if (signInStatus == true && await InternetConnection().hasInternetAccess == true){
@@ -119,30 +98,12 @@ if(gameRef.wallStatus == WallStatus.ready){
 
         ///COMPARING Level Points with Total Level Points and writes Level Points to Total Level Points if larger
         if (levelPointsTop < gameRef.levelPoints) {
-          //print('========4========');
           await gameRef.prefs.setInt('topLevelPoints$challengeLevelNumber', gameRef.levelPoints);
-          //print('*********challengeLevelNumber**********: ${challengeLevelNumber}');
 
-        } else {
-
-          //gameRef.levelPoints = 0;
-          //print('========5========');
-          //print('GAME STATUS: ${gameRef.gameState}');
-        }
+        } else { }
         ///SET Game Status to ChallengeNextLevel
-        // if(gameRef.challengeGameCounterHelper == 0) {
-        //   gameRef.challengeGameCounterHelper = 1;
-        //   //gameRef.challengeLevelsPerGame++;
-        //   //await gameRef.prefs.setInt('challengeLevelsPerGame', gameRef.challengeLevelsPerGame);
-        // print('***gameRef.challengeGameCounterHelper*** ${gameRef.challengeGameCounterHelper}');
-        // print('***gameRef.challengeLevelsPerGame*** ${gameRef.challengeLevelsPerGame}');
-        // }
         gameRef.wallStatus = WallStatus.inBuild;
-
-        //print('++++gameRef.challengeLevelsPerGame++++ ${gameRef.challengeLevelsPerGame}');
         gameRef.gameState = GameState.challengeNextLevel;
-        //gameRef.challengeCurrentLevel = await randomChallengeLevelNumber();
-        //challengeLevelgameRef.updatePointsCounter();
       }
 
       if (gameRef.gameMode == GameMode.levels){
@@ -187,10 +148,8 @@ if(gameRef.wallStatus == WallStatus.ready){
 
           int totalStars = gameRef.totalStars! + gameRef.currentGameLevelStars;
           int totalStarsPoints = gameRef.totalStarsPoints! + gameRef.currentGameLevelStarsPoints;
-          //int percentage = ((totalStars/(currentLevelNumber!*5)*100)*100).toInt();
 
           await gameRef.prefs.setInt('numberOfStars$currentLevelNumber', gameRef.currentGameLevelStars);
-          //await gameRef.prefs.setString('starsPerLevelInString', gameRef.starsPerLevelInStringLocal!);
           await gameRef.prefs.setInt('totalStars', gameRef.totalStars! + gameRef.currentGameLevelStars);
           await gameRef.prefs.setInt('starsPoints$currentLevelNumber', gameRef.currentGameLevelStarsPoints);
           await gameRef.prefs.setInt('totalStarsPoints', gameRef.currentGameLevelStarsPoints + gameRef.totalStarsPoints!);
@@ -219,9 +178,7 @@ if(gameRef.wallStatus == WallStatus.ready){
           child.body.destroyFixture(fixture);
         }
         gameRef.world.destroyBody(child.body);
-        // FlameAudio.play(brickSound[Random().nextInt(2)]);
         if (game.audioSettings == AudioSettings.on)  {
-          //print('BRICK SOUND');
           FlameAudio.play('brick3.mp3');}
         remove(child);
         gameRef.breakedBricksCounter++;
@@ -275,8 +232,6 @@ if(gameRef.wallStatus == WallStatus.ready){
 
   Future<void> buildWall(int levelNumber) async {
 
-    //int challengeLevelNumber = await randomChallengeLevelNumber();
-
     if(gameRef.gameMode == GameMode.levels){
       gameRef.currentPlayedLevelNumber = levelNumber;
       List brickList = brickList_1[levelNumber - 1];
@@ -293,27 +248,16 @@ if(gameRef.wallStatus == WallStatus.ready){
           if (brickList[r][c] > 93 && brickList[r][c] <= 99 ){await add(Brick2(spriteName: 'bricks3/$brick',size: brickSize,position: Vector2((c * brickSize.width) + 2.45, ((r * brickSize.height) + 20))));}
           if (brickList[r][c] > 98 ){await add(Brick3(spriteName: 'bricks3/$brick',size: brickSize,position: Vector2((c * brickSize.width) + 2.45, ((r * brickSize.height) + 20))));i = i + 3; }
         }
-        //gameRef.wallStatus = WallStatus.ready;
       }
 
-
-      //print('brickList LENGHT2: ${i}');
       gameRef.numberOfBrickHits = i;
       gameRef.starInterval = i~/5;
       gameRef.starInterval = (i - (i~/5))~/5;
       gameRef.numberOfBrickHitsLeft =  i - (i~/5);
       gameRef.wallStatus = WallStatus.ready;
-      // print('BRICKS i:${i}');
-      // print('MODULO (i~/5): ${(i~/5)}');
-      // print('gameRef.starInterval${gameRef.starInterval}');
-      // print('Lef BRICKS? ${i}-${i~/5}');
-      // print('gameRef.numberOfBrickHitsLeftStart${gameRef.numberOfBrickHitsLeft}');
-
-
     }
 
     else{
-      //int challengeLevelNumber = await randomChallengeLevelNumber();
 
       List brickList = brickList_2[levelNumber];
 
@@ -331,13 +275,11 @@ if(gameRef.wallStatus == WallStatus.ready){
       }
     }
     }
-    //await countBricksInCurrentLevel(i);
   }
 
    ///CHOOSE BRICK
   Future<String> getBrick(int brickType) async {
 
-    //final brickWallPosition = Vector2(0.1, gameRef.size.y * 0.075);
     const hudSize = 7.0;
     const bannerSize = 7.0;
     const distanceFromTop = hudSize+bannerSize;
@@ -372,7 +314,6 @@ if(gameRef.wallStatus == WallStatus.ready){
   }
 
   Future<void> resetWall(i) async {
-    //print('RESET WALL: ${i}');
 
     removeAll(children);
     await buildWall(i);
@@ -381,16 +322,6 @@ if(gameRef.wallStatus == WallStatus.ready){
   Future<void> pickWall(int i) async {
     removeAll(children);
     currentLevelNumber = i;
-
-    // children.register<Brick>();
-    // children.register<Brick3>();
-    // children.register<BrickCracked1>();
-    // children.register<BrickCracked2>();
     await buildWall(i);
   }
-
-  // Future <void> updateCounterBrickBreakeAchievemnts() async {
-  //   gameRef.breakedBricksCounter++;
-  //   if (_counterTotal == 40) {print('COUNTER 40 Bricks');}
-  //    }
 }

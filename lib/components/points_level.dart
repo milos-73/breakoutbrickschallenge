@@ -9,7 +9,6 @@ class LevelPointCounter extends TextComponent with HasGameRef<BrickBreakGame> {
 
   late String levelPoints;
 
-
   @override
   Future<void> onLoad() async {
     await super.onLoad();

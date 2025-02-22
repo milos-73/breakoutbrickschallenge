@@ -1,13 +1,10 @@
 import 'package:flame_audio/flame_audio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:brickbreaker/forge2d_game_world.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'dart:math';
 import '../services/saved_values.dart';
-import '../ui/levels_screen_items.dart';
 
 class AboutInfo extends StatefulWidget {
 
@@ -39,22 +36,14 @@ class _AboutInfoState extends State<AboutInfo> {
     await savedValues.getLastFinishedLevel().then((value) => setState(() {lastFinishedLevel = value;}));
     await savedValues.getTotalStars().then((value) => setState(() {totalStars = value;}));
     await savedValues.getFiveStarsLevels().then((value) => setState(() {fiveStarsLevels = value;}));
-
   }
 
   Future<void> resetGame() async {
-      //await widget.gameRef.prefs.clear();
 
       for (String key in widget.gameRef.prefs.getKeys()) {
         if (key.startsWith('numberOfStars')) {await widget.gameRef.prefs.remove(key);}
       }
 
-      // await widget.gameRef.prefs.setInt('lastFinishedLevel', 0);
-      // await widget.gameRef.prefs.setInt('currentPlayedLevelNumber', 0);
-      // await widget.gameRef.prefs.setInt('fiveStarsLevels', 0);
-      // await widget.gameRef.prefs.setInt('fiveStarsLevels', 0);
-      // await widget.gameRef.prefs.setInt('fiveStarsLevels', 0);
-      // await widget.gameRef.prefs.setInt('fiveStarsLevels', 0);
       setState(() {
         lastFinishedLevel = 0;
         challengeLevels = 0;
@@ -65,12 +54,9 @@ class _AboutInfoState extends State<AboutInfo> {
 
 
       showToastWidget(Text('Game RESET done!',style: TextStyle(fontSize: 30.0, color: Colors.white70),),duration: Duration(seconds: 4),position: ToastPosition.bottom,);
-
-  print('GAME RESET');
   }
 
   Future<void> resetLevels() async {
-    //await widget.gameRef.prefs.clear();
 
     for (String key in widget.gameRef.prefs.getKeys()) {
       if (key.startsWith('numberOfStars')) {await widget.gameRef.prefs.remove(key);}
@@ -88,7 +74,6 @@ class _AboutInfoState extends State<AboutInfo> {
 
     showToastWidget(Text('Levels RESET done!',style: TextStyle(fontSize: 30.0, color: Colors.white70),),duration: Duration(seconds: 4),position: ToastPosition.bottom,);
   }
-
 
   Future<void> resetChallenge() async {
 
@@ -110,8 +95,7 @@ class _AboutInfoState extends State<AboutInfo> {
     showToastWidget(Text('Challenge RESET done!',style: TextStyle(fontSize: 30.0, color: Colors.white70),),duration: Duration(seconds: 4),position: ToastPosition.bottom,);
   }
 
-
-  num countStarPercentage() {
+num countStarPercentage() {
 
       double percentage = (totalStars! / (lastFinishedLevel!*5))*100;
       if(percentage > 0){
@@ -140,7 +124,6 @@ class _AboutInfoState extends State<AboutInfo> {
           content: const SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                //Text('Are you sure you want to reset the Game?'),
                 Text('The changes are irreversible, and your game will start from beginning'),
               ],
             ),
@@ -172,7 +155,6 @@ class _AboutInfoState extends State<AboutInfo> {
           content: const SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                //Text('Are you sure you want to reset the Game?'),
                 Text('The changes are irreversible, and your game will start from beginning'),
               ],
             ),
@@ -203,8 +185,6 @@ class _AboutInfoState extends State<AboutInfo> {
 
   @override
   Widget build(BuildContext context) {
-
-    print('fiveStarsLevels: ${fiveStarsLevels}');
 
     return Scaffold(
       floatingActionButton: Padding(
@@ -263,8 +243,6 @@ class _AboutInfoState extends State<AboutInfo> {
                                         Text('${countStarPercentage().toStringAsFixed(2)}%',style: TextStyle(fontSize: 15,color: Colors.amber),),
                                         Text('${totalStars} / ${lastFinishedLevel!*5}',style: TextStyle(fontSize: 15,color: Colors.amber),),
                                         Text('$fiveStarsLevels',style: TextStyle(fontSize: 15,color: Colors.amber),),
-                                        //Text('${widget.gameRef.totalGamePoints}',style: TextStyle(fontSize: 20,color: Colors.amber),),
-
                                       ],
                                       ),
                                     ),
@@ -272,7 +250,6 @@ class _AboutInfoState extends State<AboutInfo> {
                                 ],
                               ),
                               SizedBox(height: 10),
-                              //Divider(thickness: 1,indent: 10,color: Colors.green,),
                               SizedBox(height: 10),
                               Text('RESET GAME'.toUpperCase(), style: TextStyle(fontSize: 18,color: Colors.red),),
                               SizedBox(height: 10),
@@ -296,7 +273,6 @@ class _AboutInfoState extends State<AboutInfo> {
                                     child: Text('About The Game'.toUpperCase(), style: TextStyle(fontSize: 18,color: Colors.green),),
                                   ),),
 
-                                  //Icon(FontAwesomeIcons.locationDot, size: 50, color: HexColor('#3B592D'),),
                                   SizedBox(height: 20,),
                                   Text('Brick Breaker'.toUpperCase(), style: TextStyle(fontSize: 27,fontWeight: FontWeight.w600,color: Colors.amber),textAlign: TextAlign.center),
                                   Text('Fun Challenge'.toUpperCase(), style: TextStyle(fontSize: 17,fontWeight: FontWeight.w400, color: Colors.limeAccent),),
@@ -304,9 +280,7 @@ class _AboutInfoState extends State<AboutInfo> {
                                   SizedBox(height: 5,),
                                   Text('version 1.1.5', style: TextStyle(fontSize: 15,fontWeight: FontWeight.w300, color: Colors.white),),
                                   SizedBox(height: 20,),
-                                  //TextButton(onPressed: () => setState(() {_launched = _launchInBrowser(_url);}), child: const Text('mylocationnow.app'),style: TextButton.styleFrom(minimumSize: Size.zero, padding: EdgeInsets.zero,tapTargetSize: MaterialTapTargetSize.shrinkWrap ),),
                                   Text('support@mylocationnow.app', style: TextStyle(fontSize: 15,fontWeight: FontWeight.w300),),
-                                  //TextButton(onPressed: () => setState(() {_launched = _launchInBrowser(_url2);}), child: const Text('Privacy Policy'),style: TextButton.styleFrom(minimumSize: Size.zero, padding: EdgeInsets.zero,tapTargetSize: MaterialTapTargetSize.shrinkWrap ),),
                                   Padding(
                                     padding: const EdgeInsets.only(top: 10, bottom: 2),
                                     child: Text('Development', style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500, color: Colors.amberAccent),),

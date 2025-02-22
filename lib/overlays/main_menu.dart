@@ -1,15 +1,12 @@
 import 'dart:math';
 
 import 'package:flame_audio/flame_audio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:games_services/games_services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 import '../components/google_play_game_services.dart';
-import '../components/walls_2.dart';
 import '../forge2d_game_world.dart';
 import '../services/ad_helper.dart';
 import '../services/hex_color.dart';
@@ -47,8 +44,6 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
   String challenge2 = 'assets/images/buttons/challengeButton_hover.png';
 
   late String board;
-  // String board1 = 'assets/images/buttons/boardButton.png';
-  // String board2 = 'assets/images/buttons/boardButton_hover.png';
   String board1 = 'assets/images/buttons/boardButtonPlay.png';
   String board2 = 'assets/images/buttons/boardButton_hover_play.png';
 
@@ -56,32 +51,21 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
   String logIn1 = 'assets/images/buttons/myAccountButton.png';
   String logIn2 = 'assets/images/buttons/myAccountButton_hover.png';
 
-  // late String settings;
-  // String settings1 = 'assets/images/buttons/settingsButton.png';
-  // String settings2 = 'assets/images/buttons/settingsButton_hover.png';
-
   late String about;
   String about1 = 'assets/images/buttons/infoButton.png';
   String about2 = 'assets/images/buttons/infoButton_hover.png';
 
-  // late String gameServices;
-  // String gameServices1 = 'assets/images/buttons/google play_button.png';
-
   late String achievements;
-  // String achievements1 = 'assets/images/buttons/achievementsButton.png';
-  // String achievements2 = 'assets/images/buttons/achievementsButton_hover.png';
   String achievements1 = 'assets/images/buttons/achievementsButtonPlay.png';
   String achievements2 = 'assets/images/buttons/achievementsButton_hover_play.png';
 
   @override
   void initState() {
-    print('WIN GAME OVERLAY: ${widget.game.gameState}');
 
     super.initState();
 
     getSignInStatus();
     fetchPlayerName();
-    //getPlayerName().then((value) => setState(() {playerName = value;}));
 
     _animationController = AnimationController(
       vsync: this,
@@ -100,7 +84,6 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
     board = board1;
     logIn = logIn1;
     achievements = achievements1;
-    //settings = settings1;
     about = about1;
 
     BannerAd(
@@ -114,7 +97,6 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
           });
         },
         onAdFailedToLoad: (ad, err) {
-          print('Failed to load a banner ad: ${err.message}');
           ad.dispose();
         },
       ),
@@ -170,8 +152,6 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
        child: AspectRatio(aspectRatio: 9/19,
          child: Column(mainAxisAlignment: MainAxisAlignment.end,
            children: [
-             //IconButton(onPressed: (){}, icon: const FaIcon(FontAwesomeIcons.gear,size: 30,color: Colors.black,)),
-             //const SizedBox(height: 30,),
              Padding(
                padding: const EdgeInsets.only(bottom: 40),
                child: Column(mainAxisAlignment: MainAxisAlignment.end, crossAxisAlignment: CrossAxisAlignment.center,
@@ -187,11 +167,9 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
                                      alignment: Alignment.center,
                              child: SizedBox(
                                width: (widget.game.camera.viewport.canvasSize?.x)!*0.95,
-                               //width: _bannerAd!.size.width.toDouble(),
-                               //height: _bannerAd!.size.height.toDouble(),
                                child: AdWidget(ad: _bannerAd!),
                              ),
-                                                          ):
+                             ):
                              SizedBox(),
                            )
 
@@ -208,10 +186,8 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
                            _levelsButton(context, widget.game),
                            _boardButton(context, widget.game),
                            _achievements(context, widget.game),
-                           //_myAccount(context, widget.game),
                            Padding(
                              padding: const EdgeInsets.only(top: 10),
-                             // child: _settings(context, widget.game),
                              child: _about(context, widget.game),
                            ),
                            Padding(padding: const EdgeInsets.only(bottom: 40),)
@@ -226,7 +202,6 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
                                child: Row(mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center, children: [
                                  signInStatus == false ? const Text('Please sign in to save your best score to leader board.',style: TextStyle(color: Colors.white),) :
                                  Text('You are signed in as ${playerName}',style: const TextStyle(color: Colors.white),),
-                                 //Text('You are signed in as ${playerName}',style: const TextStyle(color: Colors.white),),
                                ],),
                              ),
                            )
@@ -253,14 +228,12 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
            }
 
         game.gameMode = GameMode.challenge;
-        print('1 ---- GAME MODE FROM CHALLENGE BUTTON: ${game.gameMode}');
-        //await widget.game.pickLevel(1);
                int level = await widget.game.randomChallengeWallNumber();
                await widget.game.prefs.setInt('challengeLevel', level);
                widget.game.challengeCurrentLevel = level;
                await widget.game.pickLevel(level);
 
-               print('LEVEL:${level}');
+               //print('LEVEL:${level}');
       },
 
       onTapUp: (tap){setState(() {
@@ -269,19 +242,16 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
 
       onLongPress: () {
         setState(() {
-          print('LONG PRESS');
           challenge = challenge2;
         });
       },
       onLongPressEnd: (tap) {
         setState(() {
-          print('onLongPressStart');
           challenge = challenge1;
         });
       },
       onLongPressDown: (tap) {
         setState(() {
-          print('onLongPressDown');
           challenge = challenge2;
         });
       },
@@ -311,19 +281,16 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
 
       onLongPress: () {
         setState(() {
-          print('LONG PRESS');
           levels = levels2;
         });
       },
       onLongPressEnd: (tap) {
         setState(() {
-          print('onLongPressStart');
           levels = levels1;
         });
       },
       onLongPressDown: (tap) {
         setState(() {
-          print('onLongPressDown');
           levels = levels2;
         });
       },
@@ -353,19 +320,16 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
 
       onLongPress: () {
         setState(() {
-          print('LONG PRESS');
           about = about2;
         });
       },
       onLongPressEnd: (tap) {
         setState(() {
-          print('onLongPressStart');
           about = about1;
         });
       },
       onLongPressDown: (tap) {
         setState(() {
-          print('onLongPressDown');
           about = about2;
         });
       },
@@ -386,15 +350,12 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
         }
         if (await InternetConnection().hasInternetAccess == true) {
           if (signInStatus == false){
-            print('game.connectionStatus: ${game.connectionStatus}');
             _pleaseLogInMessageLeaderBoard();
-            //await Leaderboards.showLeaderboards();
             }
           else {
             await Leaderboards.showLeaderboards();
           }
         }else{
-          print('*******OFFLINE********');
           _offlineMessageLeaderBoard();
         }
       },
@@ -405,19 +366,16 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
 
       onLongPress: () {
         setState(() {
-          print('LONG PRESS');
           board = board2;
         });
       },
       onLongPressEnd: (tap) {
         setState(() {
-          print('onLongPressStart');
           board = board1;
         });
       },
       onLongPressDown: (tap) {
         setState(() {
-          print('onLongPressDown');
           board = board2;
         });
       },
@@ -444,7 +402,6 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
             await Achievements.showAchievements();
           }
         }else{
-          print('*******OFFLINE********');
           _offlineMessageAchievements();
         }
       },
@@ -455,19 +412,16 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
 
       onLongPress: () {
         setState(() {
-          print('LONG PRESS');
           achievements = achievements2;
         });
       },
       onLongPressEnd: (tap) {
         setState(() {
-          print('onLongPressStart');
           achievements = achievements1;
         });
       },
       onLongPressDown: (tap) {
         setState(() {
-          print('onLongPressDown');
           achievements = achievements2;
         });
       },
@@ -475,7 +429,6 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
       child: Image.asset(achievements, height: (widget.game.camera.viewport.canvasSize?.y)!/14.5,),
     );
   }
-
 
    Future<void> _pleaseLogInMessageLeaderBoard() async {
     return showDialog<void>(
@@ -550,22 +503,9 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
                 ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: HexColor('#8bf5aa')),
                   child: Text('OK',style: TextStyle(color: HexColor('#1c2b31'),fontWeight: FontWeight.w800),),
                   onPressed: () {
-                    // googlePlayGameServices.signIn();
-                    // setState(() {
-                    //   board = board1;
-                    // });
                     Navigator.of(context).pop();
                   },
                 ),
-                // ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: HexColor('#f60c0d')),
-                //   child: Text('Cancel',style: TextStyle(color: HexColor('#1c2b31'),fontWeight: FontWeight.w800),),
-                //   onPressed: () {
-                //     setState(() {
-                //       board = board1;
-                //     });
-                //     Navigator.of(context).pop();
-                //   },
-                // ),
               ],
             ),
           ],
@@ -646,22 +586,9 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
                 ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: HexColor('#8bf5aa')),
                   child: Text('OK',style: TextStyle(color: HexColor('#1c2b31'),fontWeight: FontWeight.w800),),
                   onPressed: () {
-                    // googlePlayGameServices.signIn();
-                    // setState(() {
-                    //   board = board1;
-                    // });
                     Navigator.of(context).pop();
                   },
                 ),
-                // ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: HexColor('#f60c0d')),
-                //   child: Text('Cancel',style: TextStyle(color: HexColor('#1c2b31'),fontWeight: FontWeight.w800),),
-                //   onPressed: () {
-                //     setState(() {
-                //       board = board1;
-                //     });
-                //     Navigator.of(context).pop();
-                //   },
-                // ),
               ],
             ),
           ],
@@ -669,17 +596,6 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
       },
     );
   }
-
-
-  // Future<int> randomChallengeLevelNumberInitialization() async {
-  //   final _random = Random();
-  //   int countLevels = brickList_2.length;
-  //   int challengeLevel = _random.nextInt(countLevels);
-  //   await widget.game.prefs.setInt('challengeLevel', challengeLevel+1);
-  //   widget.game.currentPlayedLevelNumber = challengeLevel +1;
-  //
-  //   return challengeLevel;
-  // }
 }
 
 

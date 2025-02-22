@@ -32,7 +32,6 @@ class CannonBall extends Component with HasGameRef<BrickBreakGame> {
 
   Future<void>getCannonBallTimer()async {
     int countDown = 0;
-    print('****Cannon Ball*****');
     bullet = TimerComponent(period: 2, repeat: false, removeOnFinish: true,autoStart: true, onTick:() {
       countDown++; if(countDown == 8){gameRef.gunState = GunState.off; bullet?.timer.stop();countDown=0;remove(bullet!);}
       getBulletThrough();
@@ -41,7 +40,6 @@ class CannonBall extends Component with HasGameRef<BrickBreakGame> {
   }
 
   Future<void>getBulletThrough()async {
-print('------- GET CANNON BALL -------');
 if (game.audioSettings == AudioSettings.on) {
   await FlameAudio.play('cannon.mp3');
 }

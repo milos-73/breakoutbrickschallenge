@@ -11,8 +11,6 @@ class Backyard extends SpriteComponent with HasGameRef{
     sprite = await Sprite.load('bg/test25.png');
     final background = SpriteComponent(sprite: sprite, size:gameRef.size);
     add(background);
-
-
   }
 
   @override
@@ -20,5 +18,4 @@ class Backyard extends SpriteComponent with HasGameRef{
     super.render(c);
     return;
   }
-
 }

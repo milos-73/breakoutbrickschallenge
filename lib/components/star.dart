@@ -1,9 +1,6 @@
-import 'dart:math';
-
 import 'package:flame/components.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:brickbreaker/components/paddle.dart';
-import 'package:games_services/games_services.dart';
 import '../forge2d_game_world.dart';
 import 'dead_zone.dart';
 
@@ -11,9 +8,7 @@ class Star extends BodyComponent<BrickBreakGame> with ContactCallbacks{
 
   final Vector2 size;
   final Vector2 position;
-  //final PositionComponent starComponent;
 
-  //Star({required this.position, required this.starComponent, required this.size});
   Star({required this.position, required this.size});
 
   bool destroy = false;
@@ -45,7 +40,6 @@ class Star extends BodyComponent<BrickBreakGame> with ContactCallbacks{
       }
     }
     if(other is DeadZone){
-      print('STAR IN DEATH ZONE');
       destroy = true;
     }
   }
@@ -87,7 +81,6 @@ class Star extends BodyComponent<BrickBreakGame> with ContactCallbacks{
   }
 
     Future<void> resetStar() async {
-      print('STAR RESET');
       removeFromParent();
     }
 }

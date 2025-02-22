@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame_audio/flame_audio.dart';
@@ -9,7 +7,6 @@ import '../forge2d_game_world.dart';
 class PauseButton extends SpriteComponent with Tappable, HasGameRef<BrickBreakGame>{
 
   SavedValues savedValues = SavedValues();
-
 
   @override
   Future<void> onLoad() async {
@@ -22,7 +19,7 @@ class PauseButton extends SpriteComponent with Tappable, HasGameRef<BrickBreakGa
 
   @override
   bool onTapUp(TapUpInfo info) {
-    print("tap up");
+    //print("tap up");
     return false;
   }
 
@@ -52,12 +49,10 @@ class PauseButton extends SpriteComponent with Tappable, HasGameRef<BrickBreakGa
       gameRef.overlays.add('GamePausedMenuOverlay');
       info.handled = true;
       return true;}
-
   }
 
   @override
   bool onTapCancel() {
-    print("tap cancel");
     return false;
   }
 }

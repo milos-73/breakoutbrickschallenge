@@ -5,7 +5,6 @@ import 'package:flame/events.dart';
 import 'package:flame/extensions.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
-import 'package:games_services/games_services.dart';
 
 import '../forge2d_game_world.dart';
 import 'ball.dart';
@@ -54,17 +53,11 @@ class DeadZone extends BodyComponent<BrickBreakGame> with ContactCallbacks, Tapp
 
   void setLives(int resetLives){
     gameRef.life = resetLives;
-    //print('RESETED LIVES: ${resetLives}');
-    //print('Reseted Lives $lives');
   }
 
   // 3
   @override
   Future<void> beginContact(Object other, Contact contact) async {
-
-    //print('GAMErEF LIVE: ${gameRef.life}');
-    //print('LIVE: ${gameRef.life}');
-    //print(gameRef.life);
 
     if(other is Ball && gameRef.life >= 0){
 
@@ -88,7 +81,6 @@ class DeadZone extends BodyComponent<BrickBreakGame> with ContactCallbacks, Tapp
     }
 
     if (other is Ball && gameRef.life < 0) {
-      //print('LOST GAME');
       gameRef.updateCounters();
       gameRef.updatePointsCounter();
       gameRef.particleState = ParticleState.off;
@@ -99,14 +91,12 @@ class DeadZone extends BodyComponent<BrickBreakGame> with ContactCallbacks, Tapp
 
       if(gameRef.gameMode == GameMode.challenge){
 
-        print('currentLevelNumber:${gameRef.challengeCurrentLevel}');
         levelPointsTop = gameRef.prefs.getInt('topLevelPoints${gameRef.challengeCurrentLevel}') ?? 0;
         if (levelPointsTop < gameRef.levelPoints) {
           gameRef.prefs.setInt('topLevelPoints${gameRef.challengeCurrentLevel}', gameRef.levelPoints);
         }
         gameRef.totalPointsInCurrentGame = 0;
         gameRef.levelPoints = 0;
-        print('*****GOING TO UPDATE POINTS*****');
         gameRef.updateCounters();
         gameRef.updatePointsCounter();
         gameRef.wallStatus = WallStatus.inBuild;
@@ -122,7 +112,6 @@ class DeadZone extends BodyComponent<BrickBreakGame> with ContactCallbacks, Tapp
     }
 
     if(other is Ball2 && gameRef.life >= 0){
-      //print('LOST LIVE');
       gameRef.updateCounters();
       gameRef.updatePointsCounter();
       if (gameRef.life > 0) {
@@ -131,14 +120,12 @@ class DeadZone extends BodyComponent<BrickBreakGame> with ContactCallbacks, Tapp
       }
       gameRef.life = gameRef.life - 1;
       gameRef.particleState = ParticleState.off;
-      //gameRef.obstacles.resetObstacle();
       gameRef.ballState = BallState.lost;
       if (gameRef.overlays.isActive('PostGame')){gameRef.overlays.remove('PostGame');}
       gameRef.gameState = GameState.restart;
     }
 
     if (other is Ball2 && gameRef.life < 0) {
-      //print('LOST GAME');
       gameRef.updateCounters();
       gameRef.updatePointsCounter();
       if (game.audioSettings == AudioSettings.on)  {
@@ -146,8 +133,6 @@ class DeadZone extends BodyComponent<BrickBreakGame> with ContactCallbacks, Tapp
       gameRef.life = 3;
       gameRef.particleState = ParticleState.off;
       if(gameRef.gameMode == GameMode.challenge){
-        print('IN DEATH ZONE LOFT ALL LIFES');
-        print('currentLevelNumber2:${gameRef.currentPlayedLevelNumber}');
         levelPointsTop = gameRef.prefs.getInt('topLevelPoints${gameRef.challengeCurrentLevel}') ?? 0;
         if (levelPointsTop < gameRef.levelPoints) {
           gameRef.prefs.setInt('topLevelPoints${gameRef.challengeCurrentLevel}', gameRef.levelPoints);
@@ -183,10 +168,6 @@ class DeadZone extends BodyComponent<BrickBreakGame> with ContactCallbacks, Tapp
   bool onLongTapDown(TapDownInfo info) {
 
     if(gameRef.stickyBallState == StickyBallState.inProgress){
-
-      // print('PADDLE POSITION: ${gameRef.paddle.body.position.x}');
-      // print('PADDLE SIZE:: ${gameRef.paddle.size}');
-      // print('BALL2 POSITION: ${gameRef.stickyBall?.body.position}');
 
       gameRef.removeStickyBall();
       gameRef.stickyBallOn = 0;
@@ -234,7 +215,6 @@ class DeadZone extends BodyComponent<BrickBreakGame> with ContactCallbacks, Tapp
 
   @override
   bool onTapCancel() {
-   //print("tap cancel");
    return false;
   }
 

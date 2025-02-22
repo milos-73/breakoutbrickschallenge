@@ -9,12 +9,10 @@ import '../forge2d_game_world.dart';
 import '../services/ad_helper.dart';
 
 class NextLevelChallengeModeOverlay extends StatefulWidget {
-  //final String message;
   final BrickBreakGame game;
 
   const NextLevelChallengeModeOverlay({
     super.key,
-    //required this.message,
     required this.game,
   });
 
@@ -46,15 +44,10 @@ class _NextLevelChallengeModeOverlayState extends State<NextLevelChallengeModeOv
 
   int challengeLevels = 0;
 
-
   @override
   void initState() {
-    print('WIN CHALLENGE LEVEL OVERLAY: ${widget.game.gameState}');
-
-
 
     super.initState();
-    //updateChallengeLevelCount();
     _createInterstitialAd();
 
     _animationController = AnimationController(
@@ -73,12 +66,6 @@ class _NextLevelChallengeModeOverlayState extends State<NextLevelChallengeModeOv
     reply = reply1;
     nextLevel = nextLevel1;
   }
-
-  // Future<void> updateChallengeLevelCount()async {
-  //   widget.game.challengeLevelsPerGame = widget.game.challengeLevelsPerGame + 1;
-  //   challengeLevels = widget.game.prefs.getInt('challengeLevels') ?? 0;
-  //   if (widget.game.challengeLevelsPerGame > challengeLevels) {await widget.game.prefs.setInt('challengeLevels', widget.game.challengeLevelsPerGame);}
-  // }
 
   void _createInterstitialAd() {
     InterstitialAd.load(
@@ -116,7 +103,6 @@ class _NextLevelChallengeModeOverlayState extends State<NextLevelChallengeModeOv
   Future<void> _nextLevelOverlays() async {
     widget.game.levelPoints = 0;
     if(widget.game.overlays.isActive('NextLevelChallengeModeOverlay')){widget.game.overlays.remove('NextLevelChallengeModeOverlay');}
-    //widget.game.nextLevel(level: widget.game.challengeCurrentLevel);
   }
 
   void _showInterstitialAdMainMenu() {
@@ -235,10 +221,6 @@ class _NextLevelChallengeModeOverlayState extends State<NextLevelChallengeModeOv
         await FlameAudio.play('button3.mp3');
       }
       _showInterstitialAdMainMenu();
-      // widget.game.pauseEngine();
-      // widget.game.gameState = GameState.paused;
-      // if(widget.game.overlays.isActive('NextLevelChallengeModeOverlay')){widget.game.overlays.remove('NextLevelChallengeModeOverlay');}
-      // widget.game.overlays.add('MainMenu');
 
         },
       onTapUp: (tap){setState(() {
@@ -249,19 +231,16 @@ class _NextLevelChallengeModeOverlayState extends State<NextLevelChallengeModeOv
 
       onLongPress: () {
         setState(() {
-          print('LONG PRESS');
           imgMainMenu = imgMainMenu2;
         });
       },
       onLongPressEnd: (tap) {
         setState(() {
-          print('onLongPressStart');
           imgMainMenu = imgMainMenu1;
         });
       },
       onLongPressDown: (tap) {
         setState(() {
-          print('onLongPressDown');
           imgMainMenu = imgMainMenu2;
         });
       },
@@ -277,13 +256,10 @@ class _NextLevelChallengeModeOverlayState extends State<NextLevelChallengeModeOv
       onTapDown: (tap) async {setState(() {
         reply = reply2;
        });
-        //game.totalPointsInCurrentGame = 0;
       if (game.audioSettings == AudioSettings.on) {
         await FlameAudio.play('button3.mp3');
        }
       _showInterstitialAdReplay();
-      // widget.game.resetGame();
-      // await widget.game.pickLevel(1);
       },
 
       onTapUp: (tap){setState(() {
@@ -292,19 +268,16 @@ class _NextLevelChallengeModeOverlayState extends State<NextLevelChallengeModeOv
 
       onLongPress: () {
         setState(() {
-          print('LONG PRESS');
           reply = reply2;
         });
       },
       onLongPressEnd: (tap) {
         setState(() {
-          print('onLongPressStart');
           reply = reply1;
         });
       },
       onLongPressDown: (tap) {
         setState(() {
-          print('onLongPressDown');
           reply = reply2;
         });
       },
@@ -335,23 +308,19 @@ class _NextLevelChallengeModeOverlayState extends State<NextLevelChallengeModeOv
 
       onLongPress: () {
         setState(() {
-          print('LONG PRESS');
           nextLevel = nextLevel2;
         });
       },
       onLongPressEnd: (tap) {
         setState(() {
-          print('onLongPressStart');
           nextLevel = nextLevel1;
         });
       },
       onLongPressDown: (tap) {
         setState(() {
-          print('onLongPressDown');
           nextLevel = nextLevel2;
         });
       },
-
 
       child: Image.asset(nextLevel, height: (widget.game.camera.viewport.canvasSize?.y)!/15),
     );

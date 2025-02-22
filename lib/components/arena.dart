@@ -21,7 +21,6 @@ class Arena extends BodyComponent<BrickBreakGame> with Tappable {
   @override
   Future<void> onLoad() {
     arenaSize = size ?? gameRef.size;
-    //arenaSize = Vector2(gameRef.size.x, gameRef.size.y * 0.94);
     return super.onLoad();
   }
 

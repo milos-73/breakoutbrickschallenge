@@ -48,7 +48,6 @@ class BonusFast extends BodyComponent<BrickBreakGame> with ContactCallbacks{
       ..type = BodyType.dynamic
       ..position = position
       ..gravityOverride = Vector2(0, 4)
-    //..userData = this
       ..linearDamping = 1.0;
 
     final brickBody = world.createBody(bodyDef);

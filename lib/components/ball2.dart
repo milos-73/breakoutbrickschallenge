@@ -12,7 +12,6 @@ class Ball2 extends BodyComponent<BrickBreakGame> with ContactCallbacks{
   final Vector2 position;
   final double radius;
 
-
   Ball2(this.position,{required this.radius, super.priority = 3});
 
   late TimerComponent slow;
@@ -23,7 +22,6 @@ class Ball2 extends BodyComponent<BrickBreakGame> with ContactCallbacks{
   int count = 0;
   int count2 = 0;
   var destroy = false;
-
 
   @override
   Future<void> onLoad() async{
@@ -57,7 +55,6 @@ class Ball2 extends BodyComponent<BrickBreakGame> with ContactCallbacks{
       ..userData = this
       ..bullet = true
       ..linearVelocity = Vector2(0, -40)
-    //..gravityOverride = Vector2(0, 3)
       ..angularVelocity = 4.0
       ..position = position!;
 
@@ -107,7 +104,6 @@ class Ball2 extends BodyComponent<BrickBreakGame> with ContactCallbacks{
   void endContact(Object other, Contact contact){
       }
 
-
    void reset() {
     body.setTransform(position, angle);
     body.angularVelocity = 4.0;
@@ -132,7 +128,4 @@ class Ball2 extends BodyComponent<BrickBreakGame> with ContactCallbacks{
     // 4
     canvas.drawCircle(circle.position.toOffset(), radius, paint);
   }
-
-
-
 }

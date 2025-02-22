@@ -17,8 +17,6 @@ class Gun extends BodyComponent<BrickBreakGame> {
   @override
   Future<void> onLoad() async{
     await super.onLoad();
-    print('POSITION X: ${gameRef.paddle.body.position.x}');
-    //final sprite = await gameRef.loadSprite('paddles/gun1.png');
     final sprite = await gameRef.loadSprite('paddles/gun2.png');
     renderBody = false;
     add(SpriteComponent(sprite: sprite, size: size, anchor: Anchor.center,));
@@ -34,9 +32,6 @@ class Gun extends BodyComponent<BrickBreakGame> {
     final bodyDef = BodyDef()
       ..type = BodyType.dynamic
       ..position = position;
-     // ..gravityOverride = Vector2(0, 4)
-    //..userData = this
-     // ..linearDamping = 1.0;
 
     final brickBody = world.createBody(bodyDef);
 

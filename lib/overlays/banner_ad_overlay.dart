@@ -35,7 +35,6 @@ class _BannerAdOverlayState extends State<BannerAdOverlay> {
           });
         },
         onAdFailedToLoad: (ad, err) {
-          print('Failed to load a banner ad: ${err.message}');
           ad.dispose();
         },
       ),
@@ -52,10 +51,8 @@ class _BannerAdOverlayState extends State<BannerAdOverlay> {
         child: Padding(
           padding: const EdgeInsets.all(3.0),
           child: SizedBox(
-            //width: widget.game!.size.x * 40,
             width: (widget.game?.camera.viewport.canvasSize?.x)!*0.95,
             height: (widget.game?.camera.viewport.canvasSize?.y)!/14,
-            //height: _bannerAd!.size.height.toDouble(),
             child: AdWidget(ad: _bannerAd!),
           ),
         ),

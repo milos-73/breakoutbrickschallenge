@@ -27,8 +27,6 @@ class Brick3 extends BodyComponent<BrickBreakGame> with ContactCallbacks {
 
 
   dynamic explosion;
-  // dynamic brickBreakAnim1;
-  // dynamic brickBreakAnim2;
   ObjectState state = ObjectState.normal;
 
 
@@ -38,10 +36,6 @@ class Brick3 extends BodyComponent<BrickBreakGame> with ContactCallbacks {
     final sprite = await gameRef.loadSprite('bricks3/cracked1.png');
     renderBody = false;
     add(SpriteComponent(sprite: sprite, size: Vector2(size.width, size.height), anchor: Anchor.center));
-
-
-    // final   brickBreak1 = await gameRef.loadSprite('bricks3/green2.png');
-    // final   brickBreak2 = await gameRef.loadSprite('bricks3/orange3.png');
 
     final exp1 = await gameRef.loadSprite('explosion/explosion1.png');
     final exp2 = await gameRef.loadSprite('explosion/explosion2.png');
@@ -62,9 +56,6 @@ class Brick3 extends BodyComponent<BrickBreakGame> with ContactCallbacks {
     final exp17 = await gameRef.loadSprite('explosion/explosion17.png');
     final exp18 = await gameRef.loadSprite('explosion/explosion18.png');
     final exp19 = await gameRef.loadSprite('explosion/explosion19.png');
-
-    // brickBreakAnim1 = SpriteAnimation.spriteList([brickBreak1], stepTime: 0.05,loop: false);
-    // brickBreakAnim2 = SpriteAnimation.spriteList([brickBreak2], stepTime: 0.05,loop: false);
 
     explosion = SpriteAnimation.spriteList([
       exp1,

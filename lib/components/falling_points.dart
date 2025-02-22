@@ -14,13 +14,10 @@ class FallingPoints extends Component with HasGameRef<BrickBreakGame> {
 
   int count = 0;
 
-//List zoznam = [Brick(size: null, position: null, spriteName: ''), Ball(position: null, radius: null)];
-
   @override
   Future<void> onLoad() async {
     super.onLoad();
     pointsTimer = TimerComponent(period: 2,removeOnFinish: true, repeat: true,onTick: (){elapseTics += 1;getPoint();});
-    //print('ELAPSE TIME: $elapseTics');
     add(pointsTimer!);
   }
 

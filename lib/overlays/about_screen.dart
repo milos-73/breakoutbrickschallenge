@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -29,7 +28,6 @@ class _AboutScreenState extends State<AboutScreen> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -38,7 +36,6 @@ class _AboutScreenState extends State<AboutScreen> {
           SizedBox(height: 20,),
           Text('My Location Now'.toUpperCase(), style: TextStyle(fontSize: 27,fontWeight: FontWeight.w600),textAlign: TextAlign.center,),
           Text('Find, Send & Save', style: TextStyle(fontSize: 17,fontWeight: FontWeight.w400),),
-          //Text('my current location', style: TextStyle(fontSize: 17,fontWeight: FontWeight.w400),),
           SizedBox(height: 5,),
           Text('verzia 1.2.8', style: TextStyle(fontSize: 15,fontWeight: FontWeight.w300),),
           SizedBox(height: 20,),

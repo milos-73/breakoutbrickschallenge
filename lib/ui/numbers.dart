@@ -37,7 +37,6 @@ class _NumbersState extends State<Numbers> {
     return number; }
   }
 
-
   @override
   void initState(){
     if (widget.number.toString().length == 1){getNumber1(widget.number).then((value) => setState((){number1 = value!;}));}
@@ -51,7 +50,6 @@ class _NumbersState extends State<Numbers> {
     double brickWidth = (MediaQuery.of(context).size.width /4)-25;
     double brickHeight = MediaQuery.of(context).size.width /8;
 
-
     return InkWell(onTap: () async {
 
       }, child: Padding(
@@ -62,10 +60,7 @@ class _NumbersState extends State<Numbers> {
             children: [
               Image.asset('assets/images/levels/emptyBrick1.png',fit: BoxFit.cover),
               Positioned(left:brickWidth*0.23, top: brickHeight*0.05,height: MediaQuery.of(context).size.width /10,width: 28, child: Image.asset('assets/images/levels/$number1.png')),
-              //Positioned(left: brickWidth*0.55,top: brickHeight *0.1,child: SizedBox(height: MediaQuery.of(context).size.width /10,width: 28, child: Image.asset('assets/images/levels/2.png'),)),
               Positioned(left: brickWidth*0.55,top:brickHeight*0.05, height: MediaQuery.of(context).size.width /10,width: 28, child: Image.asset('assets/images/levels/$number2.png')),
-              //const Positioned(top:0, left: 0, child: FaIcon(FontAwesomeIcons.circle, color: Colors.yellow,size: 10,)),
-              //Positioned(top:0, left: brickWidth, child: FaIcon(FontAwesomeIcons.circle, color: Colors.yellow,size: 10,))
             ]
         ),
       ),

@@ -51,7 +51,6 @@ class Ball extends BodyComponent<BrickBreakGame> with ContactCallbacks{
       ..type = BodyType.dynamic
       ..userData = this
       ..bullet = true
-      //..gravityOverride = Vector2(0, 3)
       ..angularVelocity = 2.0
       ..position = position;
 
@@ -73,7 +72,6 @@ class Ball extends BodyComponent<BrickBreakGame> with ContactCallbacks{
   @override
   Future<void> onLoad() async {
     super.onLoad();
-
   }
 
   @override
@@ -86,14 +84,10 @@ class Ball extends BodyComponent<BrickBreakGame> with ContactCallbacks{
     if(gameRef.fastBonus == 0 || gameRef.slowBonus == 0){body.linearVelocity.length = 45;}
     if(gameRef.slowBonus == 1 && gameRef.fastBonus == 0){body.linearVelocity.length = 30;}
     if(gameRef.fastBonus == 1 && gameRef.slowBonus == 0){body.linearVelocity.length = 55;}
-
     if(gameRef.powerBallBonus == 1 && gameRef.cannonBallStatus == 1){
-
       body.fixtures[0].setSensor(true);body.linearVelocity.length = 43;
       if(body.position.x > game.size.x-1.3 || body.position.x < 1.3 || body.position.y < 15 || body.position.y > game.size.y - 20 ){body.fixtures[0].setSensor(false);body.setBullet(true);body.linearVelocity.length = 40;}
-
     } else{body.fixtures[0].setSensor(false);}
-
   }
 
   @override
@@ -111,7 +105,7 @@ class Ball extends BodyComponent<BrickBreakGame> with ContactCallbacks{
         body.linearDamping = 5000;
         body.linearVelocity.length = 0;
 
-        print('LOCAL POINT BEGIN: ${body.localPoint(contact.bodyA.position)}');
+        //print('LOCAL POINT BEGIN: ${body.localPoint(contact.bodyA.position)}');
         gameRef.stickyBallPosition = body.localPoint(contact.bodyA.position);
         gameRef.stickyBallOn = 1;
         gameRef.ball2On = 0;
@@ -130,8 +124,6 @@ class Ball extends BodyComponent<BrickBreakGame> with ContactCallbacks{
     if(gameRef.stickyBallBonus == 1){
 
       if(other is Paddle) {
-        print(
-            'LOCAL POINT PRESOLVE: ${body.localPoint(contact.bodyA.position)}');
       }}
   }
 
@@ -140,8 +132,6 @@ class Ball extends BodyComponent<BrickBreakGame> with ContactCallbacks{
     if(gameRef.stickyBallBonus == 1){
 
       if(other is Paddle) {
-        print('LOCAL POINT POSTSOLVE: ${body.localPoint(
-            contact.bodyA.position)}');
       }}
   }
 
@@ -151,16 +141,13 @@ class Ball extends BodyComponent<BrickBreakGame> with ContactCallbacks{
 
       if(other is Paddle) {
         gameRef.stickyBallEndPosition = body.localPoint(contact.bodyA.position);
-        print('LOCAL POINT END: ${body.localPoint(contact.bodyA.position)}');
       }}
       }
 
     void reset() {
     body.setTransform(Vector2(18, 67), angle);
-   //body.angularVelocity = 4.0;
     body.linearVelocity = Vector2.zero();
   }
-
 
   //1
   @override
@@ -182,8 +169,6 @@ class Ball extends BodyComponent<BrickBreakGame> with ContactCallbacks{
   }
 
   Future<void> removeStickyBall() async {
-    //gameRef.stickyBallState = StickyBallState.inProgress;
     gameRef.paddle.remove(stickyBall);
    }
-
 }

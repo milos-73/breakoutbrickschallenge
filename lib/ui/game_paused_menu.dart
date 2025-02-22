@@ -1,22 +1,17 @@
 import 'dart:math';
 
 import 'package:flame_audio/flame_audio.dart';
-import 'package:flutter/animation.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import '../forge2d_game_world.dart';
 import '../services/ad_helper.dart';
-import 'overlay_builder.dart';
 
 class GamePausedMenuOverlay extends StatefulWidget {
-  //final String message;
   final BrickBreakGame game;
 
   const GamePausedMenuOverlay({
     super.key,
-    //required this.message,
     required this.game,
   });
 
@@ -155,9 +150,6 @@ class _GamePausedMenuOverlayState extends State<GamePausedMenuOverlay> with Sing
               children: [
                 Container(width: widget.game.camera.viewport.effectiveSize.x, height: (widget.game.camera.viewport.canvasSize?.y)!/2, color: Colors.black.withOpacity(0.4),),
                 const SizedBox(width: 250, height: 150,
-                  // decoration: const BoxDecoration(image: DecorationImage(
-                  //     image: AssetImage('assets/images/bg/gameOverMenu.png'),
-                  //     fit: BoxFit.contain)),
                 ),
                 Center(
                   child: Column(
@@ -169,7 +161,7 @@ class _GamePausedMenuOverlayState extends State<GamePausedMenuOverlay> with Sing
                       _resetButton(context, widget.game),
                       if (widget.game.gameMode == GameMode.levels) _pickLevelButton(context, widget.game),
                       _mainMenuButton(context, widget.game),
-                                          ],
+                    ],
                   ),
                 )
               ],
@@ -208,19 +200,16 @@ class _GamePausedMenuOverlayState extends State<GamePausedMenuOverlay> with Sing
       },
       onLongPress: () {
         setState(() {
-          print('LONG PRESS');
           resume = resume2;
         });
       },
       onLongPressEnd: (tap) {
         setState(() {
-          print('onLongPressStart');
           resume = resume1;
         });
       },
       onLongPressDown: (tap) {
         setState(() {
-          print('onLongPressDown');
           resume = resume2;
         });
       },
@@ -228,7 +217,6 @@ class _GamePausedMenuOverlayState extends State<GamePausedMenuOverlay> with Sing
       child: Image.asset(resume, height: (widget.game.camera.viewport.canvasSize?.y)!/17),
     );
   }
-
 
   Widget _mainMenuButton(BuildContext context, BrickBreakGame game) {
     return GestureDetector(
@@ -240,11 +228,6 @@ class _GamePausedMenuOverlayState extends State<GamePausedMenuOverlay> with Sing
           await FlameAudio.play('button3.mp3');
         }
         _showInterstitialAd();
-        // widget.game.pauseEngine();
-        // widget.game.gameState = GameState.paused;
-        // if(widget.game.overlays.isActive('GamePausedMenuOverlay')){widget.game.overlays.remove('GamePausedMenuOverlay');}
-        // _showInterstitialAd();
-        // widget.game.overlays.add('MainMenu');
 
       },
       onTapUp: (tap) {
@@ -255,19 +238,16 @@ class _GamePausedMenuOverlayState extends State<GamePausedMenuOverlay> with Sing
 
       onLongPress: () {
         setState(() {
-          print('LONG PRESS');
           imgMainMenu = imgMainMenu2;
         });
       },
       onLongPressEnd: (tap) {
         setState(() {
-          print('onLongPressStart');
           imgMainMenu = imgMainMenu1;
         });
       },
       onLongPressDown: (tap) {
         setState(() {
-          print('onLongPressDown');
           imgMainMenu = imgMainMenu2;
         });
       },
@@ -300,19 +280,16 @@ class _GamePausedMenuOverlayState extends State<GamePausedMenuOverlay> with Sing
       },
       onLongPress: () {
         setState(() {
-          print('LONG PRESS');
           reply = reply2;
         });
       },
       onLongPressEnd: (tap) {
         setState(() {
-          print('onLongPressStart');
           reply = reply1;
         });
       },
       onLongPressDown: (tap) {
         setState(() {
-          print('onLongPressDown');
           reply = reply2;
         });
       },
@@ -326,7 +303,6 @@ class _GamePausedMenuOverlayState extends State<GamePausedMenuOverlay> with Sing
       onTapDown: (tap) async {
         setState(() {
           pickLevel = pickLevel2;
-          //game.nextLevel();
         });
         if (game.audioSettings == AudioSettings.on) {
           await FlameAudio.play('button3.mp3');
@@ -346,19 +322,16 @@ class _GamePausedMenuOverlayState extends State<GamePausedMenuOverlay> with Sing
 
       onLongPress: () {
         setState(() {
-          print('LONG PRESS');
           pickLevel = pickLevel2;
         });
       },
       onLongPressEnd: (tap) {
         setState(() {
-          print('onLongPressStart');
           pickLevel = pickLevel1;
         });
       },
       onLongPressDown: (tap) {
         setState(() {
-          print('onLongPressDown');
           pickLevel = pickLevel2;
         });
       },

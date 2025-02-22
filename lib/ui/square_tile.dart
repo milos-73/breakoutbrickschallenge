@@ -17,7 +17,6 @@ class SquareTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('ON TAP: ${onTap}');
     return GestureDetector(onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(5),

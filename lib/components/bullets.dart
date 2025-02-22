@@ -14,10 +14,6 @@ class Bullets extends Component with HasGameRef<BrickBreakGame> {
   Bullets() : super(priority: 2);
 
   TimerComponent? bullet;
-  //TimerComponent? gun;
-
-
-  //int countDown2 = 0;
 
   @override
   Future<void> onLoad() async {

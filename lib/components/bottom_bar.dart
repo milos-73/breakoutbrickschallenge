@@ -19,10 +19,7 @@ class BottomBar extends BodyComponent<BrickBreakGame> with ContactCallbacks, Tap
     final sprite = await gameRef.loadSprite('bg/trava2.png');
     renderBody = false;
     add(SpriteComponent(sprite: sprite, size: Vector2(80, 7), anchor: Anchor.bottomCenter));
-
-
   }
-
 
   /// Create Body
   @override
@@ -36,7 +33,6 @@ class BottomBar extends BodyComponent<BrickBreakGame> with ContactCallbacks, Tap
   /// Shape with default values
   final shape = PolygonShape()
     ..setAsBox(
-
       80,
       3,
       Vector2(0.0, 0.0),
@@ -54,22 +50,4 @@ class BottomBar extends BodyComponent<BrickBreakGame> with ContactCallbacks, Tap
 
   return brickBody;
   }
-// @override
-// void render(Canvas canvas) {
-//   if (body.fixtures.isEmpty) {
-//     return;
-//   }
-//
-//   final rectangle = body.fixtures.first.shape as PolygonShape;
-//
-//
-//   canvas.drawRect(
-//       Rect.fromCenter(
-//         center: rectangle.centroid.toOffset(),
-//         width: 80,
-//         height: 7,
-//       ),
-//       paint);
-// }
-
 }

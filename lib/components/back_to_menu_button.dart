@@ -92,7 +92,6 @@ class BackToMenuButton extends SpriteComponent with Tappable, HasGameRef<BrickBr
 
  @override
  bool onTapUp(TapUpInfo info) {
-  print("tap up");
   return false;
  }
 
@@ -110,7 +109,6 @@ class BackToMenuButton extends SpriteComponent with Tappable, HasGameRef<BrickBr
 
  @override
  bool onTapCancel() {
-  print("tap cancel");
   return false;
  }
 }

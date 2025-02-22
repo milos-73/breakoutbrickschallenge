@@ -24,14 +24,10 @@ class FallingBonus extends Component with HasGameRef<BrickBreakGame> {
   late TimerComponent stickyBallTimer;
   int count = 0;
 
-//List zoznam = [Brick(size: null, position: null, spriteName: ''), Ball(position: null, radius: null)];
-
   @override
   Future<void> onLoad() async {
     super.onLoad();
-    //print('FALLING BONUS on LOAD');
     bonusTimer = TimerComponent(period: 12, repeat: true, removeOnFinish: true, onTick: () {elapseTics += 1; getBonus();});
-    //print('ELAPSE TIME: $elapseTics');
     add(bonusTimer);
   }
 
@@ -46,8 +42,6 @@ class FallingBonus extends Component with HasGameRef<BrickBreakGame> {
           }
           gameRef.world.destroyBody(child.body);
           remove(child);
-          //stickyBallTimer = TimerComponent(period: 5, repeat: false, removeOnFinish: true,onTick:() {gameRef.stickyBallBonus = 0; gameRef.stickyBallState = StickyBallState.off; gameRef.stickyBallReplacement();});
-          //add(stickyBallTimer);
         }
 
         if (child is BonusStickyBall && child.bonus){
@@ -116,7 +110,6 @@ class FallingBonus extends Component with HasGameRef<BrickBreakGame> {
     double vectorY = (Random().nextInt(30)+10).toDouble();
 
     var indexNumber = Random().nextInt(6)+1;
-    //var indexNumber = 4;
     switch (indexNumber) {
       case 1:
         BonusBullets bonus = BonusBullets(size: const Size(1.8,1.8), position: Vector2(vectorX, vectorY),);
@@ -150,7 +143,6 @@ class FallingBonus extends Component with HasGameRef<BrickBreakGame> {
   Future<void> resetFallingBonus() async {
 
     bonusTimer.removeFromParent();
-    //gameRef.gunState = GunState.off;
     gameRef.fastBonus = 0;
     gameRef.slowBonus = 0;
     gameRef.cannonBallStatus = 0;
@@ -161,13 +153,8 @@ class FallingBonus extends Component with HasGameRef<BrickBreakGame> {
     gameRef.ticks = 1;
     gameRef.stickyBallBonus = 0;
 
-    if(gameRef.gunState == GunState.on || gameRef.gunState == GunState.inProgress){print('RESETING BONUS from resetting falling bonus'); gameRef.gun?.removeFromParent(); gameRef.bullets?.resetAllBullets(); gameRef.paddle.resetGun(); gameRef.gunState = GunState.off;}
+    if(gameRef.gunState == GunState.on || gameRef.gunState == GunState.inProgress){gameRef.gun?.removeFromParent(); gameRef.bullets?.resetAllBullets(); gameRef.paddle.resetGun(); gameRef.gunState = GunState.off;}
     if(gameRef.gunState == GunState.through || gameRef.gunState == GunState.inProgress){ gameRef.cannonBall?.resetCannonBall();gameRef.gunState = GunState.off;}
-
-    // gameRef.gun.removeFromParent();
-    // gameRef.bullet.removeFromParent();
-    // gameRef.bulletsInterval.removeFromParent();
-    // gameRef.interval.removeFromParent();
 
     removeAll(children);
     elapseTics = 0;

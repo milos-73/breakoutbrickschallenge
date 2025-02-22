@@ -26,8 +26,6 @@ class BrickCracked2 extends BodyComponent<BrickBreakGame> with ContactCallbacks 
 
 
   dynamic explosion;
-  // dynamic brickBreakAnim1;
-  // dynamic brickBreakAnim2;
   ObjectState state = ObjectState.normal;
 
 
@@ -37,10 +35,6 @@ class BrickCracked2 extends BodyComponent<BrickBreakGame> with ContactCallbacks 
     final sprite = await gameRef.loadSprite('bricks3/cracked1b.png');
     renderBody = false;
     add(SpriteComponent(sprite: sprite, size: Vector2(size.width, size.height), anchor: Anchor.center));
-
-
-    // final   brickBreak1 = await gameRef.loadSprite('bricks3/green2.png');
-    // final   brickBreak2 = await gameRef.loadSprite('bricks3/orange3.png');
 
     final exp1 = await gameRef.loadSprite('explosion/explosion1.png');
     final exp2 = await gameRef.loadSprite('explosion/explosion2.png');
@@ -61,9 +55,6 @@ class BrickCracked2 extends BodyComponent<BrickBreakGame> with ContactCallbacks 
     final exp17 = await gameRef.loadSprite('explosion/explosion17.png');
     final exp18 = await gameRef.loadSprite('explosion/explosion18.png');
     final exp19 = await gameRef.loadSprite('explosion/explosion19.png');
-
-    // brickBreakAnim1 = SpriteAnimation.spriteList([brickBreak1], stepTime: 0.05,loop: false);
-    // brickBreakAnim2 = SpriteAnimation.spriteList([brickBreak2], stepTime: 0.05,loop: false);
 
     explosion = SpriteAnimation.spriteList([
       exp1,
@@ -91,12 +82,6 @@ class BrickCracked2 extends BodyComponent<BrickBreakGame> with ContactCallbacks 
   @override
   void beginContact(Object other, Contact contact){
 
-    // if (other is Ball){
-    //   //body.applyForce(body.linearVelocity*1000);
-    //   print('BRICK TO Ball CONTACT');
-    //   destroy = true;
-    // }
-
     if (other is BulletThrough){
       if(state == ObjectState.normal){
         state = ObjectState.explode;
@@ -107,16 +92,12 @@ class BrickCracked2 extends BodyComponent<BrickBreakGame> with ContactCallbacks 
     if (other is Ball){
       state = ObjectState.explode; gameRef.add(SpriteAnimationComponent(position: body.position, animation: explosion.clone(), anchor: Anchor.center, size: Vector2(size.width + 2, size.height + 2), removeOnFinish: true));
       destroy = true;
-
      }
-
 
     if (other is Ball2){
 
       if(state == ObjectState.normal){state = ObjectState.explode;
       gameRef.add(SpriteAnimationComponent(position: body.position, animation: explosion.clone(), anchor: Anchor.center, size: Vector2(size.width+2, size.height+2),removeOnFinish: true));}
-      //body.applyForce(body.linearVelocity*1000);
-      //print('BRICK TO Ball CONTACT');
       destroy = true;
     }
 
@@ -124,8 +105,6 @@ class BrickCracked2 extends BodyComponent<BrickBreakGame> with ContactCallbacks 
       if(state == ObjectState.normal){state = ObjectState.explode;
 
       gameRef.add(SpriteAnimationComponent(position: body.position, animation: explosion.clone(), anchor: Anchor.center, size: Vector2(size.width+4, size.height+4),removeOnFinish: true));}
-      //body.applyForce(body.linearVelocity*1000);
-      print('BRICK TO BULLET CONTACT');
       destroy = true;
     }
 
@@ -133,7 +112,6 @@ class BrickCracked2 extends BodyComponent<BrickBreakGame> with ContactCallbacks 
       if(state == ObjectState.normal){state = ObjectState.explode;
 
       gameRef.add(SpriteAnimationComponent(position: body.position, animation: explosion.clone(), anchor: Anchor.center, size: Vector2(size.width+4, size.height+4),removeOnFinish: true));}
-      print('BRICK TO BULLET CONTACT');
       destroy = true;
     }
   }

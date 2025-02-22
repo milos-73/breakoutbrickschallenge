@@ -1,22 +1,17 @@
 import 'dart:math';
 
 import 'package:flame_audio/flame_audio.dart';
-import 'package:flutter/animation.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import '../forge2d_game_world.dart';
 import '../services/ad_helper.dart';
-import 'overlay_builder.dart';
 
 class ChallengeGameOverOverlay extends StatefulWidget {
-  //final String message;
   final BrickBreakGame game;
 
   const ChallengeGameOverOverlay({
     super.key,
-    //required this.message,
     required this.game,
   });
 
@@ -42,10 +37,8 @@ class _ChallengeGameOverOverlayState extends State<ChallengeGameOverOverlay> wit
   String imgMainMenu1 = 'assets/images/buttons/mainMenuButton.png';
   String imgMainMenu2 = 'assets/images/buttons/mainMenuButton_hover.png';
 
-
   @override
   void initState() {
-    print('WIN CHALLENGE LEVEL OVERLAY: ${widget.game.gameState}');
 
     super.initState();
 
@@ -101,7 +94,6 @@ class _ChallengeGameOverOverlayState extends State<ChallengeGameOverOverlay> wit
     await widget.game.prefs.setInt('challengeLevel', level);
     widget.game.challengeCurrentLevel = level;
     await widget.game.pickLevel(level);
-    //await widget.game.pickLevel(random.nextInt(12));
 
     }
 
@@ -171,9 +163,6 @@ class _ChallengeGameOverOverlayState extends State<ChallengeGameOverOverlay> wit
             child: Stack(alignment: Alignment.center,
               children: [Container(width: widget.game.camera.viewport.effectiveSize.x, height: (widget.game.camera.viewport.canvasSize?.y)!/2.3, color: Colors.black.withOpacity(0.4),),
                 const SizedBox(width: 250, height: 150,
-                  // decoration: const BoxDecoration(image: DecorationImage(
-                  //     image: AssetImage('assets/images/bg/gameOverMenu.png'),
-                  //     fit: BoxFit.contain)),
                 ),
                 Center(
                   child: Column(
@@ -181,7 +170,6 @@ class _ChallengeGameOverOverlayState extends State<ChallengeGameOverOverlay> wit
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Image.asset('assets/images/bg/lostHeading.png',height: (widget.game.camera.viewport.canvasSize?.y)!/10),
-                      //Container(width: 300, height: 80, decoration: const BoxDecoration(image:DecorationImage(image: AssetImage('assets/images/bg/lostHeading.png'),fit: BoxFit.contain) ),),
                       _mainMenuButton(context, widget.game),
                       _resetButton(context, widget.game),
                     ],
@@ -214,19 +202,16 @@ class _ChallengeGameOverOverlayState extends State<ChallengeGameOverOverlay> wit
 
       onLongPress: () {
         setState(() {
-          print('LONG PRESS');
           imgMainMenu = imgMainMenu2;
         });
       },
       onLongPressEnd: (tap) {
         setState(() {
-          print('onLongPressStart');
           imgMainMenu = imgMainMenu1;
         });
       },
       onLongPressDown: (tap) {
         setState(() {
-          print('onLongPressDown');
           imgMainMenu = imgMainMenu2;
         });
       },
@@ -245,8 +230,6 @@ class _ChallengeGameOverOverlayState extends State<ChallengeGameOverOverlay> wit
         await FlameAudio.play('button3.mp3');
       }
       _showInterstitialAdReplay();
-
-
         },
 
       onTapUp: (tap) async {
@@ -257,19 +240,16 @@ class _ChallengeGameOverOverlayState extends State<ChallengeGameOverOverlay> wit
       },
       onLongPress: () {
         setState(() {
-          print('LONG PRESS');
           reply = reply2;
         });
       },
       onLongPressEnd: (tap) {
         setState(() {
-          print('onLongPressStart');
           reply = reply1;
         });
       },
       onLongPressDown: (tap) {
         setState(() {
-          print('onLongPressDown');
           reply = reply2;
         });
       },
