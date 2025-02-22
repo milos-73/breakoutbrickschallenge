@@ -74,11 +74,11 @@ class _NextLevelChallengeModeOverlayState extends State<NextLevelChallengeModeOv
     nextLevel = nextLevel1;
   }
 
-  Future<void> updateChallengeLevelCount()async {
-    widget.game.challengeLevelsPerGame = widget.game.challengeLevelsPerGame + 1;
-    challengeLevels = widget.game.prefs.getInt('challengeLevels') ?? 0;
-    if (widget.game.challengeLevelsPerGame > challengeLevels) {await widget.game.prefs.setInt('challengeLevels', widget.game.challengeLevelsPerGame);}
-  }
+  // Future<void> updateChallengeLevelCount()async {
+  //   widget.game.challengeLevelsPerGame = widget.game.challengeLevelsPerGame + 1;
+  //   challengeLevels = widget.game.prefs.getInt('challengeLevels') ?? 0;
+  //   if (widget.game.challengeLevelsPerGame > challengeLevels) {await widget.game.prefs.setInt('challengeLevels', widget.game.challengeLevelsPerGame);}
+  // }
 
   void _createInterstitialAd() {
     InterstitialAd.load(
@@ -116,7 +116,7 @@ class _NextLevelChallengeModeOverlayState extends State<NextLevelChallengeModeOv
   Future<void> _nextLevelOverlays() async {
     widget.game.levelPoints = 0;
     if(widget.game.overlays.isActive('NextLevelChallengeModeOverlay')){widget.game.overlays.remove('NextLevelChallengeModeOverlay');}
-    widget.game.nextLevel(level: widget.game.challengeCurrentLevel);
+    //widget.game.nextLevel(level: widget.game.challengeCurrentLevel);
   }
 
   void _showInterstitialAdMainMenu() {
@@ -162,13 +162,14 @@ class _NextLevelChallengeModeOverlayState extends State<NextLevelChallengeModeOv
       _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
         onAdDismissedFullScreenContent: (InterstitialAd ad) {
           ad.dispose();
-          _nextLevelOverlays();
           _createInterstitialAd();
+          _nextLevelOverlays();
+
         },
         onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
           ad.dispose();
-          _nextLevelOverlays();
           _createInterstitialAd();
+          _nextLevelOverlays();
         },
       );
       _interstitialAd!.show();

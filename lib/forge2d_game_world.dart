@@ -407,7 +407,7 @@ int gamesInRowCounter = 0;
       pauseEngine();
       //challengeGameCounterHelper = 0;
       //challengeLevelsPerGame = challengeLevelsPerGame + 1;
-      print('IN GAME STATE CHALLENGE NEXT LEVEL');
+      //print('IN GAME STATE CHALLENGE NEXT LEVEL');
       randomChallengeWallNumber();
       updateChallengeGameInRowCounters();
       updatePointsCounter();
@@ -1525,8 +1525,8 @@ Future <void> updateBrickBreakedAchievements() async {
   Future<int> randomChallengeWallNumber() async {
     final _random = Random();
     int countLevels = brickList_2.length;
-    int challengeLevel = _random.nextInt(countLevels);
-    //int challengeLevel = 0;
+    //int challengeLevel = _random.nextInt(countLevels);
+    int challengeLevel = 0;
     await prefs.setInt('challengeLevel', challengeLevel+1);
     currentPlayedLevelNumber = challengeLevel +1;
 
