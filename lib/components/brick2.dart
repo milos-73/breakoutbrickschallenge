@@ -1,12 +1,9 @@
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
-import 'package:brickbreaker/brick_walls/brick_wall_json_model.dart';
 import 'package:brickbreaker/components/bullet_right.dart';
 import 'package:brickbreaker/components/bullet_through.dart';
 import '../forge2d_game_world.dart';
-import 'ball.dart';
-import 'ball2.dart';
 import 'bullet_left.dart';
 
 /// Class

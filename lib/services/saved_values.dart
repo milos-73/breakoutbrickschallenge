@@ -66,4 +66,28 @@ class SavedValues {
     int challengeLevels = prefs.getInt('challengeLevels') ?? 0;
     return challengeLevels;
   }
+
+  Future<int> getAllTimePoints() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int allTimePoints = prefs.getInt('allTimePoints') ?? 0;
+    return allTimePoints;
+  }
+
+  Future<int> getAllTimeBricksCounter() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int allTimeBricks = prefs.getInt('allTimeBricksCounter') ?? 0;
+    return allTimeBricks;
+  }
+
+  Future<int> getChallengeLevelsPerGames() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int challengeLevelsPerGame = prefs.getInt('challengeLevelsPerGame') ?? 0;
+    return challengeLevelsPerGame;
+  }
+
+  Future<int> getAllTimeCollectedStars() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int allTimeCollectedStars = prefs.getInt('allTimeCollectedStars') ?? 0;
+    return allTimeCollectedStars;
+  }
 }

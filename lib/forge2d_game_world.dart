@@ -284,6 +284,8 @@ int allTimePointsCounter = 0; //initial value for ALL TIME POINTS counter
 
     prefs = await SharedPreferences.getInstance();
 
+  await randomChallengeWallNumber();
+
     camera.viewport = FixedResolutionViewport(Vector2(1080,2340));
 
     await Flame.device.fullScreen();
@@ -1431,6 +1433,7 @@ Future <void> updateBrickBreakedAchievements() async {
     final _random = Random();
     int countLevels = brickList_2.length;
     int challengeLevel = _random.nextInt(countLevels);
+    //int challengeLevel = 0;
     await prefs.setInt('challengeLevel', challengeLevel+1);
     currentPlayedLevelNumber = challengeLevel +1;
 

@@ -220,15 +220,17 @@ if(gameRef.wallStatus == WallStatus.ready){
     super.update(dt);
   }
 
-  Future<int> randomChallengeLevelNumber() async {
-  final _random = Random();
-  int countLevels = brickList_2.length;
-  int challengeLevel = _random.nextInt(countLevels);
-  await gameRef.prefs.setInt('challengeLevel', challengeLevel+1);
-  gameRef.currentPlayedLevelNumber = challengeLevel +1;
-
-  return challengeLevel;
-}
+//   Future<int> randomChallengeLevelNumber() async {
+//
+//   final _random = Random();
+//   int countLevels = brickList_2.length;
+//   //int challengeLevel = _random.nextInt(countLevels);
+//   int challengeLevel = 0;
+//   await gameRef.prefs.setInt('challengeLevel', challengeLevel+1);
+//   gameRef.currentPlayedLevelNumber = challengeLevel +1;
+// print('CHALENGE GAME RANDOM NUMBER ${challengeLevel}');
+//   return challengeLevel;
+// }
 
   Future<void> buildWall(int levelNumber) async {
 

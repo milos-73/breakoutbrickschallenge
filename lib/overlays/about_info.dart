@@ -25,6 +25,10 @@ class _AboutInfoState extends State<AboutInfo> {
   int? lastFinishedLevel = 0;
   int? totalStars = 0;
   int? fiveStarsLevels = 0;
+  int? allTimePoints = 0;
+  int? allTimeBricksCounter = 0;
+  int? challengeLevelsPerGame = 0;
+  int? allTimeCollectedStars = 0;
 
   Future<void>? _launched;
 
@@ -36,6 +40,10 @@ class _AboutInfoState extends State<AboutInfo> {
     await savedValues.getLastFinishedLevel().then((value) => setState(() {lastFinishedLevel = value;}));
     await savedValues.getTotalStars().then((value) => setState(() {totalStars = value;}));
     await savedValues.getFiveStarsLevels().then((value) => setState(() {fiveStarsLevels = value;}));
+    await savedValues.getAllTimePoints().then((value) => setState(() {allTimePoints = value;}));
+    await savedValues.getAllTimeBricksCounter().then((value) => setState(() {allTimeBricksCounter = value;}));
+    await savedValues.getChallengeLevelsPerGames().then((value) => setState(() {challengeLevelsPerGame = value;}));
+    await savedValues.getAllTimeCollectedStars().then((value) => setState(() {allTimeCollectedStars = value;}));
   }
 
   Future<void> resetGame() async {
@@ -228,6 +236,11 @@ num countStarPercentage() {
                                         Text('Collected stars %:',style: TextStyle(fontSize: 15,color: Colors.amber),),
                                         Text('Collected stars:',style: TextStyle(fontSize: 15,color: Colors.amber),),
                                         Text('5* Levels:',style: TextStyle(fontSize: 15,color: Colors.amber),),
+
+                                        Text('All Time Points:',style: TextStyle(fontSize: 15,color: Colors.amber),),
+                                        Text('All Time Bricks:',style: TextStyle(fontSize: 15,color: Colors.amber),),
+                                        Text('Levels Per Game:',style: TextStyle(fontSize: 15,color: Colors.amber),),
+                                        Text('All Time Collected Stars:',style: TextStyle(fontSize: 15,color: Colors.amber),),
                                         //Text('${widget.gameRef.totalGamePoints}',style: TextStyle(fontSize: 20,color: Colors.amber),),
 
                                       ],),
@@ -243,6 +256,11 @@ num countStarPercentage() {
                                         Text('${countStarPercentage().toStringAsFixed(2)}%',style: TextStyle(fontSize: 15,color: Colors.amber),),
                                         Text('${totalStars} / ${lastFinishedLevel!*5}',style: TextStyle(fontSize: 15,color: Colors.amber),),
                                         Text('$fiveStarsLevels',style: TextStyle(fontSize: 15,color: Colors.amber),),
+
+                                        Text('$allTimePoints',style: TextStyle(fontSize: 15,color: Colors.amber),),
+                                        Text('$allTimeBricksCounter',style: TextStyle(fontSize: 15,color: Colors.amber),),
+                                        Text('$challengeLevelsPerGame',style: TextStyle(fontSize: 15,color: Colors.amber),),
+                                        Text('$allTimeCollectedStars',style: TextStyle(fontSize: 15,color: Colors.amber),),
                                       ],
                                       ),
                                     ),
@@ -258,6 +276,7 @@ num countStarPercentage() {
                                 child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     SizedBox(width: 130,child: ElevatedButton(onPressed: _showLevelsResetAlertDialog, child: Text('LEVELS'),)),
+                                    SizedBox(width: 50,child: ElevatedButton(onPressed: widget.gameRef.prefs.clear, child: Text('X'))),
                                     SizedBox(width: 130,child: ElevatedButton(onPressed: _showChallengeResetAlertDialog, child: Text('CHALLENGE')))
                                   ],
                                 ),
